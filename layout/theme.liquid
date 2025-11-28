@@ -134,10 +134,11 @@
 	        <main class="main-content sw-min-h-screen sw-relative" id="MainContent">
 	        {{ content_for_layout }}
 
-
+			{% if settings.show-overlay  %}
 			<div class="body-overlay xl:sw-hidden">
 				 {% render 'icons-v2', icon:'icon-body-overlay' %}
 			</div>
+			{% endif %}
 
 	        </main>
 						 {% section 'mobile-bottom-cta' %}
