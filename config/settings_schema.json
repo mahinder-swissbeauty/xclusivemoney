@@ -10,9 +10,20 @@
   {
     "name": "Colors",
     "settings": [
+     
+      {
+        "type": "checkbox",
+        "id": "show-overlay",
+        "label": "Show Overlay",
+        "default": false
+      },
       {
         "type": "header",
         "content": "General"
+      },
+        {
+        "type": "header",
+        "content": "Custom Theme"
       },
       {
         "type": "color",
