@@ -95,6 +95,19 @@
 			p{
 				margin: 0;
 			}
+			.body-overlay {
+				position: fixed;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				z-index: 1;
+			}
+			section div:first-child{
+				position: relative;
+				z-index: 2;
+			}
+			
+
 		</style>
 
 	</head>
@@ -118,9 +131,17 @@
 	      <div class="transition-body">
 			{% section 'announcementbar' %}
 			{% section 'header' %}
-	        <main class="main-content sw-min-h-screen" id="MainContent">
+	        <main class="main-content sw-min-h-screen sw-relative" id="MainContent">
 	        {{ content_for_layout }}
+
+
+			<div class="body-overlay xl:sw-hidden">
+				 {% render 'icons-v2', icon:'icon-body-overlay' %}
+			</div>
+
 	        </main>
+						 {% section 'mobile-bottom-cta' %}
+
 			 {% section 'footer' %}
 	      </div>
 	    </div>
