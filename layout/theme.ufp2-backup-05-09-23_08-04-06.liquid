@@ -1,0 +1,677 @@
+{%- capture avada-seo-original -%}
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}" dir="{{ settings.text_direction }}">
+  <head> 
+    <script src='{{ 'sealapps_email_config.js' | asset_url }}' defer='defer' ></script> 
+    <script src='{{ 'product_restore_email.js' | asset_url }}' defer='defer' ></script> 
+    <script id='em_product_variants' type='application/json'>
+        {{ product.variants | json }}
+    </script>
+    <script id='em_product_selected_or_first_available_variant' type='application/json'>
+        {{ product.selected_or_first_available_variant | json }}
+    </script>
+  <!-- EASYGIFT SCRIPT -->
+    {% if customer %}
+        <script type="text/javascript" src="https://cdn.506.io/eg/script.js?shop=swiss-beauty-dev.myshopify.com&isCustomer=true&tags={{ customer.tags | join: "," }}"></script>
+    {% else %}
+        <script type="text/javascript" src="https://cdn.506.io/eg/script.js?shop=swiss-beauty-dev.myshopify.com"></script>
+    {% endif %}
+  <!-- END EASYGIFT SCRIPT -->
+
+  <!-- Added by AVADA SEO Suite -->
+	{% include 'avada-seo' %}
+	<!-- /Added by AVADA SEO Suite -->
+
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" integrity="sha512-yHknP1/AwR+yx26cB1y0cjvQUMvEa2PFzt1c9LlS4pRQ5NOTZFWbhBig+X9G9eYW/8m0/4OXNx8pxJ6z57x0dw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" integrity="sha512-17EgCFERpgZKcm0j0fEq1YCJuyAWdz9KUtv1EjVuaOz8pDnh/0nZxmU6BBXwaaxqoi9PQXnRWqlcDB027hgv9A==" crossorigin="anonymous" referrerpolicy="no-referrer" /> 
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js" integrity="sha512-XtmMtDEcNz2j7ekrtHvOVR4iwwaD6o/FUJe6+Zq+HgcCsk3kj4uSQQR8weQ2QVj1o0Pk6PwYLohm206ZzNfubg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+     
+    
+    
+    
+    <meta name="p:domain_verify" content="50315ebfeffb5bdf64cb8ae15408d4fe"/>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="{{ settings.color_button }}">
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="preconnect" href="https://cdn.shopify.com">
+    <link rel="preconnect" href="https://fonts.shopifycdn.com">
+    <link rel="dns-prefetch" href="https://ajax.googleapis.com">
+    <link rel="dns-prefetch" href="https://maps.googleapis.com">
+    <link rel="dns-prefetch" href="https://maps.gstatic.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    {%- if settings.favicon != blank -%}
+     <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png" />
+    {%- endif -%}
+    {%- render 'seo-title' -%}
+    {%- render 'micro' -%}
+
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+    {%- render 'font-face' -%} 
+    {%- render 'social-meta-tags' -%}
+    {{ 'theme.css' | asset_url | stylesheet_tag }}
+    {{ 'custom.min.css' | asset_url | stylesheet_tag }}
+
+    {%- render 'css-variables' -%} 
+    {%- render 'analytic-scripts' -%}
+    {% render 'gokwik' %}
+    <!-- Hotjar Tracking Code for https://swissbeauty.in/ -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:3344843,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+    <script>
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+
+      window.theme = window.theme || {};
+      theme.routes = {
+        home: "{{ routes.root_url }}",
+        cart: "{{ routes.cart_url | append: '.js' }}",
+        cartPage: "{{ routes.cart_url }}",
+        cartAdd: "{{ routes.cart_add_url | append: '.js' }}",
+        cartChange: "{{ routes.cart_change_url | append: '.js' }}"
+      };
+      theme.strings = {
+        soldOut: {{ 'products.product.sold_out' | t | json }},
+        unavailable: {{ 'products.product.unavailable' | t | json }},
+        inStockLabel: {{ 'products.product.in_stock_label' | t | json }},
+        stockLabel: {{ 'products.product.stock_label' | t: count: '[count]' | json }},
+        willNotShipUntil: {{ 'products.product.will_not_ship_until' | t: date: '[date]' | json }},
+        willBeInStockAfter: {{ 'products.product.will_be_in_stock_after' | t: date: '[date]' | json }},
+        waitingForStock: {{ 'products.product.waiting_for_stock' | t | json }},
+        savePrice: {{ 'products.general.save_html' | t: saved_amount: '[saved_amount]' | json }},
+        cartEmpty: {{ 'cart.general.empty' | t | json }},
+        cartTermsConfirmation: {{ 'cart.general.terms_confirm' | t | json }},
+        searchCollections: {{ 'general.search.collections' | t | json }},
+        searchPages: {{ 'general.search.pages' | t | json }},
+        searchArticles: {{ 'general.search.articles' | t | json }}
+      };
+      theme.settings = {
+        dynamicVariantsEnable: true,
+        cartType: {{ settings.cart_type | json }},
+        isCustomerTemplate: {% if request.page_type contains 'customers/' %}true{% else %}false{% endif %},
+        moneyFormat: {{ shop.money_format | json }},
+        saveType: {{ settings.product_save_type | json }},
+        productImageSize: {{ settings.product_grid_image_size | json }},
+        productImageCover: {{ settings.product_grid_image_fill }},
+        predictiveSearch: {{ settings.predictive_search_enabled }},
+        predictiveSearchType: {{ settings.search_type | json }},
+        quickView: {{ settings.quick_shop_enable }},
+        themeName: 'Swiss Beauty',
+        themeVersion: "5.0.0"
+      };
+
+ 
+
+    </script> 
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){
+  w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      w['scSdkId'] = i;
+      w[l] = w[l] || []
+      w.scq = function (eventName, eventType, p) {
+      var props = p || {}
+        w[l].push({ eventName: eventName, eventType: eventType, meta: props, eventFireTs: Date.now() })
+      };
+      w.scq("PAGE_VIEW", "AUTO", {
+        pageUrl: w.location.href
+      });
+      var scr = d.createElement(s);
+      scr.type = 'text/javascript';
+      scr.async = true;
+      scr.src = 'https://sc-events-sdk.sharechat.com/web-sdk.js';
+      var x = d.getElementsByTagName(s)[0];
+      x.parentNode.insertBefore(scr, x);
+ })(window,document,'script','dataLayer','GTM-T4BBQJT');
+  
+  
+  </script>
+<!-- End Google Tag Manager -->
+    {% comment %}
+    <!-- DiscountDuck code, safe to remove if you uninstalled the app -->
+     {% include 'discountduck-loader' %}
+    <!-- DiscountDuck code, safe to remove if you uninstalled the app -->
+    {% endcomment %}
+    {% capture New_content %}
+     
+    {% endcapture %}   
+
+    {{ content_for_header }}
+    {% if template contains "index" %}
+     {{ New_content | remove: 'https:\/\/www.hukcommerce.com\/apps_shopify\/assets\/js\/script.js?shop=swiss-beauty-dev.myshopify.com'
+      | remove: 'https:\/\/cdn.\.me\/assets\/installed.js?shop=swiss-beauty-dev.myshopify.com'
+      | remove: 'https:\/\/dd.redcod.ch\/public_scripts\/KkHUepqxWZDkqFk7lcatqSTKfuXUHvFEIBGr3YcnnZgvExQEotvdMRAq1Q3XVfDv36dVFtrMGINwdArsQegbkFmCWqsp7R9QtACncBlA3xnVfLYGBE7Ht5hsSORreOzx\/?shop=swiss-beauty-dev.myshopify.com'
+      | remove: 'https:\/\/cdn.judge.me\/shopify_v2.js'
+      | remove: 'https:\/\/cdn.judge.me\/shopify_v2.css'
+      | remove: 'https:\/\/wishlisthero-assets.revampco.com\/store-front\/bundle2.js'
+      | remove: 'https:\/\/js.smile.io\/v1\/smile-shopify.js?shop=swiss-beauty-dev.myshopify.com'
+      | remove: 'https:\/\/js.smile.io\/v1\/smile-lite-cd9fe646c8.js'
+      | remove: 'https:\/\/js.smile.io\/v1\/vendor-43b6e8e6a40470463bbd.modern.js'
+     }}
+    {% elsif template contains "collection"  %}
+    {{ New_content | remove: 'https:\/\/sapp.multivariants.com\/gate\/out\/sys\/js\/init.js?shop=swiss-beauty-dev.myshopify.com'
+        | remove: 'https:\/\/www.hukcommerce.com\/apps_shopify\/assets\/js\/script.js?shop=swiss-beauty-dev.myshopify.com'
+        | remove: 'https:\/\/cdn.judge.me\/assets\/installed.js?shop=swiss-beauty-dev.myshopify.com'
+        | remove: 'https:\/\/instafeed.nfcube.com\/cdn\/6c284b6b55aeffac2cfbedae296e0c3a.js?shop=swiss-beauty-dev.myshopify.com'
+        | remove: 'https:\/\/dd.redcod.ch\/public_scripts\/KkHUepqxWZDkqFk7lcatqSTKfuXUHvFEIBGr3YcnnZgvExQEotvdMRAq1Q3XVfDv36dVFtrMGINwdArsQegbkFmCWqsp7R9QtACncBlA3xnVfLYGBE7Ht5hsSORreOzx\/?shop=swiss-beauty-dev.myshopify.com'
+        | remove: 'https:\/\/cdn.judge.me\/shopify_v2.js'
+        | remove: 'https:\/\/cdn.judge.me\/shopify_v2.css'
+     }}
+    {% elsif template contains "product" %}
+    {{ New_content | remove: 'https:\/\/sapp.multivariants.com\/gate\/out\/sys\/js\/init.js?shop=swiss-beauty-dev.myshopify.com'
+        | remove: 'https:\/\/www.hukcommerce.com\/apps_shopify\/assets\/js\/script.js?shop=swiss-beauty-dev.myshopify.com'
+        | remove: 'https:\/\/instafeed.nfcube.com\/cdn\/6c284b6b55aeffac2cfbedae296e0c3a.js?shop=swiss-beauty-dev.myshopify.com'
+        | remove: 'https:\/\/dd.redcod.ch\/public_scripts\/KkHUepqxWZDkqFk7lcatqSTKfuXUHvFEIBGr3YcnnZgvExQEotvdMRAq1Q3XVfDv36dVFtrMGINwdArsQegbkFmCWqsp7R9QtACncBlA3xnVfLYGBE7Ht5hsSORreOzx\/?shop=swiss-beauty-dev.myshopify.com'
+        | remove: 'https:\/\/geolocation-recommendations.shopifycloud.com\/locale_bar\/script.js?shop=swiss-beauty-dev.myshopify.com'
+     }}
+    {% else %}
+     {{ New_content }}
+    {% endif %}
+
+    <script src="{{ 'vendor-scripts-v10.aio.min.js' | asset_url | split: '?' | first }}" defer="defer"></script>
+    {% unless template contains 'collection' or template contains 'index' %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.css"/>
+  	<script defer="defer" type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    {% endunless %}
+    {%- if shop.enabled_currencies.size > 1 -%}
+    <link rel="preload" as="style" href="{{ 'currency-flags.css' | asset_url | split: '?' | first }}" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="{{ 'currency-flags.css' | asset_url | split: '?' | first }}">
+    {%- endif -%}
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Swiss Beauty",
+  "url": "https://swissbeauty.in/",
+  "logo": "https://cdn.shopify.com/s/files/1/0595/6691/5779/files/image_2_280x.png"
+}
+</script>
+<!--onload="initMoe();-->
+    <script type="text/javascript" src="https://cdn.moengage.com/webpush/moe_webSdk.min.latest.js" ></script>
+  <script type="text/javascript">
+  if( 'function' === typeof importScripts) {
+  importScripts("https://cdn.moengage.com/webpush/releases/serviceworker_cdn.min.latest.js");
+  }
+  (function(i,s,o,g,r,a,m,n){i.moengage_object=r;t={};q=function(f){return function(){(i.moengage_q=i.moengage_q||[]).push({f:f,a:arguments})}};f=['track_event','add_user_attribute','add_first_name','add_last_name','add_email','add_mobile','add_user_name','add_gender','add_birthday','destroy_session','add_unique_user_id','moe_events','call_web_push','track','location_type_attribute'],h={onsite:["getData"]};for(k in f){t[f[k]]=q(f[k])}a=s.createElement(o);m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m);i.moe=i.moe||function(){n=arguments[0];return t};a.onload=function(){if(n){i[r]=moe(n)}}})(window,document,'script','https://cdn.moengage.com/webpush/moe_webSdk.min.latest.js','Moengage')
+  Moengage = moe({
+    app_id:"NFFRSU31JE03IMQ04WCDXXJ9",
+    debug_logs: 0,
+    swPath: "/tools/moengage/sw.js",
+    swScope: '/',
+    cluster: "DC_4"
+  });
+  </script>
+    
+    {% if template contains 'collection' %}
+    <script defer src="https://cdn.shopify.com/s/files/1/0382/4185/files/ajaxinate.js?937"></script>
+    {% endif %}
+    <script type="text/javascript" src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+    {%- if request.page_type contains 'customers/' -%}
+    <script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer="defer"></script>
+    {%- endif -%}
+    {% if template contains 'product' %}
+    {% endif %}
+
+     {%- if template contains 'collection' -%}
+    {%- capture collection_json_ld %}
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "ItemList",
+        "name": "{{ title }}",
+        "url": "{{ shop.url | append: collection.url }}",
+        "description": "{{ description }}",
+        "image": "https:{{ collection.image | img_url: "master" }}",
+        "mainEntityOfPage": {
+            "@type": "CollectionPage",
+            "@id": "{{ shop.url | append: collection.url }}"
+        },
+        "itemListElement": [
+            {%- for product in collection.products %}
+            {
+                "@type": "ListItem",
+                "position": {{ forloop.index }},
+                "url": "{{ shop.url | append: '/products/' | append: product.handle }}"
+            }{%- unless forloop.last -%},{%- endunless -%}
+            {%- endfor %}
+        ]
+    }
+    </script>
+{%- endcapture %}
+{{ collection_json_ld | strip_newlines | replace: '  ', '' | replace: ': ', ':' | replace: ' {', '{' }}
+    {%- endif -%}
+
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N71XHS094H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N71XHS094H',{ 'groups': 'GA4'});
+</script>
+
+    <!-- Meta Pixel Code -->
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+       if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+       n.queue=[];t=b.createElement(e);t.async=!0;
+       t.src=v;s=b.getElementsByTagName(e)[0];
+       s.parentNode.insertBefore(t,s)}(window, document,'script',
+                                       'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '340065174208442');
+      fbq('track', 'PageView');
+      fbq('track', 'AddToCart');
+      fbq('track', 'Checkout');
+    </script>
+    <noscript>
+      <img height="1" width="1" style="display:none"
+                   src="https://www.facebook.com/tr?id=493294185830497&ev=PageView&noscript=1"
+                   /></noscript>
+    <!-- End Meta Pixel Code -->
+    
+  
+ {% render 'gift-card-pro' %} 
+
+<script>
+function cid() {
+  var e;
+  var s1;
+  var s2;
+  return Promise.resolve().then(function () {
+    e = new URLSearchParams(window.location.search).get("pid");
+    s1 = new URLSearchParams(window.location.search).get("sub1");
+    s2 = new URLSearchParams(window.location.search).get("sub2");
+    return null === e ? null : fetch("https://secure.traqkarr.com/click?pid=" + e + "&sub1=" + s1 +"&sub2=" + s2 +"&offer_id=128&format=json").then(function (e) {
+      return e.json();
+    });
+  });
+}
+
+function sc(e) {
+  var c = new Date();
+  c.setTime(c.getTime() + 30 * 24 * 60 * 60 * 1000), document.cookie = "affclick=" + e + ";expires=" + c.toUTCString() + ";path=/" + ";domain=.swissbeauty.in", localStorage.setItem("affclick", e);
+}
+
+(function () {
+  var e;
+  return Promise.resolve().then(function () {
+    return cid();
+  }).then(function (_resp) {
+    e = _resp;
+    null !== e && sc(e.clickid);
+  });
+})();
+</script>
+  
+  <script type="text/javascript">
+window.addEventListener('MOE_LIFECYCLE', function(data) {
+  if(data.detail.name === 'SDK_INITIALIZED') {
+    var tagName = "body";
+   // This code should be written just after moengage initialization script.
+    Moengage.onsite.registerCallback(tagName, function (err, data) {
+    if (err) {
+    // Handle error case here
+    // We could get error for various reasons, like
+    // network issues, campaigns not present for a particular tag
+    return console.error('Error from moengage:', err);
+    }
+    console.log('Data for campaign:', data);
+    
+    var payload = data.payload; // Campaign payload defined during campaign creation
+    
+    var impTracker = data.imp; // Function, you can call impTracker() to send impression stats for a campaign back to MoEngage. Call this after you have successfully rendered the HTML as per the payload provided.
+    
+    var clickTracker = data.click({widget_id:"sample_widget_id"}); // Function, you can call clickTracker() to send click stats for a campaign back to MoEngage. Call this when the user clicks on the desired section of the website. Passing widget_id is not mandatory and should only be used in case you want to differentiate the clicks between 2 different widgets of the Web Personalization Campaign.
+    });
+  }
+})
+</script>
+ 
+<script>
+function setCookie(cname, cvalue, exdays) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  let expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";SameSite=None; Secure;" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+var page = (getCookie("visition_csk") == undefined) ? 0 : getCookie("visition_csk");
+  const storedValue = localStorage.getItem("visition_csk");
+ 
+  var pagesession = (storedValue == null) ? 0 : storedValue;
+   console.log("storedValue-"+storedValue);
+    console.log("pagesession-"+pagesession);
+ if(storedValue == null && pagesession  < 1 ) {
+   localStorage.setItem("visition_csk", "1");
+    var date = Date.now()
+     console.log("date-"+date);
+  var customer_email = "{{ customer.email }}"; 
+       if(customer_email !="") {
+         customer_email = customer_email;
+       } else {
+          customer_email = Math.floor(Math.random() * 1000000000 ) + "-"+date;
+       }
+  console.log(customer_email);
+      gtag('event', 'first_visit_user', {
+ 
+      'Email': customer_email,
+
+  });
+ }
+//  if(getCookie("visition_csk") != undefined && getCookie("visition_csk") < 1) {
+    
+//     page = page + 1;
+//     setCookie("visition_csk", page, "1");
+//   var date = Date.now()
+//   var customer_email = "{{ customer.email }}"; 
+//        if(customer_email !="") {
+//          customer_email = customer_email;
+//        } else {
+//           customer_email = Math.floor(Math.random() * 1000000000 ) + "-"+date;
+//        }
+//   console.log(customer_email);
+//       gtag('event', 'first_visit_user', {
+ 
+//       'Email': customer_email,
+
+//   });
+
+// }
+</script>
+  {% include 'moe.liquid' %}
+
+ {% if template.name contains 'product' %}
+    {{ '//cdnjs.cloudflare.com/ajax/libs/mhayes-twentytwenty/1.0.0/js/jquery.twentytwenty.min.js' | script_tag }}
+    {{ '//cdnjs.cloudflare.com/ajax/libs/mhayes-twentytwenty/1.0.0/js/jquery.event.move.min.js' | script_tag }}
+    {{ '//cdnjs.cloudflare.com/ajax/libs/mhayes-twentytwenty/1.0.0/css/twentytwenty.min.css'| stylesheet_tag }}
+     <script>$(function($){$('.twentytwenty-container').twentytwenty();});</script>
+ {% endif %}  
+
+
+
+<script id="docapp-cart">window.docappCart = {{ cart | json }}; window.docappCart.currency = "{{ 0 | money_with_currency | slice: -3, 3 }}"; window.docappCart.shop_currency = "{{ shop.currency }}";</script>
+<script id="docapp-free-item-speedup">
+(() => { if (!document.documentElement.innerHTML.includes('\\/shop' + '\\/js' + '\\/free-gift-cart-upsell-pro.min.js') || window.freeGiftCartUpsellProAppLoaded) return; let script = document.createElement('script'); script.src = "https://d2fk970j0emtue.cloudfront.net/shop/js/free-gift-cart-upsell-pro.min.js?shop=swiss-beauty-dev.myshopify.com"; document.getElementById('docapp-free-item-speedup').after(script); })();
+</script>
+
+  {% render 'qikify-apps' %}
+</head>
+
+  <body class="template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}{% if request.path == '/challenge' %} template-challange{% endif %} {% if template contains "collection" %}{{ collection.title | replace:' '}}{% endif %} {% if request.path == '/pages/contact' %}contact__us{% endif %} {% if template contains 'page' %}{{ page.title | handelize }}{% endif %}" 
+        data-center-text="{{ settings.type_body_align_text }}" 
+        data-button_style="{{ settings.button_style }}" 
+        data-type_header_capitalize="{{ settings.type_header_capitalize }}" 
+        data-type_headers_align_text="{{ settings.type_headers_align_text }}" 
+        data-type_product_capitalize="{{ settings.type_product_capitalize }}" 
+        data-swatch_style="{{ settings.swatch_style }}" 
+        {% if settings.disable_animations %}data-disable-animations="true"{% endif %}
+        >
+    <a class="in-page-link visually-hidden skip-link" href="#MainContent">{{ 'general.accessibility.skip_to_content' | t }}</a>
+
+    
+    <div id="PageContainer" class="page-container">
+      <div class="transition-body">
+        {%- section 'header' -%}
+        <main class="main-content" id="MainContent">
+          {% capture ICART_FULL_PAGE_LAYOUT %}{{ content_for_layout }}{% endcapture %}{% include 'icart-variables', ICART_FULL_PAGE_LAYOUT: ICART_FULL_PAGE_LAYOUT %}
+        </main>
+  <!-- {% if collection.handle == 'gifting' %}
+   <div>
+    <a href="https://bit.ly/tmc-rakhi-2023">
+    <img src="https://swissbeauty.in/cdn/shop/collections/1800x600_1800x.jpg?v=1691864683" style="display:block;width:100%;">
+    </a>
+    </div>
+    {% endif %} -->
+        {%- section 'footer-promotions' -%}
+        {% if collection.metafields.collection_bottom.seo_content and template contains 'collection' %}
+         <div class="collection--seo__content page-width {{ collection.title | handleize }}">
+           {{ collection.metafields.collection_bottom.seo_content }}
+         </div>
+        {% endif %}
+        {% if template == 'product' %}
+         {% render 'static-reccomendation' %}
+          {% endif %}
+        {%- section 'footer' -%}
+      </div>
+    </div>
+
+    {%- liquid
+      render 'video-modal'
+      render 'photoswipe-template'       
+      render 'accept-cookie'
+    -%}
+
+    
+    {% if template contains "product" %}
+    <script>
+      var jsonldScript = document.createElement('script');
+      jsonldScript.setAttribute('type', 'application/ld+json');
+      var structuredData = {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "@id": {{ canonical_url | append: '#product' | json }},
+        "review": []
+      };
+
+      var widget = document.createElement("div");
+      widget.innerHTML = `{{ product.metafields.judgeme.widget }}`;
+      widget.querySelectorAll(".jdgm-rev").forEach(review => {
+        var date = review.querySelector(".jdgm-rev__timestamp").getAttribute("data-content");
+        var body = review.querySelector(".jdgm-rev__body").innerHTML.replace(/\n|<.*?>/g,'');
+        var rating = review.querySelector(".jdgm-rev__rating").getAttribute("data-score");
+        var authorName = review.querySelector(".jdgm-rev__author").innerText;
+        var title = review.querySelector(".jdgm-rev__title").innerText;
+      
+        structuredData.review.push({
+          "@type": "Review",
+          "datePublished": date,
+          "name": title,
+          "reviewBody": body,
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": rating,
+            "bestRating": "5",
+            "worstRating": "1"
+          }, 
+          "author": {
+            "@type": "Person",
+            "name": authorName
+          }
+        });
+      });
+
+      jsonldScript.textContent = JSON.stringify(structuredData);
+      document.head.appendChild(jsonldScript);
+
+</script>
+ 
+    {% endif %}
+    <script defer type="text/javascript" src="{{ 'custom.js' | asset_url }}"></script>
+    <style>
+div#smile-ui-container {
+display: none !important;
+}
+.nudge-offer.custom {
+width: 100%;
+padding: 5px;
+}
+.drawer__footer.appear-animation.appear-delay-4 {
+padding: 20px;
+}
+p.cart-shipping__success {
+margin-bottom: 0;
+}
+    </style>
+ 
+{% section 'searchtap' %}
+<script type="text/javascript" src="https://cdn.moengage.com/webpush/moe_webSdk_shopify.min.latest.js?app_id=NFFRSU31JE03IMQ04WCDXXJ9&shop=swiss-beauty-dev.myshopify.com"></script><script type="text/javascript">function initMoe() { Moengage = moe({ app_id: 'NFFRSU31JE03IMQ04WCDXXJ9', debug_logs: 0, swPath: '/tools/moengage/sw.js', swScope: '/', cluster: 'DC_4' }); }</script><script type="text/javascript" src="https://cdn.moengage.com/webpush/moe_webSdk.min.latest.js" onload="initMoe();"></script>
+ {% include 'smile-initializer' %}
+<script>
+  const baseURL = "https://fea3-5-219-49-37.ngrok.io";
+(function (){
+      navigator.serviceWorker.register(baseURL+"/static/shopify_app/ServiceWorker.js")
+          .then((reg) => {
+            console.log("reg",reg);
+              if (Notification.permission === "granted") {
+                  getSubscription(reg);
+              } else if (Notification.permission === "blocked") {
+              } else {
+
+                  $("#GiveAccess").show();
+                  $("#PromptForAccessBtn").click(() => requestNotificationAccess(reg));
+              }
+          });
+})()
+</script>
+<script>
+  
+          (function($){
+            if(getCookie("visition_csk") != undefined && getCookie("visition_csk") < 1) {
+       $( ".add-to-cart" ).on('click', function() {
+      console.log("Product");
+      gtag('event', 'product', {
+        'ID': '{{ product.id }}',
+      'title': '{{ product.title }}',
+      'value': "{{product.price_min | remove: '00'}}",
+      'currency': 'INR'
+  });
+       });
+            }
+
+
+
+          
+
+
+
+})(jQuery);
+    
+  var d = new Date();
+  d.setTime(d.getTime()+1800000);
+  var expires = "expires="+d.toGMTString();
+  document.cookie = "session=1; "+expires+"; path=/";
+</script>
+    
+<script async src="https://spcdn.incartupsell.com/baehcd-ea3a68cef43996218809.js"></script>
+    
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T4BBQJT"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+  <!-- PickyStory snippet "main_widget_script", do not modify. Safe to remove after the app is uninstalled -->
+  {% if content_for_header contains 'pickystory' %}
+    <script defer src="https://cdn.pickystory.com/widget/dist/latest/pickystory-widget.min.js"></script>
+  {% endif %}
+  <!-- PickyStory end snippet "main_widget_script" -->
+
+{% comment %}
+<style>
+  .drop {z-index: 99;}ul#nx {position:absolute;height:100%;top:8;left:22;  writing-mode:horizontal-rl;
+text-align:left;font-size:6.2rem;}ul#nx>li {display:inline-block;padding:2 rem;}</style><ul id="nx"></ul> 
+<style>
+.drop {  position: fixed;  top: -1vh; font-size: 1rem; transform: translateY(0); animation: fall 7s linear forwards;}
+@keyframes fall {  to {  transform: translateY(101vh); }}</style><script> window.console = window.console || function(t) {};</script><script>
+  if (document.location.search.match(/type=embed/gi)) {    window.parent.postMessage("resize", "*"); }</script>
+
+
+  {% render 'qikify-apps' %}
+</head>
+<body translate="no">
+  <div class="me"></div><div class="mc"><script id="rendered-js">
+const es = ["🎉"];
+const Drops = emoji => {const drop = document.createElement("div"); drop.classList.add("drop"); drop.innerText = es[Math.floor(Math.random() * es.length)];
+  drop.style.left = Math.random() *100 + "vw"; drop.style.animationDuration = Math.random() * 15 + 10 + "s"; document.body.appendChild(drop);};
+setInterval(Drops, 1200);const mc= document.querySelector(".mc");const mg= document.querySelector(".me");</script>
+
+  
+<!-- {% include 'cart-add-on' %}
+ -->
+{% endcomment %}
+<script>
+
+// 7058725372099
+document.addEventListener('ajaxProduct:added', function(evt) {
+  
+});
+document.addEventListener('cart:updated', function(evt) {
+  console.log('sbm');
+});
+</script>
+
+    {% render 'freegifts-snippet-change' %}
+    
+
+<!-- Back in Stock helper snippet -->
+{% render 'back-in-stock-helper' %}
+<!-- End Back in Stock helper snippet -->
+</body>
+</html>
+
+<style>
+.jdgm-hidden {
+    display: block !important;
+    visibility: unset !important;
+}
+  .login_popup{display: none;
+            }
+  </style>
+
+  <style>
+    @media(min-width:900px){
+    #BIS_trigger{
+          background: #000;
+          color: #fff;
+    }
+    }
+
+    @media(max-width:767px){
+      #BIS_trigger{
+         width: 100% !important;
+         //background-color: #fddbd2!important;
+         //color: #000!important;
+      }
+    }
+  
+  </style>
+{%- endcapture avada-seo-original -%}
+{%- capture avada-seo-minified -%}
+{%- include 'avada-seo-minifier', content: avada-seo-original -%}
+{%- endcapture -%}
+{%- if avada-seo-minified contains 'Liquid error' -%}
+{{ avada-seo-original }}
+{%- else -%}
+{{ avada-seo-minified }}
+{%- endif -%}

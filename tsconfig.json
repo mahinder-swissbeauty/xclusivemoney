@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "node",
+
+    // https://github.com/lit/lit-element/issues/1052
+    "useDefineForClassFields": false,
+    "experimentalDecorators": true,
+
+    "lib": ["dom"],
+  },
+}

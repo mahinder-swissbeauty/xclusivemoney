@@ -1,0 +1,15 @@
+jsconfig.json
+tsconfig.json
+package-lock.json
+package.json
+node_modules
+.gitignore
+.shopifyignore
+postcss.config.json
+Readme.md
+tailwind.config.cjs
+vite.config.ts
+*/.json
+
+fontend
+resources
