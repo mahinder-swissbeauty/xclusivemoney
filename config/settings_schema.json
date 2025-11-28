@@ -10,10 +10,7 @@
   {
     "name": "Colors",
     "settings": [
-       {
-        "type": "header",
-        "content": "Custom Theme"
-      },
+     
       {
         "type": "checkbox",
         "id": "show-overlay",
@@ -23,6 +20,10 @@
       {
         "type": "header",
         "content": "General"
+      },
+        {
+        "type": "header",
+        "content": "Custom Theme"
       },
       {
         "type": "color",
