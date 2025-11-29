@@ -80,88 +80,161 @@
   }
 {% endstyle %}
 
-{% if section.settings.enable_slider %}
-  {% render 'vite-tag' with 'featured-testmonial-slider.js' %}
-{% endif %}
+{%- liquid
+  assign testimonial_items = nil
+  assign use_metaobjects = false
+  assign has_content = false
 
-<section
-  id="{{ section.id }}-featured-testimonials"
-  data-id="featured-testimonials"
-  style="background-color: {{ section.settings.section_bg }}; color: {{ section.settings.section_text_color }};"
->
-  <div class="xl:sw-w-[1110px] xl:sw-mx-auto">
-    <div class="featured-collection-wrapper sw-relative">
-      {% render 'section-heading' %}
+  # 1) Product metafield (metaobject list) se testimonials lao
+  if product and product.metafields.custom.testimonials and product.metafields.custom.testimonials.value != blank
+    assign meta_val = product.metafields.custom.testimonials.value
 
-      <div class="featured-collection-content_wrapper">
-        <div class="featured-collection-cards sw-pl-3">
-          {% if section.settings.enable_slider %}
-            <featured-slider
-              data-desktop-cards="2.2"
-  data-mobile-perview="1.2"
+    if meta_val != blank
+      # List of metaobjects
+      if meta_val.size and meta_val.first
+        assign testimonial_items = meta_val
+      else
+        # Single metaobject -> array bana do loop ke liye
+        assign testimonial_items = meta_val | array
+      endif
 
-              class="featured-slider-root"
-              data-desktop-cards="{{ section.settings.desktop_cards }}"
-              data-mobile-perview="{{ section.settings.mobile_perview }}"
-              data-show-arrows="{{ section.settings.show_arrows | json }}"
-            >
-              <div
-                data-role="slider-wrapper"
-                class="keen-slider sw-flex-nowrap sw-overflow-hidden sw-flex sw-w-full"
+      if testimonial_items.size > 0
+        assign has_content = true
+        assign use_metaobjects = true
+      endif
+    endif
+  endif
+
+  # 2) Agar metafield empty ho but section blocks me testimonials diye ho
+  if has_content == false and section.blocks.size > 0
+    assign has_content = true
+  endif
+-%}
+
+{% if has_content %}
+
+  {% if section.settings.enable_slider %}
+    {% render 'vite-tag' with 'featured-testmonial-slider.js' %}
+  {% endif %}
+
+  <section
+    id="{{ section.id }}-featured-testimonials"
+    data-id="featured-testimonials"
+    style="background-color: {{ section.settings.section_bg }}; color: {{ section.settings.section_text_color }};"
+  >
+    <div class="xl:sw-w-[1110px] xl:sw-mx-auto">
+      <div class="featured-collection-wrapper sw-relative">
+        {%- render 'section-heading' -%}
+
+        <div class="featured-collection-content_wrapper">
+          <div class="featured-collection-cards sw-pl-3">
+            {% if section.settings.enable_slider %}
+              <featured-slider
+                class="featured-slider-root"
+                data-desktop-cards="{{ section.settings.desktop_cards }}"
+                data-mobile-perview="{{ section.settings.mobile_perview }}"
+                data-show-arrows="{{ section.settings.show_arrows | json }}"
               >
-                {% for block in section.blocks %}
-                  <div
-                    class="
-                      fc-slide keen-slider__slide
-                      sw-flex-[0_0_calc(100%/1.2_-_0px)]
-                      lg:sw-flex-[0_0_calc(100%/3_-_0px)]
-                      sw-rounded-2xl
-                    "
-                    data-block-index="{{ forloop.index0 }}"
-                    style="border-color: {{ section.settings.card_border_color }}; background: {{ section.settings.card_bg_color }};"
-                  >
-                    {% render 'testimonial-card', testimonial: block.settings %}
-                  </div>
-                {% endfor %}
-              </div>
-
-              {% if section.settings.show_arrows %}
-                <button class="fc-arrow fc-arrow-left" data-role="arrow-prev" aria-label="Previous slide">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
-                    <path d="M13.6667 20L23.6667 30L26 27.6667L18.3333 20L26 12.3333L23.6667 10L13.6667 20Z" fill="white"/>
-                  </svg>
-                </button>
-                <button class="fc-arrow fc-arrow-right" data-role="arrow-next" aria-label="Next slide">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
-                    <path d="M26.3333 20L16.3333 30L14 27.6667L21.6667 20L14 12.3333L16.3333 10L26.3333 20Z" fill="white"/>
-                  </svg>
-                </button>
-              {% endif %}
-
-              {% if section.settings.slider_bar %}
-                <div class="featured-collection-slider-bar sw-max-w-[calc(100%_-_16px)] sw-mx-auto sw-mt-3 lg:sw-mt-[26px]">
-                  <div
-                    data-role="thumb-wrapper"
-                    style="background-color: {{ section.settings.thumb_bg }};"
-                    class="sw-w-full sw-relative sw-h-[4px] sw-rounded-sm"
-                  >
-                    <div
-                      data-role="thumb"
-                      style="background-color: {{ section.settings.thumb_color }};"
-                      class=""
-                    ></div>
-                  </div>
+                <div
+                  data-role="slider-wrapper"
+                  class="keen-slider sw-flex-nowrap sw-overflow-hidden sw-flex sw-w-full"
+                >
+                  {%- if use_metaobjects -%}
+                    {%- for testimonial in testimonial_items -%}
+                      <div
+                        class="
+                          fc-slide keen-slider__slide
+                          sw-flex-[0_0_calc(100%/1.2_-_0px)]
+                          lg:sw-flex-[0_0_calc(100%/3_-_0px)]
+                          sw-rounded-2xl
+                        "
+                        data-block-index="{{ forloop.index0 }}"
+                        style="border-color: {{ section.settings.card_border_color }}; background: {{ section.settings.card_bg_color }};"
+                      >
+                        {%- render 'testimonial-card', testimonial: testimonial -%}
+                      </div>
+                    {%- endfor -%}
+                  {%- else -%}
+                    {%- for block in section.blocks -%}
+                      {%- assign testimonial = block.settings -%}
+                      <div
+                        class="
+                          fc-slide keen-slider__slide
+                          sw-flex-[0_0_calc(100%/1.2_-_0px)]
+                          lg:sw-flex-[0_0_calc(100%/3_-_0px)]
+                          sw-rounded-2xl
+                        "
+                        data-block-index="{{ forloop.index0 }}"
+                        style="border-color: {{ section.settings.card_border_color }}; background: {{ section.settings.card_bg_color }};"
+                      >
+                        {%- render 'testimonial-card', testimonial: testimonial -%}
+                      </div>
+                    {%- endfor -%}
+                  {%- endif -%}
                 </div>
-              {% endif %}
-            </featured-slider>
-          {% else %}
-            hello
-          {% endif %}
+
+                {% if section.settings.show_arrows %}
+                  <button class="fc-arrow fc-arrow-left" data-role="arrow-prev" aria-label="Previous slide">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+                      <path d="M13.6667 20L23.6667 30L26 27.6667L18.3333 20L26 12.3333L23.6667 10L13.6667 20Z" fill="white"/>
+                    </svg>
+                  </button>
+                  <button class="fc-arrow fc-arrow-right" data-role="arrow-next" aria-label="Next slide">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+                      <path d="M26.3333 20L16.3333 30L14 27.6667L21.6667 20L14 12.3333L16.3333 10L26.3333 20Z" fill="white"/>
+                    </svg>
+                  </button>
+                {% endif %}
+
+                {% if section.settings.slider_bar %}
+                  <div class="featured-collection-slider-bar sw-max-w-[calc(100%_-_16px)] sw-mx-auto sw-mt-3 lg:sw-mt-[26px]">
+                    <div
+                      data-role="thumb-wrapper"
+                      style="background-color: {{ section.settings.thumb_bg }};"
+                      class="sw-w-full sw-relative sw-h-[4px] sw-rounded-sm"
+                    >
+                      <div
+                        data-role="thumb"
+                        style="background-color: {{ section.settings.thumb_color }};"
+                      ></div>
+                    </div>
+                  </div>
+                {% endif %}
+              </featured-slider>
+            {% else %}
+              {%- comment -%}
+                Slider disabled – aap chaaho toh yaha static grid render kar sakte ho
+              {%- endcomment -%}
+              <div class="sw-grid sw-grid-cols-1 lg:sw-grid-cols-3 sw-gap-4 sw-pr-3">
+                {%- if use_metaobjects -%}
+                  {%- for testimonial in testimonial_items -%}
+                    <div
+                      class="sw-rounded-2xl"
+                      style="border-color: {{ section.settings.card_border_color }}; background: {{ section.settings.card_bg_color }};"
+                    >
+                      {%- render 'testimonial-card', testimonial: testimonial -%}
+                    </div>
+                  {%- endfor -%}
+                {%- else -%}
+                  {%- for block in section.blocks -%}
+                    {%- assign testimonial = block.settings -%}
+                    <div
+                      class="sw-rounded-2xl"
+                      style="border-color: {{ section.settings.card_border_color }}; background: {{ section.settings.card_bg_color }};"
+                    >
+                      {%- render 'testimonial-card', testimonial: testimonial -%}
+                    </div>
+                  {%- endfor -%}
+                {%- endif -%}
+              </div>
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+
+{% endif %}
 
 {% schema %}
 {

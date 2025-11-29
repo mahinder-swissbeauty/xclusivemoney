@@ -14,32 +14,66 @@
 
 {%- comment -%}
   Get banner data from product metafield (metaobject reference),
-  fallback to section settings if metafield is not set.
+  fallback to section settings only when NOT on product.
+  On product: if metafield empty -> section hide.
 {%- endcomment -%}
 {% liquid
   assign banner = nil
+  assign show_banner = true
 
-  if product and product.metafields.custom.banner_section
-    assign banner = product.metafields.custom.banner_section.value
-  endif
+  # Agar product page hai
+  if product
+    # Product metafield se banner metaobject lao
+    if product.metafields.custom.banner_section
+      assign metafield_value = product.metafields.custom.banner_section.value
 
-  if banner
-    assign logo_image          = banner.logo
-    assign title_main          = banner.title_main
-    assign title_highlight     = banner.title_highlight
-    assign subtitle_top        = banner.subtitle_top
-    assign subtitle_bottom     = banner.subtitle_bottom
-    assign rotate_speed        = banner.rotation_speed
-    assign banner_messages     = banner.rotating_texts.value
+      if metafield_value != blank
+        assign banner = metafield_value
+
+        # Agar "List of metaobjects" hai to pehla item use karo
+        if banner.size
+          assign banner = banner[0]
+        endif
+      else
+        # Product pe metafield empty hai -> section mat dikhana
+        assign show_banner = false
+      endif
+    else
+      # Product pe metafield hi nahi hai -> section mat dikhana
+      assign show_banner = false
+    endif
+
+    # Agar banner metaobject mil gaya
+    if banner and show_banner
+      assign logo_image      = banner.logo
+      assign title_main      = banner.main_title
+      assign title_highlight = banner.highlight_title
+      assign subtitle_top    = banner.subtitle_top
+      assign subtitle_bottom = banner.subtitle_bottom
+      assign rotate_speed    = banner.rotation_speed
+
+      # rotating_texts handle (list of text OR list of metaobjects)
+      if banner.rotating_texts
+        assign banner_messages = banner.rotating_texts.value | default: banner.rotating_texts
+      else
+        assign banner_messages = nil
+      endif
+    endif
+
   else
-    assign logo_image          = section.settings.logo_image
-    assign title_main          = section.settings.title_main
-    assign title_highlight     = section.settings.title_highlight
-    assign subtitle_top        = section.settings.subtitle_top
-    assign subtitle_bottom     = section.settings.subtitle_bottom
-    assign rotate_speed        = section.settings.rotate_speed
+    # NON-product pages (e.g. homepage) -> section settings fallback use karo
+    assign logo_image      = section.settings.logo_image
+    assign title_main      = section.settings.title_main
+    assign title_highlight = section.settings.title_highlight
+    assign subtitle_top    = section.settings.subtitle_top
+    assign subtitle_bottom = section.settings.subtitle_bottom
+    assign rotate_speed    = section.settings.rotate_speed
+
+    assign banner_messages = nil
   endif
 %}
+
+{% if show_banner %}
 
 <!-- TradeEdge Pro Section -->
 <section
@@ -64,13 +98,15 @@
 
       <h2 class="sw-text-2xl sw-font-semibold xl:sw-text-[48px]">
         {{ title_main }}
-        <span
-          class="sw-text-[#233052] sw-inline-block sw-text-[18px] sw-bg-[#01C5E3] sw-rounded-2xl sw-leading-none sw-font-semibold
-          sw-ml-1 sw-py-1 sw-px-2
-          xl:sw-text-[36px] xl:sw-ml-5 xl:sw-h-auto xl:sw-w-auto xl:sw-px-4 xl:sw-py-3 xl:sw-rounded-[32px] xl:sw-leading-[26px]"
-        >
-          {{ title_highlight }}
-        </span>
+        {% if title_highlight != blank %}
+          <span
+            class="sw-text-[#233052] sw-inline-block sw-text-[18px] sw-bg-[#01C5E3] sw-rounded-2xl sw-leading-none sw-font-semibold
+            sw-ml-1 sw-py-1 sw-px-2
+            xl:sw-text-[36px] xl:sw-ml-5 xl:sw-h-auto xl:sw-w-auto xl:sw-px-4 xl:sw-py-3 xl:sw-rounded-[32px] xl:sw-leading-[26px]"
+          >
+            {{ title_highlight }}
+          </span>
+        {% endif %}
       </h2>
     </div>
 
@@ -84,12 +120,13 @@
         <div class="sw-slider-track sw-flex sw-flex-col sw-transition-transform sw-duration-500 sw-ease-out">
           {% if banner_messages and banner_messages.size > 0 %}
             {% for message in banner_messages %}
+              {% assign message_text = message.text | default: message %}
               <div
                 class="sw-slide sw-min-h-10 sw-flex sw-items-center sw-justify-center sw-text-center
                 sw-text-2xl sw-font-heading sw-text-[#01C5E3] sw-font-semibold sw-leading-normal
                 xl:sw-text-[36px]"
               >
-                {{ message }}
+                {{ message_text }}
               </div>
             {% endfor %}
           {% else %}
@@ -114,17 +151,17 @@
 
   <!-- Background Graph Image -->
   <div class="sw-absolute sw-bottom-0 sw-z-0 sw-left-0 sw-w-full">
-    <div class="sw-block xl:sw-hidden sw-absolute sw-bottom-0">
+    <div class="sw-block xl:sw-hidden sw-absolute sw-bottom-0 sw-w-full sw-h-auto">
       {% render 'icons-v2',
         icon: 'icon-banner-mobile',
-        class: 'sw-w-[14px] sw-h-[14px] sw-transition-all group-[&.copied]:sw-opacity-0'
+        class: 'sw-w-full sw-h-auto sw-transition-all group-[&.copied]:sw-opacity-0'
       %}
     </div>
 
     <div class="desktop_banner sw-absolute sw-bottom-0 sw-hidden xl:sw-block sw-w-full ">
       {% render 'icons-v2',
         icon: 'icon-banner-desktop',
-        class: 'sw-hidden sw-w-[14px] sw-h-[14px] sw-transition-all group-[&.copied]:sw-opacity-0'
+        class: 'sw-hidden sw-w-full sw-h-auto sw-transition-all group-[&.copied]:sw-opacity-0'
       %}
     </div>
   </div>
@@ -136,7 +173,7 @@
     const track = document.querySelector(".sw-slider-track");
     const slides = document.querySelectorAll(".sw-slide");
 
-    if (!slides.length) return;
+    if (!slides.length || !track) return;
 
     let index = 1;
     const speed = 500;
@@ -149,29 +186,33 @@
     track.insertBefore(lastClone, slides[0]);
 
     let allSlides = document.querySelectorAll(".sw-slide");
-
-    const slideHeight = slides[0].offsetHeight;
+    let slideHeight = slides[0].offsetHeight || 48;
 
     track.style.transform = `translateY(-${index * slideHeight}px)`;
 
     function goNext() {
+      slideHeight = slides[0].offsetHeight || slideHeight;
       index++;
       track.style.transition = `${speed}ms ease-out`;
       track.style.transform = `translateY(-${index * slideHeight}px)`;
 
-      track.addEventListener("transitionend", function handler() {
+      const onTransitionEnd = () => {
         if (allSlides[index] === firstClone) {
           track.style.transition = "none";
           index = 1;
           track.style.transform = `translateY(-${index * slideHeight}px)`;
         }
-        track.removeEventListener("transitionend", handler);
-      });
+        track.removeEventListener("transitionend", onTransitionEnd);
+      };
+
+      track.addEventListener("transitionend", onTransitionEnd);
     }
 
     setInterval(goNext, autoTime);
   });
 </script>
+
+{% endif %}
 
 {% schema %}
 {
