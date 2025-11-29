@@ -2,6 +2,42 @@
   sections/who-is-this-for.liquid
 {% endcomment %}
 
+{% comment %}
+  Product metafield (List of metaobjects) for this section:
+
+  Namespace/key:
+    custom.who_is_this_for_cards
+
+  Suggested metaobject fields:
+    - icon   : image (40x40px suggested)
+    - title  : text
+{% endcomment %}
+
+{% liquid
+  assign who_for_cards = nil
+  assign has_content = false
+
+  if product and product.metafields.custom.who_is_this_for_cards
+    assign meta_ref = product.metafields.custom.who_is_this_for_cards
+    assign meta_val = meta_ref.value
+
+    if meta_val != blank
+      if meta_val.size and meta_val.first
+        assign who_for_cards = meta_val
+      else
+        assign who_for_cards = meta_val | array
+      endif
+    endif
+  endif
+
+  if who_for_cards and who_for_cards.size > 0
+    assign has_content = true
+  elsif section.blocks.size > 0
+    assign has_content = true
+  endif
+%}
+
+{% if has_content %}
 <section
   id="{{ section.id }}-who-for"
   class="sw-w-full"
@@ -16,73 +52,103 @@
     {% endif %}
 
     {% if section.settings.subheading != blank %}
-      <p class="sw-font-body  sw-text-xs xl:sw-text-[24px] sw-leading-normal sw-text-[#ffffff] sw-mx-auto sw-mb-3 xl:sw-mb-8">
+      <p class="sw-font-body sw-text-xs xl:sw-text-[24px] sw-leading-normal sw-text-[#ffffff] sw-mx-auto sw-mb-3 xl:sw-mb-8">
         {{ section.settings.subheading }}
       </p>
     {% endif %}
 
     <div
-      class="sw-relative sw-rounded-2xl sw-border sw-border-[#01C5E3] sw-bg-[#05080D] sw-pt-[19px] sw-px-[18px] sw-pb-[21px] xl:sw-pt-[24px] xl:sw-px-[38px] xl:sw-pb-[64px]  sw-mx-auto "
+      class="sw-relative sw-rounded-2xl sw-border sw-border-[#01C5E3] sw-bg-[#05080D]
+             sw-pt-[19px] sw-px-[18px] sw-pb-[21px]
+             xl:sw-pt-[24px] xl:sw-px-[38px] xl:sw-pb-[64px] sw-mx-auto"
     >
       {%- comment -%} ICON ROW {%- endcomment -%}
       <div class="sw-grid sw-grid-cols-4 sw-gap-4 xl:sw-gap-10 sw-items-center sw-justify-items-center">
-        {% for block in section.blocks %}
-          <div
-            class="sw-flex sw-flex-col sw-items-center sw-gap-1"
-            {{ block.shopify_attributes }}
-          >
-            {% if block.settings.icon != blank %}
-              <div class="sw-w-10 sw-h-10 xl:sw-w-20 xl:sw-h-20 sw-flex sw-items-center sw-justify-center">
-                <img
-                  src="{{ block.settings.icon | image_url: width: 64 }}"
-                  alt="{{ block.settings.title | escape }}"
-                  class="sw-w-full sw-h-full sw-object-contain"
-                  loading="lazy"
-                >
-              </div>
-            {% else %}
-              <div
-                class="sw-w-10 sw-h-10 xl:sw-w-12 xl:sw-h-12 sw-rounded-full  sw-flex sw-items-center sw-justify-center"
-              >
-                <span class="sw-text-lg"> 🌍</span>
-              </div>
-            {% endif %}
+        {%- if who_for_cards -%}
+          {%- comment -%} METAOBJECT CARDS {%- endcomment -%}
+          {% for card in who_for_cards %}
+            <div class="sw-flex sw-flex-col sw-items-center sw-gap-1">
+              {% if card.icon %}
+                <div class="sw-w-10 sw-h-10 xl:sw-w-20 xl:sw-h-20 sw-flex sw-items-center sw-justify-center">
+                  <img
+                    src="{{ card.icon | img_url: width: 64 }}"
+                    alt="{{ card.title | escape }}"
+                    class="sw-w-full sw-h-full sw-object-contain"
+                    loading="lazy"
+                  >
+                </div>
+              {% else %}
+                <div class="sw-w-10 sw-h-10 xl:sw-w-12 xl:sw-h-12 sw-rounded-full sw-flex sw-items-center sw-justify-center">
+                  <span class="sw-text-lg">🌍</span>
+                </div>
+              {% endif %}
 
-            {% if block.settings.title != blank %}
-              <span class="sw-text-[10px] xl:sw-text-[16px] sw-font-semibold"> 
-                {{ block.settings.title }}
-              </span>
-            {% endif %}
-          </div>
-        {% endfor %}
+              {% if card.title %}
+                <span class="sw-text-[10px] xl:sw-text-[16px] sw-font-semibold">
+                  {{ card.title }}
+                </span>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {%- else -%}
+          {%- comment -%} FALLBACK: SECTION BLOCKS {%- endcomment -%}
+          {% for block in section.blocks %}
+            <div
+              class="sw-flex sw-flex-col sw-items-center sw-gap-1"
+              {{ block.shopify_attributes }}
+            >
+              {% if block.settings.icon != blank %}
+                <div class="sw-w-10 sw-h-10 xl:sw-w-20 xl:sw-h-20 sw-flex sw-items-center sw-justify-center">
+                  <img
+                    src="{{ block.settings.icon | image_url: width: 64 }}"
+                    alt="{{ block.settings.title | escape }}"
+                    class="sw-w-full sw-h-full sw-object-contain"
+                    loading="lazy"
+                  >
+                </div>
+              {% else %}
+                <div class="sw-w-10 sw-h-10 xl:sw-w-12 xl:sw-h-12 sw-rounded-full sw-flex sw-items-center sw-justify-center">
+                  <span class="sw-text-lg">🌍</span>
+                </div>
+              {% endif %}
+
+              {% if block.settings.title != blank %}
+                <span class="sw-text-[10px] xl:sw-text-[16px] sw-font-semibold">
+                  {{ block.settings.title }}
+                </span>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {%- endif -%}
       </div>
 
       {%- comment -%} TRADERS LABEL WITH ARROWS {%- endcomment -%}
       {% if section.settings.traders_label != blank %}
-        <div class="sw-flex sw-items-center sw-justify-center sw-gap-2 xl:sw-gap-4 sw-mt-6
-         sw-absolute
-  sw-bg-[#05080d]
-  sw-left-1/2
-  sw-bottom-[-8px]
-  xl:sw-bottom-[-18px]
-  sw--translate-x-1/2
-        ">
-<span class="sw-w-0 sw-h-0
-             sw-border-t-[4px] sw-border-t-transparent 
-             sw-border-b-[4px] sw-border-b-transparent 
-             sw-border-l-[6px] sw-border-l-[#01C5E3]"></span>
-          <span class=" sw-font-heading sw-text-[11px] xl:sw-text-[24px] sw-font-semibold  sw-uppercase">
+        <div
+          class="sw-flex sw-items-center sw-justify-center sw-gap-2 xl:sw-gap-4 sw-mt-6
+                 sw-absolute sw-bg-[#05080d]
+                 sw-left-1/2 sw-bottom-[-8px] xl:sw-bottom-[-18px]
+                 sw--translate-x-1/2"
+        >
+          <span class="sw-w-0 sw-h-0
+                       sw-border-t-[4px] sw-border-t-transparent
+                       sw-border-b-[4px] sw-border-b-transparent
+                       sw-border-l-[6px] sw-border-l-[#01C5E3]"></span>
+
+          <span class="sw-font-heading sw-text-[11px] xl:sw-text-[24px] sw-font-semibold sw-uppercase">
             {{ section.settings.traders_label }}
           </span>
-         <span class="sw-w-0 sw-h-0 
-               sw-border-t-[4px] sw-border-t-transparent 
-               sw-border-b-[4px] sw-border-b-transparent 
-               sw-border-r-[6px] sw-border-r-[#01C5E3]"></span>
+
+          <span class="sw-w-0 sw-h-0
+                       sw-border-t-[4px] sw-border-t-transparent
+                       sw-border-b-[4px] sw-border-b-transparent
+                       sw-border-r-[6px] sw-border-r-[#01C5E3]"></span>
         </div>
       {% endif %}
     </div>
   </div>
 </section>
+{% endif %}
 
 <style>
   #{{ section.id }}-who-for {
@@ -130,7 +196,7 @@
       "type": "color",
       "label": "section text color",
       "id": "section_text_color",
-      "default": "#ffffff" 
+      "default": "#ffffff"
     },
     {
       "type": "range",
@@ -171,7 +237,7 @@
       "step": 4,
       "unit": "px",
       "default": 80
-    } 
+    }
   ],
   "blocks": [
     {

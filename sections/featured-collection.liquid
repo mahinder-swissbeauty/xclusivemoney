@@ -1,91 +1,113 @@
 {% style %}
 #{{ section.id }}-featured-collection .featured-collection-wrapper{
   padding-top: {{section.settings.mobile_padding}}px;
-   padding-bottom: {{section.settings.mobile_padding}}px;
+  padding-bottom: {{section.settings.mobile_padding}}px;
 }
-      section#{{ section.id }}-featured-collection{
-        position:relative;
-        z-index:1;
-      }
-    
-      /* basic layout & utility classes prefix sw- kept consistent with your project */
-      section#{{ section.id }}-featured-collection .featured-collection-wrapper{
-        width:100%;
-      }
+section#{{ section.id }}-featured-collection{
+  position:relative;
+  z-index:1;
+}
 
-      /* slider container */
-      section#{{ section.id }}-featured-collection featured-slider{
-        display:block;
-        width:100%;
-      }
+/* basic layout & utility classes prefix sw- kept consistent with your project */
+section#{{ section.id }}-featured-collection .featured-collection-wrapper{
+  width:100%;
+}
 
-      /* slide base */
-      .fc-slide {
-        box-sizing:border-box;
-      }
+/* slider container */
+section#{{ section.id }}-featured-collection featured-slider{
+  display:block;
+  width:100%;
+}
 
-      /* arrows */
-      .fc-arrow{
-          display:none;
-        position:absolute;
-        top:50%;
-        transform:translateY(-50%);
-        z-index:30;
-        background:transparent;
-        border:none;
-        cursor:pointer;
-        align-items:center;
-        justify-content:center;
-        width:40px;
-        height:40px;
-      }
-      .fc-arrow-left{ left:8px; }
-      .fc-arrow-right{ right:8px; }
+/* slide base */
+.fc-slide {
+  box-sizing:border-box;
+}
 
-      /* thumb bar */
-      .featured-collection-slider-bar{
-        position:relative;
-      }
-      [data-role="thumb-wrapper"]{ height:4px; border-radius:4px; position:relative; overflow:hidden;}
-      [data-role="thumb"]{ position:absolute; top:0; left:0; height:100%; border-radius:4px; transition:left .2s linear, width .2s linear, transform .2s linear; }
+/* arrows */
+.fc-arrow{
+  display:none;
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:30;
+  background:transparent;
+  border:none;
+  cursor:pointer;
+  align-items:center;
+  justify-content:center;
+  width:40px;
+  height:40px;
+}
+.fc-arrow-left{ left:8px; }
+.fc-arrow-right{ right:8px; }
 
+/* thumb bar */
+.featured-collection-slider-bar{
+  position:relative;
+}
+[data-role="thumb-wrapper"]{ height:4px; border-radius:4px; position:relative; overflow:hidden;}
+[data-role="thumb"]{ position:absolute; top:0; left:0; height:100%; border-radius:4px; transition:left .2s linear, width .2s linear, transform .2s linear; }
 
-
-
-
-  @media(min-width:1200px){
-
-
-      .fc-arrow{
-          display:flex;
-      }
-      .fc-arrow{ width:40px; height:40px; }
-      .fc-arrow-left {
-      left: -40px;
+@media(min-width:1200px){
+  .fc-arrow{
+    display:flex;
+  }
+  .fc-arrow{ width:40px; height:40px; }
+  .fc-arrow-left {
+    left: -40px;
   }
   .fc-arrow-right {
-      right: -55px;
+    right: -55px;
   }
   #{{ section.id }}-featured-collection .featured-collection-wrapper{
-  padding-top: {{section.settings.desktop_padding}}px;
-  padding-bottom: {{section.settings.desktop_padding}}px;
-}
-
+    padding-top: {{section.settings.desktop_padding}}px;
+    padding-bottom: {{section.settings.desktop_padding}}px;
   }
+}
 {% endstyle %}
 
 {% if section.settings.enable_slider %}
   {% render 'vite-tag' with 'featured-collection-slider.js' %}
 {% endif %}
 
+{%- comment -%}
+  Product metafield (List of metaobjects):
+  Namespace/key: custom.feature_card_block
+{%- endcomment -%}
+{% liquid
+  assign feature_cards = nil
+  assign has_content = false
+
+  if product and product.metafields.custom.feature_card_block
+    assign meta_ref = product.metafields.custom.feature_card_block
+    assign meta_val = meta_ref.value
+
+    if meta_val != blank
+      if meta_val.size and meta_val.first
+        assign feature_cards = meta_val
+      else
+        assign feature_cards = meta_val | array
+      endif
+    endif
+  endif
+
+  if feature_cards and feature_cards.size > 0
+    assign has_content = true
+  elsif section.blocks.size > 0
+    assign has_content = true
+  endif
+%}
+
+{% if has_content %}
 <section
   id="{{ section.id }}-featured-collection"
   data-id="featured-collection-v2"
   style="background-color: {{section.settings.section_bg}}; color:{{section.settings.section_text_color}}"
 >
   <div class="xl:sw-w-[1152px] xl:sw-mx-auto">
-    <div class="featured-collection-wrapper sw-relative sw-z-50  sw-pl-4 sw-pr-0 xl:sw-pl-0">
-     {% render 'section-heading' %}
+    <div class="featured-collection-wrapper sw-relative sw-z-50 sw-pl-4 sw-pr-0 xl:sw-pl-0">
+      {% render 'section-heading' %}
 
       <div class="featured-collection-content_wrapper">
         <div class="featured-collection-cards">
@@ -98,98 +120,206 @@
             >
               <div
                 data-role="slider-wrapper"
-                class="
-                                  keen-slider
-                  sw-flex-nowrap sw-overflow-hidden sw-flex sw-w-full
-                 
-                "
+                class="keen-slider sw-flex-nowrap sw-overflow-hidden sw-flex sw-w-full"
               >
-                {% for block in section.blocks %}
-                  <div
-                    class="
-                                        sw-px-3 sw-pt-3 sw-pb-4
-                      fc-slide keen-slider__slide sw-flex-[0_0_calc(100%/1.2_-_0px)] lg:sw-flex-[0_0_calc(100%/3_-_0px)]
-                      sw-border-solid sw-border-2 sw-rounded-2xl
-                    "
-                    data-block-index="{{ forloop.index0 }}"
-                    style="border-color: {{section.settings.card_border_color}}; background:{{section.settings.card_bg_color}}"
-                  >
-                    {% if block.type == 'image_text' %}
-                      <a
-                        href="{{ block.settings.url }}"
-                        class="fc-item sw-block  sw-rounded-md sw-overflow-hidden"
-                      >
-                        <div class="fc-media">
-                          {% if block.settings.image %}
-                            <img
-                              src="{{ block.settings.image | img_url: 'master' }}"
-                              alt="{{ block.settings.title }}"
-                              style="width:100%;height:auto;display:block;"
-                              loading="lazy"
-                              class="sw-rounded-2xl"
+                {%- if feature_cards -%}
+                  {%- comment -%} METAOBJECT CARDS {%- endcomment -%}
+                  {% for card in feature_cards %}
+                    <div
+                      class="sw-px-3 sw-pt-3 sw-pb-4 fc-slide keen-slider__slide sw-flex-[0_0_calc(100%/1.2_-_0px)] lg:sw-flex-[0_0_calc(100%/3_-_0px)] sw-border-solid sw-border-2 sw-rounded-2xl"
+                      data-card-index="{{ forloop.index0 }}"
+                      style="border-color: {{section.settings.card_border_color}}; background:{{section.settings.card_bg_color}}"
+                    >
+                      {% if card.card_is_video %}
+                        <div class="fc-item fc-video sw-block sw-rounded-md sw-overflow-hidden">
+                          <div class="fc-media sw-relative" style="padding-top:56.25%; background:#000;">
+                            {% if card.poster_image %}
+                              <img
+                                src="{{ card.poster_image | img_url: 'master' }}"
+                                alt="{{ card.title }}"
+                                style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"
+                              >
+                            {% endif %}
+                            <video
+                              {% if card.video_url %}
+                                data-video-src="{{ card.video_url | file_url }}"
+                              {% endif %}
+                              preload="metadata"
+                              controlsList="nodownload"
+                              style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;"
+                              playsinline
+                            ></video>
+                            <button
+                              type="button"
+                              class="fc-video-play sw-absolute sw-left-1/2 sw-top-1/2 sw-transform -sw-translate-x-1/2 -sw-translate-y-1/2"
+                              aria-label="Play video"
                             >
-                          {% endif %}
+                              <svg width="37" height="47" viewBox="0 0 37 47" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0 46.6667V0L36.6667 23.3333L0 46.6667Z" fill="#D9D9D9"/>
+                              </svg>
+                            </button>
+                          </div>
+                          <div class="fc-content sw-p-3">
+                            {% if card.title %}
+                              <h3 class="sw-text-lg sw-font-medium">{{ card.title }}</h3>
+                            {% endif %}
+                            {% if card.paragraph %}
+                              <p class="sw-text-[12px] sw-font-normal sw-mt-2 xl:sw-text-[16px]">
+                                {{ card.paragraph }}
+                              </p>
+                            {% endif %}
+                            {% if card.button_label and card.button_url %}
+                              <a
+                                href="{{ card.button_url }}"
+                                class="sw-bg-[#01E3BD] sw-flex sw-mt-5 sw-text-center sw-rounded-lg sw-text-black sw-font-heading sw-px-4 sw-py-[6px] sw-text-xs sw-font-semibold sw-hover:sw-bg-teal-300 sw-transition xl:sw-text-[16px] xl:sw-px-8 xl:sw-py-[11px]"
+                              >
+                                {{ card.button_label }}
+                              </a>
+                            {% endif %}
+                          </div>
                         </div>
-                        <div class="fc-content sw-pt-2">
-                          {% if block.settings.title %}
-                            <h3
-                              class="sw-text-[16px] sw-text-[#01C5E3] sw-font-semibold xl:sw-text-[24px]"
-                              style="color:{{ section.settings.heading_color }}"
+                      {% else %}
+                        <div class="fc-item sw-block sw-rounded-md sw-overflow-hidden">
+                          <div class="fc-media">
+                            {% if card.image %}
+                              <img
+                                src="{{ card.image | img_url: 'master' }}"
+                                alt="{{ card.title }}"
+                                style="width:100%;height:auto;display:block;"
+                                class="sw-rounded-2xl"
+                                loading="lazy"
+                              >
+                            {% endif %}
+                          </div>
+                          <div class="fc-content sw-pt-2">
+                            {% if card.title %}
+                              <h3
+                                class="sw-text-[16px] sw-text-[#01C5E3] sw-font-semibold xl:sw-text-[24px]"
+                                style="color:{{ section.settings.heading_color }}"
+                              >
+                                {{ card.title }}
+                              </h3>
+                            {% endif %}
+                            {% if card.paragraph %}
+                              <p class="sw-text-[12px] sw-font-normal sw-mt-2 xl:sw-text-[16px]">
+                                {{ card.paragraph }}
+                              </p>
+                            {% endif %}
+                            {% if card.button_label and card.button_url %}
+                              <a
+                                href="{{ card.button_url }}"
+                                class="sw-bg-[#01E3BD] sw-flex sw-mt-5 sw-text-center sw-rounded-lg sw-text-black sw-font-heading sw-px-4 sw-py-[6px] sw-text-xs sw-font-semibold sw-hover:sw-bg-teal-300 sw-transition xl:sw-text-[16px] xl:sw-px-8 xl:sw-py-[11px]"
+                              >
+                                {{ card.button_label }}
+                              </a>
+                            {% endif %}
+                          </div>
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                {%- else -%}
+                  {%- comment -%} FALLBACK: SECTION BLOCKS {%- endcomment -%}
+                  {% for block in section.blocks %}
+                    <div
+                      class="sw-px-3 sw-pt-3 sw-pb-4 fc-slide keen-slider__slide sw-flex-[0_0_calc(100%/1.2_-_0px)] lg:sw-flex-[0_0_calc(100%/3_-_0px)] sw-border-solid sw-border-2 sw-rounded-2xl"
+                      data-block-index="{{ forloop.index0 }}"
+                      style="border-color: {{section.settings.card_border_color}}; background:{{section.settings.card_bg_color}}"
+                    >
+                      {% if block.type == 'image_text' %}
+                        <div class="fc-item sw-block sw-rounded-md sw-overflow-hidden">
+                          <div class="fc-media">
+                            {% if block.settings.image %}
+                              {% if block.settings.url %}
+                                <a href="{{ block.settings.url }}">
+                                  <img
+                                    src="{{ block.settings.image | img_url: 'master' }}"
+                                    alt="{{ block.settings.title }}"
+                                    style="width:100%;height:auto;display:block;"
+                                    loading="lazy"
+                                    class="sw-rounded-2xl"
+                                  >
+                                </a>
+                              {% else %}
+                                <img
+                                  src="{{ block.settings.image | img_url: 'master' }}"
+                                  alt="{{ block.settings.title }}"
+                                  style="width:100%;height:auto;display:block;"
+                                  loading="lazy"
+                                  class="sw-rounded-2xl"
+                                >
+                              {% endif %}
+                            {% endif %}
+                          </div>
+                          <div class="fc-content sw-pt-2">
+                            {% if block.settings.title %}
+                              <h3
+                                class="sw-text-[16px] sw-text-[#01C5E3] sw-font-semibold xl:sw-text-[24px]"
+                                style="color:{{ section.settings.heading_color }}"
+                              >
+                                {{ block.settings.title }}
+                              </h3>
+                            {% endif %}
+                            {% if block.settings.paragraph %}
+                              <p class="sw-text-[12px] sw-font-normal sw-mt-2 xl:sw-text-[16px]">
+                                {{ block.settings.paragraph }}
+                              </p>
+                            {% endif %}
+                            {% if block.settings.button_label and block.settings.button_url %}
+                              <a
+                                href="{{ block.settings.button_url }}"
+                                class="sw-bg-[#01E3BD] sw-inline-flex sw-mt-5 sw-text-center sw-rounded-lg sw-text-black sw-font-heading sw-px-4 sw-py-[6px] sw-text-xs sw-font-semibold sw-hover:sw-bg-teal-300 sw-transition xl:sw-text-[16px] xl:sw-px-8 xl:sw-py-[11px]"
+                              >
+                                {{ block.settings.button_label }}
+                              </a>
+                            {% endif %}
+                          </div>
+                        </div>
+                      {% elsif block.type == 'video' %}
+                        <div class="fc-item fc-video sw-block sw-rounded-md sw-overflow-hidden">
+                          <div class="fc-media sw-relative" style="padding-top:56.25%; background:#000;">
+                            {% if block.settings.poster %}
+                              <img
+                                src="{{ block.settings.poster | img_url: 'master' }}"
+                                alt="{{ block.settings.title }}"
+                                style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"
+                              >
+                            {% endif %}
+                            <video
+                              data-video-src="{{ block.settings.video_url }}"
+                              preload="metadata"
+                              controlsList="nodownload"
+                              style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;"
+                              playsinline
+                            ></video>
+                            <button
+                              type="button"
+                              class="fc-video-play sw-absolute sw-left-1/2 sw-top-1/2 sw-transform -sw-translate-x-1/2 -sw-translate-y-1/2"
+                              aria-label="Play video"
                             >
-                              {{ block.settings.title }}
-                            </h3>
-                          {% endif %}
-                          {% if block.settings.paragraph %}
-                            <p class="sw-text-[12px] sw-font-normal sw-mt-2 xl:sw-text-[16px]">
-                              {{ block.settings.paragraph }}
-                            </p>
-                          {% endif %}
+                              <svg width="37" height="47" viewBox="0 0 37 47" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0 46.6667V0L36.6667 23.3333L0 46.6667Z" fill="#D9D9D9"/>
+                              </svg>
+                            </button>
+                          </div>
+                          <div class="fc-content sw-p-3">
+                            {% if block.settings.title %}
+                              <h3 class="sw-text-lg sw-font-medium">{{ block.settings.title }}</h3>
+                            {% endif %}
+                            {% if block.settings.button_label and block.settings.button_url %}
+                              <a
+                                href="{{ block.settings.button_url }}"
+                                class="sw-bg-[#01E3BD] sw-inline-flex sw-mt-5 sw-text-center sw-rounded-lg sw-text-black sw-font-heading sw-px-4 sw-py-[6px] sw-text-xs sw-font-semibold sw-hover:sw-bg-teal-300 sw-transition xl:sw-text-[16px] xl:sw-px-8 xl:sw-py-[11px]"
+                              >
+                                {{ block.settings.button_label }}
+                              </a>
+                            {% endif %}
+                          </div>
                         </div>
-                      </a>
-                    {% elsif block.type == 'video' %}
-                      <div class="fc-item fc-video sw-block sw-rounded-md sw-overflow-hidden">
-                        <div class="fc-media sw-relative" style="padding-top:56.25%; background:#000;">
-                          {% if block.settings.poster %}
-                            <img
-                              src="{{ block.settings.poster | img_url: 'master' }}"
-                              alt="{{ block.settings.title }}"
-                              style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"
-                            >
-                          {% endif %}
-                          <video
-                            data-video-src="{{ block.settings.video_url }}"
-                            preload="metadata"
-                            controlsList="nodownload"
-                            style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;"
-                            playsinline
-                          ></video>
-                          <button
-                            type="button"
-                            class="fc-video-play sw-absolute sw-left-1/2 sw-top-1/2 sw-transform -sw-translate-x-1/2 -sw-translate-y-1/2"
-                            aria-label="Play video"
-                          >
-                            <!-- simple play SVG -->
-
-                            <svg
-                              width="37"
-                              height="47"
-                              viewBox="0 0 37 47"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path d="M0 46.6667V0L36.6667 23.3333L0 46.6667Z" fill="#D9D9D9"/>
-                            </svg>
-                          </button>
-                        </div>
-                        <div class="fc-content sw-p-3">
-                          {% if block.settings.title %}
-                            <h3 class="sw-text-lg sw-font-medium">{{ block.settings.title }}</h3>
-                          {% endif %}
-                        </div>
-                      </div>
-                    {% endif %}
-                  </div>
-                {% endfor %}
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                {%- endif -%}
               </div>
 
               {% if section.settings.show_arrows %}
@@ -218,43 +348,144 @@
               {% endif %}
             </featured-slider>
           {% else %}
-            <!-- If slider disabled: show stacked blocks responsively (2 columns mobile, 4 desktop) -->
-            <div class="sw-grid sw-grid-cols-2 lg:sw-grid-cols-4 sw-gap-3">
-              {% for block in section.blocks %}
-                <div class="sw-p-2">
-                  {% if block.type == 'image_text' %}
-                    <a href="{{ block.settings.url }}" class="sw-block">
-                      {% if block.settings.image -%}
-                        <img
-                          src="{{ block.settings.image | img_url: 'master' }}"
-                          alt="{{ block.settings.title }}"
-                          style="width:100%;height:auto;"
-                        >
-                      {%- endif %}
-                      <h3>{{ block.settings.title }}</h3>
-                      <p>{{ block.settings.paragraph }}</p>
-                    </a>
-                  {% elsif block.type == 'video' %}
-                    <div>
-                      {% if block.settings.poster -%}
-                        <img
-                          src="{{ block.settings.poster | img_url: 'master' }}"
-                          alt="{{ block.settings.title }}"
-                          style="width:100%;height:auto;"
-                        >
-                      {%- endif %}
-                      <h3>{{ block.settings.title }}</h3>
-                    </div>
-                  {% endif %}
-                </div>
-              {% endfor %}
-            </div>
+            {%- comment -%} NO SLIDER: GRID VIEW {%- endcomment -%}
+            {% if feature_cards %}
+              <div class="sw-grid sw-grid-cols-2 lg:sw-grid-cols-4 sw-gap-3">
+                {% for card in feature_cards %}
+                  <div class="sw-p-2">
+                    {% if card.card_is_video %}
+                      <div class="fc-item fc-video sw-block sw-rounded-md sw-overflow-hidden">
+                        <div class="fc-media sw-relative" style="padding-top:56.25%; background:#000;">
+                          {% if card.poster_image %}
+                            <img
+                              src="{{ card.poster_image | img_url: 'master' }}"
+                              alt="{{ card.title }}"
+                              style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"
+                            >
+                          {% endif %}
+                          <video
+                            {% if card.video_url %}
+                              data-video-src="{{ card.video_url | file_url }}"
+                            {% endif %}
+                            preload="metadata"
+                            controlsList="nodownload"
+                            style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;"
+                            playsinline
+                          ></video>
+                        </div>
+                        <div class="fc-content sw-p-3">
+                          {% if card.title %}
+                            <h3 class="sw-text-lg sw-font-medium">{{ card.title }}</h3>
+                          {% endif %}
+                          {% if card.button_label and card.button_url %}
+                            <a
+                              href="{{ card.button_url }}"
+                              class="sw-bg-[#01E3BD] sw-inline-flex sw-mt-5 sw-text-center sw-rounded-lg sw-text-black sw-font-heading sw-px-4 sw-py-[6px] sw-text-xs sw-font-semibold sw-hover:sw-bg-teal-300 sw-transition xl:sw-text-[16px] xl:sw-px-8 xl:sw-py-[11px]"
+                            >
+                              {{ card.button_label }}
+                            </a>
+                          {% endif %}
+                        </div>
+                      </div>
+                    {% else %}
+                      <div class="sw-block sw-rounded-md sw-overflow-hidden">
+                        {% if card.image %}
+                          <img
+                            src="{{ card.image | img_url: 'master' }}"
+                            alt="{{ card.title }}"
+                            style="width:100%;height:auto;"
+                          >
+                        {% endif %}
+                        {% if card.title %}
+                          <h3>{{ card.title }}</h3>
+                        {% endif %}
+                        {% if card.paragraph %}
+                          <p>{{ card.paragraph }}</p>
+                        {% endif %}
+                        {% if card.button_label and card.button_url %}
+                          <a
+                            href="{{ card.button_url }}"
+                            class="sw-bg-[#01E3BD] sw-inline-flex sw-mt-3 sw-text-center sw-rounded-lg sw-text-black sw-font-heading sw-px-4 sw-py-[6px] sw-text-xs sw-font-semibold sw-hover:sw-bg-teal-300 sw-transition xl:sw-text-[16px] xl:sw-px-8 xl:sw-py-[11px]"
+                          >
+                            {{ card.button_label }}
+                          </a>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="sw-grid sw-grid-cols-2 lg:sw-grid-cols-4 sw-gap-3">
+                {% for block in section.blocks %}
+                  <div class="sw-p-2">
+                    {% if block.type == 'image_text' %}
+                      <div class="sw-block sw-rounded-md sw-overflow-hidden">
+                        {% if block.settings.image -%}
+                          {% if block.settings.url %}
+                            <a href="{{ block.settings.url }}">
+                              <img
+                                src="{{ block.settings.image | img_url: 'master' }}"
+                                alt="{{ block.settings.title }}"
+                                style="width:100%;height:auto;"
+                              >
+                            </a>
+                          {% else %}
+                            <img
+                              src="{{ block.settings.image | img_url: 'master' }}"
+                              alt="{{ block.settings.title }}"
+                              style="width:100%;height:auto;"
+                            >
+                          {% endif %}
+                        {%- endif %}
+                        {% if block.settings.title %}
+                          <h3>{{ block.settings.title }}</h3>
+                        {% endif %}
+                        {% if block.settings.paragraph %}
+                          <p>{{ block.settings.paragraph }}</p>
+                        {% endif %}
+                        {% if block.settings.button_label and block.settings.button_url %}
+                          <a
+                            href="{{ block.settings.button_url }}"
+                            class="sw-bg-[#01E3BD] sw-inline-flex sw-mt-3 sw-text-center sw-rounded-lg sw-text-black sw-font-heading sw-px-4 sw-py-[6px] sw-text-xs sw-font-semibold sw-hover:sw-bg-teal-300 sw-transition xl:sw-text-[16px] xl:sw-px-8 xl:sw-py-[11px]"
+                          >
+                            {{ block.settings.button_label }}
+                          </a>
+                        {% endif %}
+                      </div>
+                    {% elsif block.type == 'video' %}
+                      <div class="sw-block sw-rounded-md sw-overflow-hidden">
+                        {% if block.settings.poster -%}
+                          <img
+                            src="{{ block.settings.poster | img_url: 'master' }}"
+                            alt="{{ block.settings.title }}"
+                            style="width:100%;height:auto;"
+                          >
+                        {%- endif %}
+                        {% if block.settings.title %}
+                          <h3>{{ block.settings.title }}</h3>
+                        {% endif %}
+                        {% if block.settings.button_label and block.settings.button_url %}
+                          <a
+                            href="{{ block.settings.button_url }}"
+                            class="sw-bg-[#01E3BD] sw-inline-flex sw-mt-3 sw-text-center sw-rounded-lg sw-text-black sw-font-heading sw-px-4 sw-py-[6px] sw-text-xs sw-font-semibold sw-hover:sw-bg-teal-300 sw-transition xl:sw-text-[16px] xl:sw-px-8 xl:sw-py-[11px]"
+                          >
+                            {{ block.settings.button_label }}
+                          </a>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
           {% endif %}
         </div>
       </div>
     </div>
   </div>
 </section>
+{% endif %}
 
 {% schema %}
 {
@@ -317,7 +548,6 @@
       "id": "card_bg_color",
       "default": "#000000"
     },
-
     {
       "type": "text",
       "label": "Mobile perView (decimal allowed, e.g. 1.2)",
@@ -361,7 +591,6 @@
       "default": "#000000"
     }
   ],
-
   "blocks": [
     {
       "type": "image_text",
@@ -370,7 +599,9 @@
         { "type": "image_picker", "id": "image", "label": "Image" },
         { "type": "text", "id": "title", "label": "Title" },
         { "type": "textarea", "id": "paragraph", "label": "Paragraph" },
-        { "type": "url", "id": "url", "label": "Link URL" }
+        { "type": "url", "id": "url", "label": "Link URL (optional – image/title)" },
+        { "type": "text", "id": "button_label", "label": "Button label" },
+        { "type": "url", "id": "button_url", "label": "Button URL" }
       ]
     },
     {
@@ -379,11 +610,13 @@
       "settings": [
         { "type": "text", "id": "video_url", "label": "MP4 URL" },
         { "type": "image_picker", "id": "poster", "label": "Poster / fallback image (optional)" },
-        { "type": "text", "id": "title", "label": "Title" }
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "text", "id": "button_label", "label": "Button label" },
+        { "type": "url", "id": "button_url", "label": "Button URL" }
       ]
     }
   ],
-
   "presets": [{ "name": "Featured Card (blocks)" }]
 }
 {% endschema %}
+ 

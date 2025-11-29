@@ -1,59 +1,114 @@
+{% liquid
+  assign fa_items = nil
+
+  # Product metafield: list of metaobjects (featured articles)
+  if product and product.metafields.custom.featured_articles
+    assign fa_ref = product.metafields.custom.featured_articles
+    assign fa_val = fa_ref.value
+
+    if fa_val != blank
+      # List of metaobjects
+      if fa_val.size and fa_val.first
+        assign fa_items = fa_val
+      else
+        # Single metaobject -> array for loop
+        assign fa_items = fa_val | array
+      endif
+    endif
+  endif
+
+  assign has_meta_articles = false
+  if fa_items and fa_items.size > 0
+    assign has_meta_articles = true
+  endif
+
+  # Section ko hide karne ke liye content check
+  assign content_exists = false
+  if has_meta_articles
+    assign content_exists = true
+  elsif section.settings.article_source == 'blocks' and section.blocks.size > 0
+    assign content_exists = true
+  elsif section.settings.article_source == 'blog' and section.settings.source_blog and section.settings.source_blog.articles_count > 0
+    assign content_exists = true
+  endif
+%}
+
 <style>
-    .logo-wrapper img{
-        max-width: 100%;
-    }
-#{{ section.id }}-featured-collection .featured-collection-wrapper{
-  padding-top: {{section.settings.mobile_padding}}px;
-  padding-bottom: {{section.settings.mobile_padding}}px;
-}
-
-.slider-dots button.is-active {
-  width: 36px;
-  background: #01C5E3 !important;
-  height: 8px;
-}
-
-/* arrows */
-.fc-arrow{
-  display:none;
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  z-index:30;
-  background:transparent;
-  border:none;
-  cursor:pointer;
-  align-items:center;
-  justify-content:center;
-  width:40px;
-  height:40px;
-}
-.fc-arrow-left{ left:8px; }
-.fc-arrow-right{ right:8px; }
-
-@media(min-width:1200px){
-  .fc-arrow{
-    display:flex;
+  .logo-wrapper img{
+    max-width: 100%;
   }
-  .fc-arrow{ width:40px; height:40px; }
-  .fc-arrow-left {
-    left: -40px;
+
+  /* Title max 2 lines */
+  #{{ section.id }}-featured-article .sw-fa-title-clamp{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;  /* max 2 lines */
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  .fc-arrow-right {
-    right: -55px;
+
+  /* Body max ~5 lines */
+  #{{ section.id }}-featured-article .sw-fa-body-clamp{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;  /* approx 4–5 lines */
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   #{{ section.id }}-featured-collection .featured-collection-wrapper{
-    padding-top: {{section.settings.desktop_padding}}px;
-    padding-bottom: {{section.settings.desktop_padding}}px;
+    padding-top: {{section.settings.mobile_padding}}px;
+    padding-bottom: {{section.settings.mobile_padding}}px;
   }
-}
+
+  .slider-dots button.is-active {
+    width: 36px;
+    background: #01C5E3 !important;
+    height: 8px;
+  }
+
+  /* arrows */
+  .fc-arrow{
+    display:none;
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:30;
+    background:transparent;
+    border:none;
+    cursor:pointer;
+    align-items:center;
+    justify-content:center;
+    width:40px;
+    height:40px;
+  }
+  .fc-arrow-left{ left:8px; }
+  .fc-arrow-right{ right:8px; }
+
+  @media(min-width:1200px){
+    .fc-arrow{
+      display:flex;
+    }
+    .fc-arrow{ width:40px; height:40px; }
+    .fc-arrow-left {
+      left: -40px;
+    }
+    .fc-arrow-right {
+      right: -55px;
+    }
+
+    #{{ section.id }}-featured-collection .featured-collection-wrapper{
+      padding-top: {{section.settings.desktop_padding}}px;
+      padding-bottom: {{section.settings.desktop_padding}}px;
+    }
+  }
 </style>
 
 {% if section.settings.enable_slider %}
   {% render 'vite-tag' with 'featured-article-slider.js' %}
 {% endif %}
 
+{% if content_exists %}
 <section
   class="sw-px-4 sw-relative {% if section.settings.show_card_padding %} sw-pr-0{% endif %}"
   id="{{ section.id }}-featured-article"
@@ -64,24 +119,27 @@
   <div class="xl:sw-w-[1152px] sw-mx-auto">
     <div class="featured-collection-wrapper sw-relative sw-z-10">
 
-      <div class=" {% if section.settings.show_card_padding %} sw-pr-4 {% endif %}">
-        {% if section.settings.section_title != blank %}
-          {% render 'section-heading' %}
-        {% endif %}
+      <div class="{% if section.settings.show_card_padding %} sw-pr-4 {% endif %}">
 
-        {%- if section.settings.logo != blank -%}
-          <div class="sw-flex sw-justify-center sw-mb-6 xl:sw-mb-8">
-            <div
-              class="logo-wrapper sw-w-[170px] sw-flex sw-items-center sw-justify-center"
-            >
-              <img
-                src="{{ section.settings.logo | img_url: '400x' }}"
-                alt="{{ section.settings.logo_alt | escape }}"
-                loading="lazy"
+        <div class="sw-flex sw-items-center sw-gap-2">
+          {% if section.settings.section_title != blank %}
+            {% render 'section-heading' %}
+          {% endif %}
+
+          {%- if section.settings.logo != blank -%}
+            <div class="sw-flex sw-justify-center sw-mb-6 xl:sw-mb-8">
+              <div
+                class="logo-wrapper sw-w-[170px] sw-flex sw-items-center sw-justify-center"
               >
+                <img
+                  src="{{ section.settings.logo | img_url: '400x' }}"
+                  alt="{{ section.settings.logo_alt | escape }}"
+                  loading="lazy"
+                >
+              </div>
             </div>
-          </div>
-        {%- endif -%}
+          {%- endif -%}
+        </div>
 
         {%- if section.settings.description != blank -%}
           <div
@@ -109,13 +167,49 @@
         >
 
           {%- comment -%}
-            ARTICLE SLIDES
-            - Mode 1: article_source == 'blocks' → use manual blocks
-            - Mode 2: article_source == 'blog'   → use selected blog's latest articles
+            DATA PRIORITY:
+            1) Product metafield list (featured_articles metaobjects)
+            2) Manual blocks (article_source == 'blocks')
+            3) Blog auto mode (article_source == 'blog')
           {%- endcomment -%}
 
-          {%- if section.settings.article_source == 'blocks' -%}
-            {%- comment -%} MODE 1: manually selected blocks {%- endcomment -%}
+          {% if has_meta_articles %}
+            {%- for item in fa_items -%}
+              <div
+                class="fc-item sw-flex sw-flex-col sw-items-center sw-rounded-2xl keen-slider__slide
+                  {% if section.settings.show_card_padding %}
+                    xl:sw-rounded-[32px] sw-border sw-border-solid sw-border-[#403f3f] sw-px-2 sw-py-4 xl:sw-px-6 xl:sw-py-6
+                  {% endif %}"
+                {% if section.settings.show_card_padding %}
+                  style="background: {{ section.settings.card_bg }};"
+                {% endif %}
+              >
+                {% if item.title != blank %}
+                  <h3 class="sw-text-center sw-font-heading sw-font-semibold sw-text-[14px] xl:sw-text-[24px] sw-mb-6 sw-mt-4 xl:sw-mt-0 sw-fa-title-clamp">
+                    {{ item.title }}
+                  </h3>
+                {% endif %}
+
+                {% if item.image %}
+                  <a href="{{ item.cta_url | default: '#' }}" class="sw-block sw-rounded-2xl sw-overflow-hidden">
+                    <img
+                      src="{{ item.image | img_url: 'master' }}"
+                      alt="{{ item.image.alt | escape }}"
+                      loading="lazy"
+                    >
+                  </a>
+                {% endif %}
+
+                {% if item.body != blank %}
+                  <div class="sw-text-xs xl:sw-text-[18px] sw-leading-relaxed sw-mt-4 sw-max-w-[480px] xl:sw-mt-6 sw-fa-body-clamp">
+                    {{ item.body }}
+                  </div>
+                {% endif %}
+              </div>
+            {%- endfor -%}
+
+          {%- elsif section.settings.article_source == 'blocks' -%}
+            {%- comment -%} MODE 2: manually selected blocks {%- endcomment -%}
             {%- for block in section.blocks -%}
               {%- if block.type == 'article' and block.settings.article != blank -%}
                 {%- assign article = articles[block.settings.article] -%}
@@ -131,7 +225,7 @@
                     {{ block.shopify_attributes }}
                   >
                     {% if article.title != blank %}
-                      <h3 class="sw-text-center sw-font-heading sw-font-semibold sw-text-[14px] xl:sw-text-[24px] sw-mb-6 sw-mt-4 xl:sw-mt-0">
+                      <h3 class="sw-text-center sw-font-heading sw-font-semibold sw-text-[14px] xl:sw-text-[24px] sw-mb-6 sw-mt-4 xl:sw-mt-0 sw-fa-title-clamp">
                         {{ article.title }}
                       </h3>
                     {% endif %}
@@ -147,7 +241,7 @@
                     {% endif %}
 
                     {% if article.content %}
-                      <p class="sw-text-xs xl:sw-text-[18px] sw-leading-relaxed sw-mt-4 sw-max-w-[480px] xl:sw-mt-6">
+                      <p class="sw-text-xs xl:sw-text-[18px] sw-leading-relaxed sw-mt-4 sw-max-w-[480px] xl:sw-mt-6 sw-fa-body-clamp">
                         {{ article.content }}
                       </p>
                     {% endif %}
@@ -157,7 +251,7 @@
             {%- endfor -%}
 
           {%- else -%}
-            {%- comment -%} MODE 2: auto – latest articles from a blog {%- endcomment -%}
+            {%- comment -%} MODE 3: auto – latest articles from a blog {%- endcomment -%}
             {%- if section.settings.source_blog != blank -%}
               {%- for article in section.settings.source_blog.articles limit: section.settings.articles_limit -%}
                 <div
@@ -170,7 +264,7 @@
                   {% endif %}
                 >
                   {% if article.title != blank %}
-                    <h3 class="sw-text-center sw-font-heading sw-font-semibold sw-text-[14px] xl:sw-text-[24px] sw-mb-6 sw-mt-4 xl:sw-mt-0">
+                    <h3 class="sw-text-center sw-font-heading sw-font-semibold sw-text-[14px] xl:sw-text-[24px] sw-mb-6 sw-mt-4 xl:sw-mt-0 sw-fa-title-clamp">
                       {{ article.title }}
                     </h3>
                   {% endif %}
@@ -186,14 +280,14 @@
                   {% endif %}
 
                   {% if article.content %}
-                    <p class="sw-text-xs xl:sw-text-[18px] sw-leading-relaxed sw-mt-4 sw-max-w-[480px] xl:sw-mt-6">
+                    <p class="sw-text-xs xl:sw-text-[18px] sw-leading-relaxed sw-mt-4 sw-max-w-[480px] xl:sw-mt-6 sw-fa-body-clamp">
                       {{ article.content }}
                     </p>
                   {% endif %}
                 </div>
               {%- endfor -%}
             {%- endif -%}
-          {%- endif -%}
+          {%- endif %}
 
         </div>
 
@@ -232,17 +326,19 @@
     </div>
   </div>
 
-  {% comment %} header-top-bg-image {% endcomment %}
+  {%- comment -%} header-top-bg-image right {%- endcomment -%}
   {% if section.settings.enable_header_right %}
     <div class="header-bg-svg sw-absolute sw-top-[-12px] sw-right-0 xl:sw-top-[-100px] sw-w-full">
       <span class="xl:sw-hidden">
         <!-- mobile right header SVG -->
+        <!-- (same SVG as before) -->
         <svg width="375" height="225" viewBox="0 0 375 225" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g filter="url(#filter0_f_576_1117)"> <path d="M-67 70C164.28 95.5305 246.772 126.834 423 136.979V155C284.228 147.456 80 112.05 -67 144.088V70Z" fill="url(#paint0_linear_576_1117)" fill-opacity="0.4"/> </g> <path d="M375 153.5C223.888 149 202 95 -0.5 67" stroke="url(#paint1_linear_576_1117)"/> <path d="M375 145.5C223.888 141 202 87 -0.5 59" stroke="url(#paint2_linear_576_1117)"/> <path d="M0 80C150.911 84.5258 172.77 138.838 375 167" stroke="url(#paint3_linear_576_1117)"/> <defs> <filter id="filter0_f_576_1117" x="-137" y="0" width="630" height="225" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"> <feFlood flood-opacity="0" result="BackgroundImageFix"/> <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/> <feGaussianBlur stdDeviation="35" result="effect1_foregroundBlur_576_1117"/> </filter> <linearGradient id="paint0_linear_576_1117" x1="-67" y1="146.591" x2="423" y2="146.591" gradientUnits="userSpaceOnUse"> <stop offset="0.5" stop-color="#01C5E3"/> <stop offset="1" stop-color="#01E3BD"/> </linearGradient> <linearGradient id="paint1_linear_576_1117" x1="375" y1="110.25" x2="-0.5" y2="110.25" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> <linearGradient id="paint2_linear_576_1117" x1="375" y1="102.25" x2="-0.5" y2="102.25" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> <linearGradient id="paint3_linear_576_1117" x1="0" y1="123.5" x2="375" y2="123.5" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> </defs>
         </svg>
       </span>
       <span class="sw-hidden xl:sw-block">
         <!-- desktop right header SVG -->
+        <!-- (same SVG as before) -->
         <svg width="1440" height="420" viewBox="0 0 1440 420" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g filter="url(#filter0_f_251_1815)"> <path d="M-274 120C621.856 174.065 941.386 240.355 1624 261.837V300C1086.47 284.024 295.4 209.047 -274 276.893V120Z" fill="url(#paint0_linear_251_1815)" fill-opacity="0.4"/> </g> <path d="M1440 266.75C860.503 260.091 776.565 180.184 1.06096e-05 138.75" stroke="url(#paint1_linear_251_1815)"/> <path d="M1440 254.75C860.503 248.091 776.565 168.184 1.06096e-05 126.75" stroke="url(#paint2_linear_251_1815)"/> <path d="M0 155C579.497 162.491 663.435 252.387 1440 299" stroke="url(#paint3_linear_251_1815)"/> <defs> <filter id="filter0_f_251_1815" x="-394" y="0" width="2138" height="420" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"> <feFlood flood-opacity="0" result="BackgroundImageFix"/> <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/> <feGaussianBlur stdDeviation="60" result="effect1_foregroundBlur_251_1815"/> </filter> <linearGradient id="paint0_linear_251_1815" x1="-274" y1="282.193" x2="1624" y2="282.193" gradientUnits="userSpaceOnUse"> <stop offset="0.5" stop-color="#01C5E3"/> <stop offset="1" stop-color="#01E3BD"/> </linearGradient> <linearGradient id="paint1_linear_251_1815" x1="1440" y1="202.75" x2="0" y2="202.75" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> <linearGradient id="paint2_linear_251_1815" x1="1440" y1="190.75" x2="0" y2="190.75" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> <linearGradient id="paint3_linear_251_1815" x1="0" y1="227" x2="1440" y2="227" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> </defs>
         </svg>
@@ -250,14 +346,17 @@
     </div>
   {% endif %}
 
+  {%- comment -%} header-top-bg-image left {%- endcomment -%}
   {% if section.settings.enable_header_left %}
     <div class="header-bg-svg sw-absolute sw-top-[-12px] sw-right-0 xl:sw-top-[-100px] sw-w-full">
       <span class="xl:sw-hidden">
         <!-- mobile left header SVG -->
+        <!-- (same SVG as before) -->
         <svg width="375" height="225" viewBox="0 0 375 225" fill="none" xmlns="http://www.w3.org/2000/svg"> <g filter="url(#filter0_f_576_1192)"> <path d="M442 70C210.72 95.5305 128.228 126.834 -48 136.979V155C90.7719 147.456 295 112.05 442 144.088V70Z" fill="url(#paint0_linear_576_1192)" fill-opacity="0.4"/> </g> <path d="M0 153.5C151.112 149 173 95 375.5 67" stroke="url(#paint1_linear_576_1192)"/> <path d="M0 145.5C151.112 141 173 87 375.5 59" stroke="url(#paint2_linear_576_1192)"/> <path d="M375 80C224.089 84.5258 202.23 138.838 3.69549e-06 167" stroke="url(#paint3_linear_576_1192)"/> <defs> <filter id="filter0_f_576_1192" x="-118" y="0" width="630" height="225" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"> <feFlood flood-opacity="0" result="BackgroundImageFix"/> <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/> <feGaussianBlur stdDeviation="35" result="effect1_foregroundBlur_576_1192"/> </filter> <linearGradient id="paint0_linear_576_1192" x1="442" y1="146.591" x2="-48" y2="146.591" gradientUnits="userSpaceOnUse"> <stop offset="0.5" stop-color="#01C5E3"/> <stop offset="1" stop-color="#01E3BD"/> </linearGradient> <linearGradient id="paint1_linear_576_1192" x1="0" y1="110.25" x2="375.5" y2="110.25" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> <linearGradient id="paint2_linear_576_1192" x1="0" y1="102.25" x2="375.5" y2="102.25" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> <linearGradient id="paint3_linear_576_1192" x1="375" y1="123.5" x2="0" y2="123.5" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> </defs> </svg>
       </span>
       <span class="sw-hidden xl:sw-block">
         <!-- desktop left header SVG -->
+        <!-- (same SVG as before) -->
         <svg width="1440" height="420" viewBox="0 0 1440 420" fill="none" xmlns="http://www.w3.org/2000/svg"> <g filter="url(#filter0_f_251_1826)"> <path d="M1714 120C818.144 174.065 498.614 240.355 -184 261.837V300C353.529 284.024 1144.6 209.047 1714 276.893V120Z" fill="url(#paint0_linear_251_1826)" fill-opacity="0.4"/> </g> <path d="M0 266.75C579.497 260.091 663.435 180.184 1440 138.75" stroke="url(#paint1_linear_251_1826)"/> <path d="M0 254.75C579.497 248.091 663.435 168.184 1440 126.75" stroke="url(#paint2_linear_251_1826)"/> <path d="M1440 155C860.503 162.491 776.565 252.387 1.06096e-05 299" stroke="url(#paint3_linear_251_1826)"/> <defs> <filter id="filter0_f_251_1826" x="-304" y="0" width="2138" height="420" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"> <feFlood flood-opacity="0" result="BackgroundImageFix"/> <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/> <feGaussianBlur stdDeviation="60" result="effect1_foregroundBlur_251_1826"/> </filter> <linearGradient id="paint0_linear_251_1826" x1="1714" y1="282.193" x2="-184" y2="282.193" gradientUnits="userSpaceOnUse"> <stop offset="0.5" stop-color="#01C5E3"/> <stop offset="1" stop-color="#01E3BD"/> </linearGradient> <linearGradient id="paint1_linear_251_1826" x1="0" y1="202.75" x2="1440" y2="202.75" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> <linearGradient id="paint2_linear_251_1826" x1="0" y1="190.75" x2="1440" y2="190.75" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> <linearGradient id="paint3_linear_251_1826" x1="1440" y1="227" x2="0" y2="227" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> </defs> </svg>
       </span>
     </div>
@@ -279,7 +378,8 @@
   {% endif %}
 
 </section>
-  
+{% endif %}
+
 {% schema %}
 {
   "name": "Featured Article",
@@ -367,7 +467,6 @@
       "id": "section_title_color",
       "default": "#000000"
     },
-
     {
       "type": "select",
       "id": "article_source",
@@ -392,7 +491,6 @@
       "step": 1,
       "default": 6
     },
-
     {
       "type": "header",
       "content": "Slider controls"
@@ -447,7 +545,6 @@
       ],
       "default": "1.2"
     },
-
     {
       "type": "header",
       "content": "Card text toggles"

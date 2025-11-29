@@ -51,6 +51,46 @@
   {% render 'vite-tag' with 'featured-slider.js' %}
 {% endif %}
 
+{%- comment -%}
+  Product metafield (List of metaobjects) for this slider:
+  Namespace/key: custom.feature_slider_block
+
+  Metaobject fields (suggested):
+  - card_is_video   : boolean
+  - image           : image
+  - url             : url
+  - title           : text
+  - description     : text
+  - video_url       : text (MP4 URL or file handle)
+  - poster          : image
+  - button_label    : text
+  - button_url      : url
+{%- endcomment -%}
+{% liquid
+  assign slider_cards = nil
+  assign has_content = false
+
+  if product and product.metafields.custom.feature_slider_block
+    assign meta_ref = product.metafields.custom.feature_slider_block
+    assign meta_val = meta_ref.value
+
+    if meta_val != blank
+      if meta_val.size and meta_val.first
+        assign slider_cards = meta_val
+      else
+        assign slider_cards = meta_val | array
+      endif
+    endif
+  endif
+
+  if slider_cards and slider_cards.size > 0
+    assign has_content = true
+  elsif section.blocks.size > 0
+    assign has_content = true
+  endif
+%}
+
+{% if has_content %}
 <section
   class="sw-px-4 sw-relative {% if section.settings.show_card_padding %} sw-pr-0{% endif %}"
   id="{{ section.id }}-featured-collection"
@@ -110,61 +150,202 @@
       >
         <div
           data-role="slider-wrapper"
-          class="keen-slider  sw-w-full sw-overflow-hidden sw-relative sw-rounded-2xl xl:sw-rounded-[32px]"
+          class="keen-slider sw-w-full sw-overflow-hidden sw-relative sw-rounded-2xl xl:sw-rounded-[32px]"
         >
-          {% for block in section.blocks %}
-            <div
-              class="keen-slider__slide sw-relative sw-w-full fc-slide sw-rounded-2xl xl:sw-rounded-[32px]"
-              style="border-color: {{ section.settings.card_border_color }}; background:{{ section.settings.card_bg_color }}"
-            >
-              {% if block.type == 'video' %}
-                <div class="fc-item fc-video sw-rounded-md sw-overflow-hidden">
-                  <div class="fc-media sw-relative" style="padding-top:56.25%; background:#000;">
-                    {% if block.settings.poster %}
-                      <img
-                        src="{{ block.settings.poster | img_url: 'master' }}"
-                        class="sw-absolute sw-inset-0 sw-w-full sw-h-full sw-object-cover video-poster"
+          {%- if slider_cards -%}
+            {%- comment -%} METAOBJECT SLIDES {%- endcomment -%}
+            {% for card in slider_cards %}
+              <div
+                class="keen-slider__slide sw-relative sw-w-full fc-slide sw-rounded-2xl xl:sw-rounded-[32px]"
+                style="border-color: {{ section.settings.card_border_color }}; background:{{ section.settings.card_bg_color }}"
+              >
+                {% if card.card_is_video %}
+                  <div class="fc-item fc-video sw-rounded-md sw-overflow-hidden">
+                    <div class="fc-media sw-relative" style="padding-top:56.25%; background:#000;">
+                      {% if card.poster %}
+                        <img
+                          src="{{ card.poster | img_url: 'master' }}"
+                          class="sw-absolute sw-inset-0 sw-w-full sw-h-full sw-object-cover video-poster"
+                        >
+                      {% endif %}
+
+                      <video
+                        preload="metadata"
+                        {% if card.video_url %}
+                          data-video-src="{{ card.video_url | file_url }}"
+                        {% endif %}
+                        class="fc-video-element sw-absolute sw-inset-0 sw-w-full sw-h-full sw-object-cover"
+                        controlsList="nodownload"
+                        playsinline
+                      ></video>
+
+                      <button
+                        type="button"
+                        class="fc-video-play sw-absolute sw-left-1/2 sw-top-1/2 sw-transform -sw-translate-x-1/2 -sw-translate-y-1/2 sw-z-40 sw-rounded-full sw-w-12 sw-h-12 sw-flex sw-items-center sw-justify-center"
                       >
+                        <svg width="37" height="47" viewBox="0 0 37 47" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M0 46.6667V0L36.6667 23.3333L0 46.6667Z" fill="#D9D9D9"/>
+                        </svg>
+                      </button>
+                    </div>
+
+                    <div class="fc-content sw-p-4 sw-text-center">
+                      {% if card.title %}
+                        <h3 class="sw-text-sm xl:sw-text-lg sw-font-semibold sw-mb-2">
+                          {{ card.title }}
+                        </h3>
+                      {% endif %}
+                      {% if card.description %}
+                        <p class="sw-text-xs xl:sw-text-sm sw-mb-3">
+                          {{ card.description }}
+                        </p>
+                      {% endif %}
+                      {% if card.button_label and card.button_url %}
+                        <a
+                          href="{{ card.button_url }}"
+                          class="sw-bg-[#01E3BD] sw-inline-flex sw-mt-1 sw-text-center sw-rounded-lg sw-text-black sw-font-heading sw-px-4 sw-py-[6px] sw-text-xs sw-font-semibold sw-hover:sw-bg-teal-300 sw-transition
+                                 xl:sw-text-[16px] xl:sw-px-8 xl:sw-py-[11px]"
+                        >
+                          {{ card.button_label }}
+                        </a>
+                      {% endif %}
+                    </div>
+                  </div>
+                {% else %}
+                  <div
+                    class="fc-item sw-flex sw-flex-col sw-items-center sw-rounded-2xl 
+                      {% if section.settings.show_card_padding %}
+                        xl:sw-rounded-[32px] sw-border sw-border-solid sw-border-[#403f3f] sw-px-2 sw-py-4 xl:sw-px-14 xl:sw-py-6
+                      {% endif %}"
+                    {% if section.settings.show_card_padding %}
+                      style="background: {{ section.settings.card_bg }};"
+                    {% endif %}
+                  >
+                    {% if section.settings.show_card_heading and card.title != blank %}
+                      <h3 class="sw-text-center sw-font-heading sw-font-semibold sw-text-[14px] xl:sw-text-[24px] sw-mb-6 sw-mt-4 xl:sw-mt-0">
+                        {{ card.title }}
+                      </h3>
                     {% endif %}
 
-                    <video
-                      preload="metadata"
-                      data-video-src="{{ block.settings.video_url }}"
-                      class="fc-video-element sw-absolute sw-inset-0 sw-w-full sw-h-full sw-object-cover"
-                      controlsList="nodownload"
-                      playsinline
-                    ></video>
+                    {% if card.url != blank %}
+                      <a href="{{ card.url }}" class="sw-block sw-rounded-2xl sw-overflow-hidden">
+                        {% if card.image %}
+                          <img
+                            src="{{ card.image | img_url: 'master' }}"
+                            alt="{{ card.title }}"
+                            class="sw-w-full sw-h-auto sw-block sw-rounded-2xl"
+                          >
+                        {% endif %}
+                      </a>
+                    {% else %}
+                      {% if card.image %}
+                        <img
+                          src="{{ card.image | img_url: 'master' }}"
+                          alt="{{ card.title }}"
+                          class="sw-w-full sw-h-auto sw-block sw-rounded-2xl"
+                        >
+                      {% endif %}
+                    {% endif %}
 
-                    <button
-                      type="button"
-                      class="fc-video-play sw-absolute sw-left-1/2 sw-top-1/2 sw-transform -sw-translate-x-1/2 -sw-translate-y-1/2 sw-z-40 sw-rounded-full sw-w-12 sw-h-12 sw-flex sw-items-center sw-justify-center"
-                    >
-                      <svg width="37" height="47" viewBox="0 0 37 47" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0 46.6667V0L36.6667 23.3333L0 46.6667Z" fill="#D9D9D9"/>
-                      </svg>
-                    </button>
+                    {% if section.settings.show_card_paragraph and card.description != blank %}
+                      <p class="sw-text-center sw-text-xs xl:sw-text-[18px] sw-leading-relaxed sw-mt-4 sw-max-w-[480px] xl:sw-mt-6">
+                        {{ card.description }}
+                      </p>
+                    {% endif %}
+
+                    {% if card.button_label and card.button_url %}
+                      <a
+                        href="{{ card.button_url }}"
+                        class="sw-bg-[#01E3BD] sw-inline-flex sw-mt-5 sw-text-center sw-rounded-lg sw-text-black sw-font-heading sw-px-4 sw-py-[6px] sw-text-xs sw-font-semibold sw-hover:sw-bg-teal-300 sw-transition
+                               xl:sw-text-[16px] xl:sw-px-8 xl:sw-py-[11px]"
+                      >
+                        {{ card.button_label }}
+                      </a>
+                    {% endif %}
                   </div>
-                </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          {%- else -%}
+            {%- comment -%} FALLBACK: SECTION BLOCKS {%- endcomment -%}
+            {% for block in section.blocks %}
+              <div
+                class="keen-slider__slide sw-relative sw-w-full fc-slide sw-rounded-2xl xl:sw-rounded-[32px]"
+                style="border-color: {{ section.settings.card_border_color }}; background:{{ section.settings.card_bg_color }}"
+              >
+                {% if block.type == 'video' %}
+                  <div class="fc-item fc-video sw-rounded-md sw-overflow-hidden">
+                    <div class="fc-media sw-relative" style="padding-top:56.25%; background:#000;">
+                      {% if block.settings.poster %}
+                        <img
+                          src="{{ block.settings.poster | img_url: 'master' }}"
+                          class="sw-absolute sw-inset-0 sw-w-full sw-h-full sw-object-cover video-poster"
+                        >
+                      {% endif %}
 
-              {% elsif block.type == 'image_text' %}
-               <div
-  class="fc-item sw-flex sw-flex-col sw-items-center sw-rounded-2xl 
-    {% if section.settings.show_card_padding %}
-      xl:sw-rounded-[32px] sw-border sw-border-solid sw-border-[#403f3f] sw-px-2 sw-py-4 xl:sw-px-14 xl:sw-py-6
-    {% endif %}"
-  {% if section.settings.show_card_padding %}
-    style="background: {{ section.settings.card_bg }};"
-  {% endif %}
->
+                      <video
+                        preload="metadata"
+                        data-video-src="{{ block.settings.video_url }}"
+                        class="fc-video-element sw-absolute sw-inset-0 sw-w-full sw-h-full sw-object-cover"
+                        controlsList="nodownload"
+                        playsinline
+                      ></video>
 
-                  {% if section.settings.show_card_heading and block.settings.title != blank %}
-                    <h3 class="sw-text-center sw-font-heading sw-font-semibold sw-text-[14px] xl:sw-text-[24px] sw-mb-6 sw-mt-4 xl:sw-mt-0">
-                      {{ block.settings.title }}
-                    </h3>
-                  {% endif %}
+                      <button
+                        type="button"
+                        class="fc-video-play sw-absolute sw-left-1/2 sw-top-1/2 sw-transform -sw-translate-x-1/2 -sw-translate-y-1/2 sw-z-40 sw-rounded-full sw-w-12 sw-h-12 sw-flex sw-items-center sw-justify-center"
+                      >
+                        <svg width="37" height="47" viewBox="0 0 37 47" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M0 46.6667V0L36.6667 23.3333L0 46.6667Z" fill="#D9D9D9"/>
+                        </svg>
+                      </button>
+                    </div>
 
-                  {% if block.settings.url != blank %}
-                    <a href="{{ block.settings.url }}" class="sw-block sw-rounded-2xl sw-overflow-hidden">
+                    <div class="fc-content sw-p-4 sw-text-center">
+                      {% if block.settings.title %}
+                        <h3 class="sw-text-sm xl:sw-text-lg sw-font-semibold sw-mb-2">
+                          {{ block.settings.title }}
+                        </h3>
+                      {% endif %}
+                      {% if block.settings.button_label and block.settings.button_url %}
+                        <a
+                          href="{{ block.settings.button_url }}"
+                          class="sw-bg-[#01E3BD] sw-inline-flex sw-mt-1 sw-text-center sw-rounded-lg sw-text-black sw-font-heading sw-px-4 sw-py-[6px] sw-text-xs sw-font-semibold sw-hover:sw-bg-teal-300 sw-transition
+                                 xl:sw-text-[16px] xl:sw-px-8 xl:sw-py-[11px]"
+                        >
+                          {{ block.settings.button_label }}
+                        </a>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                {% elsif block.type == 'image_text' %}
+                  <div
+                    class="fc-item sw-flex sw-flex-col sw-items-center sw-rounded-2xl 
+                      {% if section.settings.show_card_padding %}
+                        xl:sw-rounded-[32px] sw-border sw-border-solid sw-border-[#403f3f] sw-px-2 sw-py-4 xl:sw-px-14 xl:sw-py-6
+                      {% endif %}"
+                    {% if section.settings.show_card_padding %}
+                      style="background: {{ section.settings.card_bg }};"
+                    {% endif %}
+                  >
+                    {% if section.settings.show_card_heading and block.settings.title != blank %}
+                      <h3 class="sw-text-center sw-font-heading sw-font-semibold sw-text-[14px] xl:sw-text-[24px] sw-mb-6 sw-mt-4 xl:sw-mt-0">
+                        {{ block.settings.title }}
+                      </h3>
+                    {% endif %}
+
+                    {% if block.settings.url != blank %}
+                      <a href="{{ block.settings.url }}" class="sw-block sw-rounded-2xl sw-overflow-hidden">
+                        {% if block.settings.image %}
+                          <img
+                            src="{{ block.settings.image | img_url: 'master' }}"
+                            alt="{{ block.settings.title }}"
+                            class="sw-w-full sw-h-auto sw-block sw-rounded-2xl"
+                          >
+                        {% endif %}
+                      </a>
+                    {% else %}
                       {% if block.settings.image %}
                         <img
                           src="{{ block.settings.image | img_url: 'master' }}"
@@ -172,26 +353,28 @@
                           class="sw-w-full sw-h-auto sw-block sw-rounded-2xl"
                         >
                       {% endif %}
-                    </a>
-                  {% else %}
-                    {% if block.settings.image %}
-                      <img
-                        src="{{ block.settings.image | img_url: 'master' }}"
-                        alt="{{ block.settings.title }}"
-                        class="sw-w-full sw-h-auto sw-block sw-rounded-2xl"
-                      >
                     {% endif %}
-                  {% endif %}
 
-                  {% if section.settings.show_card_paragraph and block.settings.description != blank %}
-                    <p class="sw-text-center sw-text-xs xl:sw-text-[18px] sw-leading-relaxed sw-mt-4 sw-max-w-[480px] xl:sw-mt-6">
-                      {{ block.settings.description }}
-                    </p>
-                  {% endif %}
-                </div>
-              {% endif %}
-            </div>
-          {% endfor %}
+                    {% if section.settings.show_card_paragraph and block.settings.description != blank %}
+                      <p class="sw-text-center sw-text-xs xl:sw-text-[18px] sw-leading-relaxed sw-mt-4 sw-max-w-[480px] xl:sw-mt-6">
+                        {{ block.settings.description }}
+                      </p>
+                    {% endif %}
+
+                    {% if block.settings.button_label and block.settings.button_url %}
+                      <a
+                        href="{{ block.settings.button_url }}"
+                        class="sw-bg-[#01E3BD] sw-inline-flex sw-mt-5 sw-text-center sw-rounded-lg sw-text-black sw-font-heading sw-px-4 sw-py-[6px] sw-text-xs sw-font-semibold sw-hover:sw-bg-teal-300 sw-transition
+                               xl:sw-text-[16px] xl:sw-px-8 xl:sw-py-[11px]"
+                      >
+                        {{ block.settings.button_label }}
+                      </a>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          {%- endif -%}
         </div>
 
         {% if section.settings.show_arrows %}
@@ -229,7 +412,7 @@
     </div>
   </div>
 
-  {% comment %} header-top-bg-image {% endcomment %}
+  {% comment %} header-top-bg-image RIGHT {% endcomment %}
   {% if section.settings.enable_header_right %}
     <div class="header-bg-svg sw-absolute sw-top-[-12px] sw-right-0 md:sw-top-[-100px] sw-w-full">
       <span class="md:sw-hidden">
@@ -244,6 +427,8 @@
       </span>
     </div>
   {% endif %}
+
+  {% comment %} header-top-bg-image LEFT {% endcomment %}
   {% if section.settings.enable_header_left %}
     <div class="header-bg-svg sw-absolute sw-top-[-12px] sw-right-0 md:sw-top-[-100px] sw-w-full">
       <span class="md:sw-hidden">
@@ -254,8 +439,6 @@
       </span>
     </div>
   {% endif %}
-
-
 
   {% if section.settings.show_body_shade %}
       <span class="sw-absolute sw-top-[-100px] sw-left-0 sw-z-50 xl:sw-hidden">
@@ -273,7 +456,8 @@
   {% endif %}
 
 </section>
-  
+{% endif %}
+
 {% schema %}
 {
   "name": "Featured slider",
@@ -481,7 +665,7 @@
       "label": "Show card bg",
       "default": false
     },
-     {
+    {
       "type": "checkbox",
       "id": "show_body_shade",
       "label": "Show Body Bg Shade",
@@ -521,6 +705,16 @@
           "id": "description",
           "label": "Paragraph (below image)",
           "default": "Run comprehensive backtests with real-world slippage and commission modelling to verify performance."
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button URL"
         }
       ]
     },
@@ -542,6 +736,16 @@
           "type": "text",
           "id": "title",
           "label": "Video title"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button URL"
         }
       ]
     }
