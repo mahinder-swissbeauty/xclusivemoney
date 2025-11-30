@@ -53,7 +53,7 @@ Namespace/key:
   custom.why_traders_cards
 
 Metaobject fields (suggested):
-  - icon          : text / html (emoji or SVG snippet)
+  - Icon_img          : text / html (emoji or SVG snippet)
   - title         : text
   - description   : text
   - button_label  : text
@@ -111,9 +111,9 @@ Metaobject fields (suggested):
               <div class="sw-flex sw-items-start sw-gap-2 xl:sw-gap-4 sw-pt-4 sw-border-t sw-border-teal-500/20 first:sw-border-t-0">
                 <!-- Icon -->
                 <div class="icon-column sw-flex sw-h-5 sw-w-5 sw-flex-none sw-items-center sw-justify-center sw-text-teal-200">
-                  {% if card.icon %}
+                  {% if card.Icon_img %}
                     <span class="sw-w-5 sw-h-5 xl:sw-w-8 xl:sw-h-8 xl:sw-flex">
-                      {{ card.icon }}
+                      {{ card.Icon_img }}
                     </span>
                   {% endif %}
                 </div>
@@ -291,10 +291,9 @@ Metaobject fields (suggested):
       "name": "Feature",
       "settings": [
         {
-          "type": "html",
+          "type": "image_picker",
           "id": "icon",
-          "label": "Icon (emoji / SVG / short HTML)",
-          "default": "🌍"
+          "label": "Icon",
         },
         {
           "type": "text",
