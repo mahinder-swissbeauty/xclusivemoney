@@ -65,14 +65,15 @@
     <div class="featured-collection-wrapper sw-relative sw-z-10">
 
       <div class="{% if section.settings.show_card_padding %} sw-pr-4 {% endif %}">
-        {% if section.settings.section_title != blank %}
+        <div class="sw-flex sw-justify-center sw-items-center sw-gap-4">
+          {% if section.settings.section_title != blank %}
           {% render 'section-heading' %}
         {% endif %}
 
         {%- if section.settings.logo != blank -%}
           <div class="sw-flex sw-justify-center sw-mb-6 xl:sw-mb-8">
             <div
-              class="logo-wrapper sw-w-[170px] sw-flex sw-items-center sw-justify-center"
+              class="logo-wrapper sw-flex sw-items-center sw-justify-center"
             >
               <img
                 src="{{ section.settings.logo | img_url: '400x' }}"
@@ -82,6 +83,7 @@
             </div>
           </div>
         {%- endif -%}
+        </div>
 
         {%- if section.settings.description != blank -%}
           <div
