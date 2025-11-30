@@ -111,10 +111,10 @@ Metaobject fields (suggested):
               <div class="sw-flex sw-items-start sw-gap-2 xl:sw-gap-4 sw-pt-4 sw-border-t sw-border-teal-500/20 first:sw-border-t-0">
                 <!-- Icon -->
                 <div class="icon-column sw-flex sw-h-5 sw-w-5 sw-flex-none sw-items-center sw-justify-center sw-text-teal-200">
-                  {% if card.Icon_img %}
+                  {% if card.icon_img %}
                     <span class="sw-w-5 sw-h-5 xl:sw-w-8 xl:sw-h-8 xl:sw-flex">
                        <img
-                    src="{{ card.Icon_img | img_url: width: 64 }}"
+                    src="{{ card.icon_img | img_url: width: 64 }}"
                     alt="{{ card.title | escape }}"
                     class="sw-w-full sw-h-full sw-object-contain"
                     loading="lazy"
