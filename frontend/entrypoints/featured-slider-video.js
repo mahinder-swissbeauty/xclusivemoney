@@ -1,262 +1,255 @@
 class FeaturedSliderVideo extends HTMLElement {
-  connectedCallback() {
-    this.sliderWrapper = this.querySelector('[data-role="slider-wrapper"]');
+    constructor() {
+        super();
+        this.sliderWrapper = this.querySelector('[data-role="slider-wrapper"]');
+        this.thumbWrapper = this.querySelector('[data-role="thumb-wrapper"]');
+        this.sliderThumb = this.querySelector('[data-role="thumb"]');
 
-    // Schema-based settings
-    this.autoplay = this.dataset.autoplay === "true";
-    this.interval = parseInt(this.dataset.slideInterval) || 4000;
+        // attributes
+        this.desktopCards = parseInt(this.dataset.desktopCards) || 3;
+        this.mobilePerView = parseFloat(this.dataset.mobilePerview) || 1.2;
 
-    this.showArrows = this.dataset.showArrows === "true";
-    this.showDots = this.dataset.showDots === "true";
-    this.showPlayPause = this.dataset.showPlayPause === "true";
-
-    // NEW: mobile multi-slide settings
-    this.enableMobileMulti = this.dataset.enableMobileMulti === "true";
-    this.mobileSlidesPerView = parseFloat(this.dataset.mobileSlidesPerView) || 1;
-
-    // Elements
-    this.prevBtn = this.querySelector(".prev-arrow");
-    this.nextBtn = this.querySelector(".next-arrow");
-    this.dotsContainer = this.querySelector(".slider-dots");
-    this.playPauseBtn = this.querySelector(".slider-play-pause");
-
-    this.videos = [...this.querySelectorAll("video")];
-    this.playing = this.autoplay;
-    this.autoplayTimer = null;
-
-    this.initVideoPlayers();
-    this.waitForKeen();
-
-    this.applySchemaVisibility();
-  }
-
-  applySchemaVisibility() {
-    if (!this.showArrows) {
-      this.prevBtn?.remove();
-      this.nextBtn?.remove();
+        // store refs
+        this.slides = [];
+        this.slider = null;
+        this.keenInstance = null;
     }
 
-    if (!this.showDots) {
-      this.dotsContainer?.remove();
+    connectedCallback() {
+        if (window.KeenSlider) {
+            this.initializeSlider(window.KeenSlider);
+        } else {
+            document.addEventListener("custom:KeenLoaded", () => {
+                if (window.KeenSlider) this.initializeSlider(window.KeenSlider);
+            });
+        }
     }
 
-    if (!this.showPlayPause) {
-      this.playPauseBtn?.remove();
+    initializeSlider(KeenSliderClass) {
+        if (!this.sliderWrapper) return;
+
+        // collect slides
+        this.slides = Array.from(this.sliderWrapper.querySelectorAll('.keen-slider__slide'));
+
+        // compute perView
+        const perViewMobile = this.mobilePerView;
+        const perViewDesktop = Math.max(1, this.desktopCards);
+
+        // spacing
+        const spacingMobile = 16;
+        const spacingDesktop = 32;
+
+        this.keenInstance = new KeenSliderClass(this.sliderWrapper, {
+            loop: false,
+            rubberband: false,
+            mode: 'free',
+            drag: true,
+            slides: {
+                perView: perViewMobile,
+                spacing: spacingMobile
+            },
+            breakpoints: {
+                '(min-width: 768px)': {
+                    slides: {
+                        perView: perViewDesktop,
+                        spacing: spacingDesktop,
+                        rubberband: false,
+                        mode: 'free',
+                        drag: true
+                    }
+                }
+            }
+        }, [
+            (slider) => {
+                slider.on('created', () => {
+                    this.slider = slider;
+                    this.setupArrows();
+                    this.wheelControls(slider);
+                    this.setupThumbSync(slider);
+                    this.attachVideoControls();
+                    this.updateThumb();
+
+                    slider.on('slideChanged', () => this.pauseAllVideos());
+                });
+            }
+        ]);
     }
-  }
 
-  waitForKeen() {
-    if (window.KeenSlider) {
-      this.initSlider();
-    } else {
-      setTimeout(() => this.waitForKeen(), 100);
+    /* -------------------------------
+       AUTO HIDE ARROWS BASED ON SLIDES
+    ---------------------------------*/
+    setupArrows() {
+        const prev = this.querySelector('[data-role="arrow-prev"]');
+        const next = this.querySelector('[data-role="arrow-next"]');
+
+        const total = this.slides.length;
+        const currentPerView = (window.innerWidth >= 768)
+            ? Math.max(1, this.desktopCards)
+            : this.mobilePerView;
+
+        // hide/show arrows
+        const shouldShow = total > currentPerView;
+
+        if (prev) prev.style.display = shouldShow ? "" : "none";
+        if (next) next.style.display = shouldShow ? "" : "none";
+
+        if (!shouldShow) return;
+
+        if (prev) prev.addEventListener('click', () => this.slider.prev());
+        if (next) next.addEventListener('click', () => this.slider.next());
     }
-  }
 
-  initSlider() {
-    this.slider = new KeenSlider(this.sliderWrapper, {
-      loop: true,
+    wheelControls(slider) {
+        let timeout;
+        let wheelActive = false;
 
-      // MOBILE default (schema-controlled)
-      slides: {
-        perView: this.enableMobileMulti ? this.mobileSlidesPerView : 1,
-        spacing: 10
-      },
+        function onWheel(e) {
+            if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) return;
 
-      // Desktop / tablet breakpoints
-      breakpoints: {
-        "(min-width: 768px)": {
-          slides: { perView: 1, spacing: 10 }
-        },
-        "(min-width: 1200px)": {
-          slides: { perView: 1, spacing: 10 }
-        }
-      },
+            e.preventDefault();
+            const movement = e.deltaY || e.deltaX;
 
-      slideChanged: (s) => {
-        this.pauseAllVideos();
-        if (this.showDots) this.updateDots(s.track.details.rel);
-      },
+            if (!wheelActive) {
+                slider.track.stopped = false;
+                slider.track.animating = false;
+                wheelActive = true;
+            }
 
-      created: (s) => {
-        const totalSlides = s.track.details.slides.length;
+            slider.track.addMovement(-movement);
 
-        // If single slide, hide controls
-        if (totalSlides <= 1) {
-          this.prevBtn?.remove();
-          this.nextBtn?.remove();
-          this.dotsContainer?.remove();
-          this.playPauseBtn?.remove();
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                wheelActive = false;
+            }, 80);
         }
 
-        // Dots
-        if (this.showDots && totalSlides > 1) {
-          this.createDots(totalSlides);
-          this.updateDots(0);
-        }
-
-        // Arrows
-        if (this.showArrows && totalSlides > 1) {
-          this.prevBtn?.addEventListener("click", () => s.prev());
-          this.nextBtn?.addEventListener("click", () => s.next());
-        }
-
-        // Autoplay
-        if (this.autoplay && totalSlides > 1) {
-          this.initAutoplay();
-        }
-
-        // Play / Pause button
-        if (this.showPlayPause && totalSlides > 1) {
-          this.initPlayPauseControls();
-        }
-      }
-    });
-  }
-
-  /* ---------------- AUTOPLAY ---------------- */
-
-  initAutoplay() {
-    this.autoplayTimer = setInterval(() => {
-      if (this.slider) this.slider.next();
-    }, this.interval);
-  }
-
-  pauseAutoplay() {
-    clearInterval(this.autoplayTimer);
-    this.autoplayTimer = null;
-  }
-
-  toggleAutoplay() {
-    this.playing = !this.playing;
-
-    if (this.playing) {
-      // PAUSE ICON
-      this.playPauseBtn.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M16 19C14.8954 19 14 18.1046 14 17V7C14 5.89543 14.8954 5 16 5C17.1046 5 18 5.89543 18 7V17C18 18.1046 17.1046 19 16 19ZM8 19C6.89543 19 6 18.1046 6 17V7C6 5.89543 6.89543 5 8 5C9.10457 5 10 5.89543 10 7V17C10 18.1046 9.10457 19 8 19Z" fill="#D9D9D9"/>
-        </svg>
-      `;
-      this.initAutoplay();
-    } else {
-      // PLAY ICON
-      this.playPauseBtn.innerHTML = `
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-          <path d="M8 5v14l11-7z"></path>
-        </svg>
-      `;
-      this.pauseAutoplay();
+        slider.on("created", () => {
+            slider.container.addEventListener("wheel", onWheel, { passive: false });
+        });
     }
-  }
 
-  initPlayPauseControls() {
-    this.playPauseBtn.addEventListener("click", () => {
-      this.toggleAutoplay();
-    });
-  }
+    setupThumbSync(slider) {
+        if (!this.thumbWrapper || !this.sliderThumb) return;
 
-  /* ---------------- DOTS ---------------- */
+        const update = () => this.updateThumb();
 
-  createDots(count) {
-    if (!this.dotsContainer) return;
+        slider.on('detailsChanged', update);
+        window.addEventListener('resize', update);
 
-    this.dotsContainer.innerHTML = "";
-
-    for (let i = 0; i < count; i++) {
-      let dot = document.createElement("button");
-      dot.className = "dot sw-w-3 sw-h-3 sw-rounded-full sw-bg-white/40";
-      dot.dataset.index = i;
-
-      dot.addEventListener("click", () => {
-        this.slider.moveToIdx(i);
-      });
-
-      this.dotsContainer.appendChild(dot);
+        const observer = new MutationObserver(update);
+        observer.observe(this.sliderWrapper, { childList: true, subtree: true });
     }
-  }
 
-  updateDots(activeIndex) {
-    if (!this.dotsContainer) return;
+    /* -------------------------------
+       AUTO HIDE BOTTOM SCROLL BAR
+    ---------------------------------*/
+    updateThumb() {
+        if (!this.slider || !this.sliderThumb || !this.thumbWrapper) return;
 
-    const dots = this.dotsContainer.querySelectorAll(".dot");
-    dots.forEach((dot, i) => {
-      dot.style.background = i === activeIndex ? "#fff" : "rgba(255,255,255,0.4)";
-      if (i === activeIndex) {
-        dot.classList.add("is-active");
-      } else {
-        dot.classList.remove("is-active");
-      }
-    });
-  }
+        const totalSlides = this.slider.track.details.slides.length || this.slides.length || 1;
+        const currentPerView = (window.innerWidth >= 768)
+            ? Math.max(1, this.desktopCards)
+            : this.mobilePerView;
 
-  /* ---------------- VIDEO LOGIC ---------------- */
-
-  pauseAllVideos() {
-    this.videos.forEach(video => {
-      video.pause();
-
-      const wrapper = video.closest(".fc-video");
-      if (!wrapper) return;
-
-      const playBtn = wrapper.querySelector(".fc-video-play");
-      if (playBtn) playBtn.style.display = "flex";
-
-      const poster = wrapper.querySelector(".video-poster");
-      if (poster) poster.style.display = "block";
-
-      video.removeAttribute("src");
-      video.load();
-    });
-  }
-
-  initVideoPlayers() {
-    const players = this.querySelectorAll(".fc-video");
-
-    players.forEach(player => {
-      const poster = player.querySelector(".video-poster");
-      const video = player.querySelector("video");
-      const playBtn = player.querySelector(".fc-video-play");
-
-      if (!video || !playBtn) return;
-
-      playBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-
-        this.pauseAllVideos();
-
-        video.src = video.dataset.videoSrc;
-        video.play();
-
-        if (poster) poster.style.display = "none";
-        playBtn.style.display = "none";
-
-        this.pauseAutoplay();
-        this.playing = false;
-
-        if (this.showPlayPause && this.playPauseBtn) {
-          this.playPauseBtn.innerHTML = `
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-              <path d="M8 5v14l11-7z"></path>
-            </svg>
-          `;
+        // Hide if not enough slides
+        if (totalSlides <= currentPerView) {
+            this.thumbWrapper.style.display = "none";
+            return;
+        } else {
+            this.thumbWrapper.style.display = "";
         }
-      });
 
-      video.addEventListener("click", (e) => {
-        e.stopPropagation();
-        if (!video.paused) {
-          video.pause();
-          if (playBtn) playBtn.style.display = "flex";
-          if (poster) poster.style.display = "block";
-        }
-      });
+        const wrapperWidth = this.thumbWrapper.offsetWidth || 1;
+        const thumbPercent = Math.min(100, (currentPerView / totalSlides) * 100);
+        const thumbWidthPx = (thumbPercent / 100) * wrapperWidth;
 
-      video.addEventListener("ended", () => {
-        if (playBtn) playBtn.style.display = "flex";
-        if (poster) poster.style.display = "block";
-      });
-    });
-  }
+        const progress = Math.max(0, Math.min(1, this.slider.track.details.progress || 0));
+        const maxLeftPx = Math.max(0, wrapperWidth - thumbWidthPx);
+
+        const leftPx = progress * maxLeftPx;
+
+        this.sliderThumb.style.width = `${Math.round(thumbWidthPx)}px`;
+        this.sliderThumb.style.left = `${Math.round(leftPx)}px`;
+    }
+
+    attachVideoControls() {
+        const videos = Array.from(this.querySelectorAll('video'));
+
+        videos.forEach((v) => {
+            const src = v.dataset.videoSrc;
+            if (src && !v.querySelector('source')) {
+                v.src = src;
+                v.preload = 'metadata';
+                v.controls = false;
+                v.pause();
+            }
+        });
+
+        const playButtons = Array.from(this.querySelectorAll('.fc-video-play'));
+
+        playButtons.forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const slideEl = btn.closest('.keen-slider__slide');
+                if (!slideEl) return;
+
+                const video = slideEl.querySelector('video');
+                if (!video) return;
+
+                this.pauseAllVideos(video);
+
+                if (video.paused) {
+                    video.play().catch(() => {});
+                    video.controls = true;
+                    btn.style.display = 'none';
+
+                    video.addEventListener('ended', () => {
+                        btn.style.display = '';
+                        video.controls = false;
+                    }, { once: true });
+
+                } else {
+                    video.pause();
+                    video.controls = false;
+                    btn.style.display = '';
+                }
+            });
+        });
+
+        videos.forEach((v) => {
+            v.addEventListener('play', () => this.pauseAllVideos(v));
+            v.addEventListener('pause', () => {
+                const slideEl = v.closest('.keen-slider__slide');
+                if (!slideEl) return;
+
+                const btn = slideEl.querySelector('.fc-video-play');
+                if (btn) btn.style.display = '';
+            });
+        });
+    }
+
+    pauseAllVideos(except = null) {
+        const videos = Array.from(this.querySelectorAll('video'));
+        videos.forEach((v) => {
+            if (except && v === except) return;
+            try { v.pause(); v.controls = false; } catch (_) {}
+
+            const slideEl = v.closest('.keen-slider__slide');
+            if (slideEl) {
+                const btn = slideEl.querySelector('.fc-video-play');
+                if (btn) btn.style.display = '';
+            }
+        });
+    }
+
+    disconnectedCallback() {
+        try {
+            if (this.keenInstance?.destroy) this.keenInstance.destroy();
+            else if (this.slider?.destroy) this.slider.destroy();
+        } catch (_) {}
+
+        window.removeEventListener('resize', this.updateThumb);
+    }
 }
 
-customElements.define("featured-slider-video", FeaturedSliderVideo);
+customElements.define('featured-slider-video', FeaturedSliderVideo);
