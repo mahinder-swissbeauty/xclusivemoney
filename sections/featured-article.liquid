@@ -93,16 +93,17 @@
         {%- endif -%}
       </div>
 
-      <featured-article
-        class="featured-slider-root sw-relative"
-        data-autoplay="{{ section.settings.autoplay }}"
-        data-slide-interval="{{ section.settings.slide_interval }}"
-        data-show-arrows="{{ section.settings.show_arrows }}"
-        data-show-dots="{{ section.settings.show_dots }}"
-        data-show-play-pause="{{ section.settings.show_play_pause }}"
-        data-enable-mobile-multi="{{ section.settings.enable_mobile_multi }}"
-        data-mobile-slides-per-view="{{ section.settings.mobile_slides_per_view }}"
-      >
+     <featured-article
+  class="featured-slider-root sw-relative"
+  data-autoplay="{{ section.settings.autoplay }}"
+  data-slide-interval="{{ section.settings.slide_interval }}"
+  data-show-arrows="{{ section.settings.show_arrows }}"
+  data-show-dots="{{ section.settings.show_dots }}"
+  data-show-play-pause="{{ section.settings.show_play_pause }}"
+  data-enable-mobile-multi="{{ section.settings.enable_mobile_multi }}"
+  data-mobile-slides-per-view="{{ section.settings.mobile_slides_per_view }}"
+  data-desktop-per-view="{{ section.settings.desktop_per_view }}"  
+>
         <div
           data-role="slider-wrapper"
           class="keen-slider sw-w-full sw-overflow-hidden sw-relative sw-rounded-2xl xl:sw-rounded-[32px]"
@@ -444,6 +445,15 @@
       "label": "Enable multiple slides on mobile",
       "default": false
     },
+    {
+  "type": "range",
+  "id": "desktop_per_view",
+  "label": "Desktop slides per view",
+  "min": 1,
+  "max": 3,
+  "step": 1,
+  "default": 3
+},
     {
       "type": "select",
       "id": "mobile_slides_per_view",

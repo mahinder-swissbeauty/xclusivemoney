@@ -2,7 +2,7 @@ class FeaturedArticle extends HTMLElement {
   connectedCallback() {
     this.sliderWrapper = this.querySelector('[data-role="slider-wrapper"]');
 
-    // Schema-based settings
+    // Schema-based settings (data- attributes from Liquid)
     this.autoplay = this.dataset.autoplay === "true";
     this.interval = parseInt(this.dataset.slideInterval) || 4000;
 
@@ -10,9 +10,12 @@ class FeaturedArticle extends HTMLElement {
     this.showDots = this.dataset.showDots === "true";
     this.showPlayPause = this.dataset.showPlayPause === "true";
 
-    // NEW: mobile multi-slide settings
+    // Mobile multi-slide settings
     this.enableMobileMulti = this.dataset.enableMobileMulti === "true";
     this.mobileSlidesPerView = parseFloat(this.dataset.mobileSlidesPerView) || 1;
+
+    // NEW: Desktop slides per view (1 / 2 / 3 from schema)
+    this.desktopPerView = parseFloat(this.dataset.desktopPerView) || 3;
 
     // Elements
     this.prevBtn = this.querySelector(".prev-arrow");
@@ -35,17 +38,16 @@ class FeaturedArticle extends HTMLElement {
       this.prevBtn?.remove();
       this.nextBtn?.remove();
     }
-
     if (!this.showDots) {
       this.dotsContainer?.remove();
     }
-
     if (!this.showPlayPause) {
       this.playPauseBtn?.remove();
     }
   }
 
   waitForKeen() {
+    // Defensive: agar KeenSlider async load ho raha hai
     if (window.KeenSlider) {
       this.initSlider();
     } else {
@@ -54,7 +56,7 @@ class FeaturedArticle extends HTMLElement {
   }
 
   initSlider() {
-    if (!this.sliderWrapper) return;
+    if (!this.sliderWrapper || !window.KeenSlider) return;
 
     this.slider = new KeenSlider(this.sliderWrapper, {
       loop: true,
@@ -68,12 +70,12 @@ class FeaturedArticle extends HTMLElement {
       // Tablet / Desktop breakpoints
       breakpoints: {
         "(min-width: 768px)": {
-          // tablet: 2 cards
+          // tablet fixed 2 cards
           slides: { perView: 2, spacing: 24 }
         },
         "(min-width: 1200px)": {
-          // desktop: 3 cards
-          slides: { perView: 3, spacing: 32 }
+          // DESKTOP: schema se 1 / 2 / 3
+          slides: { perView: this.desktopPerView, spacing: 32 }
         }
       },
 
@@ -85,7 +87,7 @@ class FeaturedArticle extends HTMLElement {
       created: (s) => {
         const totalSlides = s.track.details.slides.length;
 
-        // If single slide, hide controls
+        // If single slide, hide all controls
         if (totalSlides <= 1) {
           this.prevBtn?.remove();
           this.nextBtn?.remove();
@@ -121,14 +123,17 @@ class FeaturedArticle extends HTMLElement {
   /* ---------------- AUTOPLAY ---------------- */
 
   initAutoplay() {
+    this.pauseAutoplay();
     this.autoplayTimer = setInterval(() => {
       if (this.slider) this.slider.next();
     }, this.interval);
   }
 
   pauseAutoplay() {
-    clearInterval(this.autoplayTimer);
-    this.autoplayTimer = null;
+    if (this.autoplayTimer) {
+      clearInterval(this.autoplayTimer);
+      this.autoplayTimer = null;
+    }
   }
 
   toggleAutoplay() {
@@ -213,6 +218,7 @@ class FeaturedArticle extends HTMLElement {
       const poster = wrapper.querySelector(".video-poster");
       if (poster) poster.style.display = "block";
 
+      // optional reset:
       video.removeAttribute("src");
       video.load();
     });
@@ -233,7 +239,9 @@ class FeaturedArticle extends HTMLElement {
 
         this.pauseAllVideos();
 
-        video.src = video.dataset.videoSrc;
+        if (video.dataset.videoSrc) {
+          video.src = video.dataset.videoSrc;
+        }
         video.play();
 
         if (poster) poster.style.display = "none";
