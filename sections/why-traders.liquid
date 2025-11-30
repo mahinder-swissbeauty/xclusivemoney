@@ -110,7 +110,7 @@ Metaobject fields (suggested):
             {% for card in why_traders_cards %}
               <div class="sw-flex sw-items-start sw-gap-2 xl:sw-gap-4 sw-pt-4 sw-border-t sw-border-teal-500/20 first:sw-border-t-0">
                 <!-- Icon -->
-                <div class="icon-column sw-flex sw-h-5 sw-w-5 sw-flex-none sw-items-center sw-justify-center sw-text-teal-200">
+                <div class="icon-column sw-flex sw-h-5 sw-w-5  xl:sw-h-5 xl:sw-w-5 sw-flex-none sw-items-center sw-justify-center sw-text-teal-200">
                   {% if card.icon_img %}
                     <span class="sw-w-5 sw-h-5 xl:sw-w-8 xl:sw-h-8 xl:sw-flex">
                        <img
@@ -162,8 +162,13 @@ Metaobject fields (suggested):
                   <!-- Icon -->
                   <div class="icon-column sw-flex sw-h-5 sw-w-5 sw-flex-none sw-items-center sw-justify-center sw-text-teal-200">
                     {% if block.settings.icon != blank %}
-                      <span class="sw-w-5 sw-h-5 xl:sw-w-8 xl:sw-h-8 xl:sw-flex">
-                        {{ block.settings.icon }}
+                      <span class="sw-w-5 sw-h-5 xl:sw-w-8 xl:sw-h-8 xl:sw-flex ">
+                            <img
+                              src="{{ block.settings.icon | img_url: width: 30 }}"
+                              alt="icon"
+                              class="sw-w-full sw-h-full sw-object-contain"
+                              loading="lazy"
+                            > 
                       </span>
                     {% endif %}
                   </div>
