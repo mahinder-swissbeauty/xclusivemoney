@@ -114,11 +114,11 @@ Metaobject fields (suggested):
                   {% if card.icon_img %}
                     <span class="sw-w-5 sw-h-5 xl:sw-w-8 xl:sw-h-8 xl:sw-flex">
                        <img
-                    src="{{ card.icon_img | img_url: width: 64 }}"
-                    alt="{{ card.title | escape }}"
+                    src="{{ card.icon_img | img_url: width: 30 }}"
+                    alt="icon"
                     class="sw-w-full sw-h-full sw-object-contain"
                     loading="lazy"
-                  >
+                  > 
                     </span>
                   {% endif %}
                 </div>
