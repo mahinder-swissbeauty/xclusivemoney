@@ -1,90 +1,50 @@
 <style>
-  .icon-column svg {
-    width: 100%;
+    .icon-column svg {
+      width: 100%;
   }
-
-  #{{ section.id }}-featured-collection .featured-collection-wrapper{
+    #{{ section.id }}-featured-collection .featured-collection-wrapper{
     padding-top: {{section.settings.mobile_padding}}px;
     padding-bottom: {{section.settings.mobile_padding}}px;
   }
-
   .header-bg-svg svg {
-    width: 100% !important;
-    height: auto !important;
+      width: 100% !important;
+      height: auto !important;
   }
 
-  .section_heading span {
-    border-radius: 16px;
-    background: #01c5e3;
-    padding: 4px 6px;
-    display: inline-flex;
-    color: #233052;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-  }
+     .section_heading span {
+      border-radius: 16px;
+      background: #01c5e3;
+      padding: 4px 6px;
+      display: inline-flex;
+      color: #233052;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 600;
+    }
 
-  @media(min-width:1200px){
+
+    @media(min-width:1200px){
     .section_heading span{
       padding: 2px 14px;
       font-size: 24px;
       border-radius: 16px;
-    }
+
+
+        }
 
     #{{ section.id }}-featured-collection .featured-collection-wrapper{
-      padding-top: {{section.settings.desktop_padding}}px;
+    padding-top: {{section.settings.desktop_padding}}px;
       padding-bottom: {{section.settings.desktop_padding}}px;
-    }
-
-    .icon-column svg {
-      width: auto;
-    }
-
-    .trader-wrapper>div:nth-child(2) {
-      border-top: none !important;
-    }
   }
+  .icon-column svg {
+      width: auto;
+  }
+  .trader-wrapper>div:nth-child(2) {
+      border-top: none !important;
+  }
+    }
 </style>
 
-{%- comment -%}
-Product metafield (List of metaobjects) for this section:
-
-Namespace/key:
-  custom.why_traders_cards
-
-Metaobject fields (suggested):
-  - Icon_img          : text / html (emoji or SVG snippet)
-  - title         : text
-  - description   : text
-  - button_label  : text
-  - button_url    : url
-{%- endcomment -%}
-
-{% liquid
-  assign why_traders_cards = nil
-  assign has_content = false
-
-  if product and product.metafields.custom.why_traders_cards
-    assign meta_ref = product.metafields.custom.why_traders_cards
-    assign meta_val = meta_ref.value
-
-    if meta_val != blank
-      if meta_val.size and meta_val.first
-        assign why_traders_cards = meta_val
-      else
-        assign why_traders_cards = meta_val | array
-      endif
-    endif
-  endif
-
-  if why_traders_cards and why_traders_cards.size > 0
-    assign has_content = true
-  elsif section.blocks.size > 0
-    assign has_content = true
-  endif
-%}
-
-{% if has_content %}
 <section
   class="sw-relative"
   id="{{ section.id }}-featured-collection"
@@ -100,123 +60,49 @@ Metaobject fields (suggested):
       {% render 'section-heading' %}
 
       <!-- Card -->
-     <div
-  class="
-    sw-relative sw-z-10 sw-max-w-5xl sw-mx-auto sw-bg-slate-900/80 sw-border sw-border-teal-500/40
-    sw-rounded-[16px] sw-py-6 sw-px-4 md:sw-p-10 sw-backdrop-blur
-    xl:sw-max-w-[880px] xl:sw-mx-auto xl:sw-p-10
-  "
-  {% if section.settings.bg_image != blank %}
-    style="
-      background-image: url('{{ section.settings.bg_image | image_url: width: 2000 }}');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    "
-  {% endif %}
->
-        <div class="trader-wrapper sw-grid sw-grid-cols-1 md:sw-grid-cols-2 sw-gap-y-6 md:sw-gap-x-12 md:sw-gap-y-8">
+      <div
+        class="
+          sw-relative sw-z-10 sw-max-w-5xl sw-mx-auto sw-bg-slate-900/80 sw-border sw-border-teal-500/40 sw-rounded-[16px]  sw-py-6  sw-px-4  md:sw-p-10 sw-backdrop-blur
 
-          {%- if why_traders_cards -%}
-            {%- comment -%} METAOBJECT CARDS {%- endcomment -%}
-            {% for card in why_traders_cards %}
-              <div class="sw-flex sw-items-start sw-gap-2 xl:sw-gap-4 sw-pt-4 sw-border-t sw-border-teal-500/20 first:sw-border-t-0">
-                <!-- Icon -->
-                <div class="icon-column sw-flex sw-h-5 sw-w-5  xl:sw-h-5 xl:sw-w-5 sw-flex-none sw-items-center sw-justify-center sw-text-teal-200">
-                  {% if card.icon_img %}
+          xl:sw-max-w-[880px] xl:sw-max-auto xl:sw-p-10
+        "
+      >
+        <div class="trader-wrapper sw-grid sw-grid-cols-1 md:sw-grid-cols-2 sw-gap-y-6 md:sw-gap-x-12 md:sw-gap-y-8">
+          {% for block in section.blocks %}
+            {% if block.type == 'feature' %}
+              <div
+                class="sw-flex sw-items-start sw-gap-2 xl:sw-gap-4  sw-pt-4 sw-border-t sw-border-teal-500/20 first:sw-border-t-0  "
+                {{ block.shopify_attributes }}
+              >
+                <!-- Icon circle -->
+                <div class=" icon-column sw-flex sw-h-5 sw-w-5 sw-flex-none sw-items-center sw-justify-center  sw-text-teal-200">
+                  {% if section.settings.icon != blank %}
+                    <span class="sw-leading-none"> 🌍 </span>
+                  {% else %}
                     <span class="sw-w-5 sw-h-5 xl:sw-w-8 xl:sw-h-8 xl:sw-flex">
-                       <img
-                    src="{{ card.icon_img | img_url: width: 30 }}"
-                    alt="icon"
-                    class="sw-w-full sw-h-full sw-object-contain"
-                    loading="lazy"
-                  > 
+                      {{ block.settings.icon }}
                     </span>
                   {% endif %}
                 </div>
-
-                <!-- Text + Button -->
+                <!-- Text -->
                 <div>
-                  {% if card.title %}
-                    <h3 class="sw-font-heading sw-text-base xl:sw-text-[24px] sw-font-semibold sw-text-[#FFF]">
-                      {{ card.title }}
-                    </h3>
-                  {% endif %}
-
-                  {% if card.description %}
-                    <p class="sw-font-body sw-mt-2 xl:sw-mt-3 sw-text-xs xl:sw-text-[16px] sw-font-normal sw-leading-relaxed sw-text-[#FFF]">
-                      {{ card.description }}
-                    </p>
-                  {% endif %}
-
-                  {% if card.button_label and card.button_url %}
-                    <a
-                      href="{{ card.button_url }}"
-                      class="sw-inline-flex sw-mt-3 xl:sw-mt-4 sw-text-center sw-rounded-lg sw-bg-[#01E3BD]
-                             sw-text-black sw-font-heading sw-px-4 sw-py-[6px] sw-text-xs sw-font-semibold
-                             sw-hover:sw-bg-teal-300 sw-transition
-                             xl:sw-text-[16px] xl:sw-px-8 xl:sw-py-[11px]"
-                    >
-                      {{ card.button_label }}
-                    </a>
-                  {% endif %}
+                  <h3 class="sw-font-heading sw-text-base xl:sw-text-[24px] sw-font-semibold sw-text-[#FFF]">
+                    {{ block.settings.title }}
+                  </h3>
+                  <p class="sw-font-body sw-mt-2 xl:sw-mt-3 sw-leading-normal  sw-text-xs xl:sw-text-[16px] sw-font-normal sw-leading-relaxed sw-text-[#FFF]">
+                    {{ block.settings.description }}
+                  </p>
                 </div>
               </div>
-            {% endfor %}
-          {%- else -%}
-            {%- comment -%} FALLBACK: SECTION BLOCKS {%- endcomment -%}
-            {% for block in section.blocks %}
-              {% if block.type == 'feature' %}
-                <div
-                  class="sw-flex sw-items-start sw-gap-2 xl:sw-gap-4 sw-pt-4 sw-border-t sw-border-teal-500/20 first:sw-border-t-0"
-                  {{ block.shopify_attributes }}
-                >
-                  <!-- Icon -->
-                  <div class="icon-column sw-flex sw-h-5 sw-w-5 sw-flex-none sw-items-center sw-justify-center sw-text-teal-200">
-                    {% if block.settings.icon != blank %}
-                      <span class="sw-w-5 sw-h-5 xl:sw-w-8 xl:sw-h-8 xl:sw-flex ">
-                            <img
-                              src="{{ block.settings.icon | img_url: width: 30 }}"
-                              alt="icon"
-                              class="sw-w-full sw-h-full sw-object-contain"
-                              loading="lazy"
-                            > 
-                      </span>
-                    {% endif %}
-                  </div>
-
-                  <!-- Text + Button -->
-                  <div>
-                    <h3 class="sw-font-heading sw-text-base xl:sw-text-[24px] sw-font-semibold sw-text-[#FFF]">
-                      {{ block.settings.title }}
-                    </h3>
-                    <p class="sw-font-body sw-mt-2 xl:sw-mt-3 sw-text-xs xl:sw-text-[16px] sw-font-normal sw-leading-relaxed sw-text-[#FFF]">
-                      {{ block.settings.description }}
-                    </p>
-
-                    {% if block.settings.button_label != blank and block.settings.button_url != blank %}
-                      <a
-                        href="{{ block.settings.button_url }}"
-                        class="sw-inline-flex sw-mt-3 xl:sw-mt-4 sw-text-center sw-rounded-lg sw-bg-[#01E3BD]
-                               sw-text-black sw-font-heading sw-px-4 sw-py-[6px] sw-text-xs sw-font-semibold
-                               sw-hover:sw-bg-teal-300 sw-transition
-                               xl:sw-text-[16px] xl:sw-px-8 xl:sw-py-[11px]"
-                      >
-                        {{ block.settings.button_label }}
-                      </a>
-                    {% endif %}
-                  </div>
-                </div>
-              {% endif %}
-            {% endfor %}
-          {%- endif -%}
-
+            {% endif %}
+          {% endfor %}
         </div>
       </div>
     </div>
   </div>
 
-  {% comment %} header-top-bg-image RIGHT {% endcomment %}
+  {% comment %} header-top-bg-image {% endcomment %}
+
   {% if section.settings.enable_header_right %}
     <div class="header-bg-svg sw-absolute sw-top-[-12px] sw-right-0 md:sw-top-[-100px] sw-w-full">
       <span class="md:sw-hidden">
@@ -231,8 +117,6 @@ Metaobject fields (suggested):
       </span>
     </div>
   {% endif %}
-
-  {% comment %} header-top-bg-image LEFT {% endcomment %}
   {% if section.settings.enable_header_left %}
     <div class="header-bg-svg sw-absolute sw-top-[-12px] sw-right-0 md:sw-top-[-100px] sw-w-full">
       <span class="md:sw-hidden">
@@ -243,8 +127,8 @@ Metaobject fields (suggested):
       </span>
     </div>
   {% endif %}
+  
 </section>
-{% endif %}
 
 {% schema %}
 {
@@ -318,9 +202,10 @@ Metaobject fields (suggested):
       "name": "Feature",
       "settings": [
         {
-          "type": "image_picker",
+          "type": "html",
           "id": "icon",
-          "label": "Icon",
+          "label": "Icon (emoji or short text)",
+          "default": "🌍"
         },
         {
           "type": "text",
@@ -333,16 +218,6 @@ Metaobject fields (suggested):
           "id": "description",
           "label": "Description",
           "default": "Works on US stocks, Indian equity, crypto, forex, commodities - any market"
-        },
-        {
-          "type": "text",
-          "id": "button_label",
-          "label": "Button label"
-        },
-        {
-          "type": "url",
-          "id": "button_url",
-          "label": "Button URL"
         }
       ]
     }

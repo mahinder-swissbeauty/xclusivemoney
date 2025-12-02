@@ -1,18 +1,17 @@
 {% style %}
-  .border-top{
+.border-top{
     border-top: 1px solid rgba(1,197,227,0.2);
-  }
-
+}
   /* Marker hatana */
   #{{ section.id }}-faq details summary::-webkit-details-marker {
     display: none;
   }
 
-  /* Padding (mobile) */
-  #{{ section.id }}-faq{
-    padding-top: {{ section.settings.mobile_padding }}px;
-    padding-bottom: {{ section.settings.mobile_padding }}px;
-  }
+  #{{ section.id }}faq{
+  padding-top: {{section.settings.mobile_padding}}px;
+  padding-bottom: {{section.settings.mobile_padding}}px;
+}
+
 
   /* Plus icon */
   #{{ section.id }}-faq [data-faq-icon-plus] {
@@ -51,50 +50,17 @@
   }
 
   @media(min-width:1200px){
-    #{{ section.id }}-faq{
-      padding-top: {{ section.settings.desktop_padding }}px;
-      padding-bottom: {{ section.settings.desktop_padding }}px;
-    }
-  }
+    #{{ section.id }}faq{
+   padding-top: {{section.settings.desktop_padding}}px;
+    padding-bottom: {{section.settings.desktop_padding}}px;
+}
+}
 {% endstyle %}
 
-{%- liquid
-  assign faq_items = nil
-  assign use_metaobjects = false
-  assign has_content = false
-
-  # 1) Product metafield (metaobject list) se FAQs lao
-  # metafield: product.metafields.custom.faq_items (type: List of metaobjects)
-  if product and product.metafields.custom.faq_items and product.metafields.custom.faq_items.value != blank
-    assign meta_val = product.metafields.custom.faq_items.value
-
-    if meta_val != blank
-      # List of metaobjects
-      if meta_val.size and meta_val.first
-        assign faq_items = meta_val
-      else
-        # Single metaobject -> array bana do loop ke liye
-        assign faq_items = meta_val | array
-      endif
-
-      if faq_items.size > 0
-        assign has_content = true
-        assign use_metaobjects = true
-      endif
-    endif
-  endif
-
-  # 2) Agar metafield empty ho, lekin section blocks me FAQs diye hue hain
-  if has_content == false and section.blocks.size > 0
-    assign has_content = true
-  endif
--%}
-
-{% if has_content %}
 <section
   id="{{ section.id }}-faq"
   class="sw-w-full sw-bg-[#05080D] sw-text-white sw-py-10 xl:sw-py-16"
-  style="background-color: {{ section.settings.section_bg }}; color: {{ section.settings.section_text_color }}"
+   style="background-color: {{section.settings.section_bg}}; color:{{section.settings.section_text_color}}"
 >
   <div class="sw-max-w-[610px] sw-mx-auto sw-px-4">
     {%- if section.settings.heading != blank -%}
@@ -106,62 +72,40 @@
     {%- endif -%}
 
     <div class="sw-border-y sw-border-[#01C5E3]/40">
-      {%- if use_metaobjects -%}
-        {%- for faq in faq_items -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'faq' -%}
           <details
             class=""
+            {{ block.shopify_attributes }}
             {% if section.settings.open_first and forloop.first %}open{% endif %}
           >
             <summary
-              class="border-top sw-flex sw-items-center sw-justify-between sw-py-4 xl:sw-py-5 sw-gap-4 sw-cursor-pointer"
+              class=" border-top sw-flex sw-items-center sw-justify-between sw-py-4 xl:sw-py-5 sw-gap-4 sw-cursor-pointer 
+                
+              "
             >
               <span class="sw-text-[16px] xl:sw-text-[20px] sw-font-normal sw-text-[#ffffff] sw-text-left">
-                {{ faq.question }}
+                {{ block.settings.question }}
               </span>
 
               <span data-faq-icon-plus></span>
             </summary>
 
             <div class="sw-pb-4 sw-text-sm xl:sw-text-[16px] xl:sw-pb-5 sw-text-[#C8C8C8]">
-              {{ faq.answer }}
+              {{ block.settings.answer }}
             </div>
           </details>
-        {%- endfor -%}
-      {%- else -%}
-        {%- for block in section.blocks -%}
-          {%- if block.type == 'faq' -%}
-            <details
-              class=""
-              {{ block.shopify_attributes }}
-              {% if section.settings.open_first and forloop.first %}open{% endif %}
-            >
-              <summary
-                class="border-top sw-flex sw-items-center sw-justify-between sw-py-4 xl:sw-py-5 sw-gap-4 sw-cursor-pointer"
-              >
-                <span class="sw-text-[16px] xl:sw-text-[20px] sw-font-normal sw-text-[#ffffff] sw-text-left">
-                  {{ block.settings.question }}
-                </span>
-
-                <span data-faq-icon-plus></span>
-              </summary>
-
-              <div class="sw-pb-4 sw-text-sm xl:sw-text-[16px] xl:sw-pb-5 sw-text-[#C8C8C8]">
-                {{ block.settings.answer }}
-              </div>
-            </details>
-          {%- endif -%}
-        {%- endfor -%}
-      {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
     </div>
   </div>
 </section>
-{% endif %}
 
 {% schema %}
 {
   "name": "FAQ",
   "settings": [
-    {
+     {
       "type": "range",
       "id": "mobile_padding",
       "label": "Mobile Padding Y axis",

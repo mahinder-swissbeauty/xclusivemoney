@@ -1,123 +1,10 @@
 {% comment %}
   Section: TradeEdge Pro Comparison (Desktop layout tuned)
-
-  Product metafield:
-  - Namespace/key: custom.tradeedge_comparison_block
-  - Type: Metaobject reference (single) to: tradeedge_comparison_block
-
-  Suggested metaobject fields:
-  - without_title      : text
-  - with_title         : text
-  - without_point_1-4  : text / textarea
-  - with_point_1-4     : text / textarea
-  - left_avatar_image  : image
-  - left_avatar_alt    : text
-  - right_avatar_image : image
-  - right_avatar_alt   : text
 {% endcomment %}
 
-{% liquid
-  assign comp_meta = nil
-
-  if product and product.metafields.custom.tradeedge_comparison_block
-    assign comp_meta = product.metafields.custom.tradeedge_comparison_block.value
-  endif
-
-  comment
-    Base values from section settings (fallback)
-  endcomment
-  assign without_title  = section.settings.without_title
-  assign with_title     = section.settings.with_title
-
-  assign without_point_1 = section.settings.without_point_1
-  assign without_point_2 = section.settings.without_point_2
-  assign without_point_3 = section.settings.without_point_3
-  assign without_point_4 = section.settings.without_point_4
-
-  assign with_point_1 = section.settings.with_point_1
-  assign with_point_2 = section.settings.with_point_2
-  assign with_point_3 = section.settings.with_point_3
-  assign with_point_4 = section.settings.with_point_4
-
-  assign left_avatar_image  = section.settings.left_avatar_image
-  assign left_avatar_alt    = section.settings.left_avatar_alt
-  assign right_avatar_image = section.settings.right_avatar_image
-  assign right_avatar_alt   = section.settings.right_avatar_alt
-
-  if comp_meta
-    if comp_meta.without_title != blank
-      assign without_title = comp_meta.without_title
-    endif
-
-    if comp_meta.with_title != blank
-      assign with_title = comp_meta.with_title
-    endif
-
-    if comp_meta.without_point_1 != blank
-      assign without_point_1 = comp_meta.without_point_1
-    endif
-    if comp_meta.without_point_2 != blank
-      assign without_point_2 = comp_meta.without_point_2
-    endif
-    if comp_meta.without_point_3 != blank
-      assign without_point_3 = comp_meta.without_point_3
-    endif
-    if comp_meta.without_point_4 != blank
-      assign without_point_4 = comp_meta.without_point_4
-    endif
-
-    if comp_meta.with_point_1 != blank
-      assign with_point_1 = comp_meta.with_point_1
-    endif
-    if comp_meta.with_point_2 != blank
-      assign with_point_2 = comp_meta.with_point_2
-    endif
-    if comp_meta.with_point_3 != blank
-      assign with_point_3 = comp_meta.with_point_3
-    endif
-    if comp_meta.with_point_4 != blank
-      assign with_point_4 = comp_meta.with_point_4
-    endif
-
-    if comp_meta.left_avatar_image != blank
-      assign left_avatar_image = comp_meta.left_avatar_image
-    endif
-    if comp_meta.left_avatar_alt != blank
-      assign left_avatar_alt = comp_meta.left_avatar_alt
-    endif
-
-    if comp_meta.right_avatar_image != blank
-      assign right_avatar_image = comp_meta.right_avatar_image
-    endif
-    if comp_meta.right_avatar_alt != blank
-      assign right_avatar_alt = comp_meta.right_avatar_alt
-    endif
-  endif
-
-  comment
-    Decide if section has any content or not
-  endcomment
-  assign has_content = false
-
-  if without_title != blank
-    assign has_content = true
-  elsif with_title != blank
-    assign has_content = true
-  elsif without_point_1 != blank or without_point_2 != blank or without_point_3 != blank or without_point_4 != blank
-    assign has_content = true
-  elsif with_point_1 != blank or with_point_2 != blank or with_point_3 != blank or with_point_4 != blank
-    assign has_content = true
-  elsif left_avatar_image or right_avatar_image
-    assign has_content = true
-  endif
-%}
-
-{% if has_content %}
-
-<section
-  id="{{ section.id }}-tradeedge-comparison"
+<section id="{{ section.id }}-tradeedge-comparison"
   class="sw-bg-[#151515] sw-text-white sw-py-10 sw-px-4 xl:sw-py-16"
-  style="background-color: {{ section.settings.section_bg }}; color: {{ section.settings.section_text_color }};"
+  style="background-color: {{section.settings.section_bg}}; color:{{section.settings.section_text_color}}"
 >
 
   <!-- MAIN HEADING -->
@@ -128,172 +15,80 @@
 
     {%- comment -%} LEFT: WITHOUT TRADEDGE PRO {%- endcomment -%}
     <div class="sw-grid sw-grid-cols-[88px,1fr] sw-gap-6 xl:sw-grid-cols-[120px,1fr] xl:sw-gap-10">
-      <!-- Avatar -->
+      <!-- Avatar / Image -->
       <div class="sw-flex-shrink-0 sw-mt-auto">
-        {% if left_avatar_image %}
-          <img
-            src="{{ left_avatar_image | image_url: width: 220 }}"
-            alt="{{ left_avatar_alt | default: without_title }}"
-            class="sw-w-full sw-h-auto sw-object-contain"
-            loading="lazy"
-          >
+        {% if section.settings.without_image != blank %}
+          {{ section.settings.without_image
+            | image_url: width: 240
+            | image_tag:
+              class: 'sw-w-full sw-h-auto sw-object-contain',
+              loading: 'lazy',
+              alt: section.settings.without_title | escape
+          }}
         {% endif %}
       </div>
 
       <!-- Text block -->
       <div class="sw-flex-1 sw-text-left">
-        {% if without_title != blank %}
-          <h3 class="sw-text-[16px] sw-font-semibold sw-text-[#FF5B6F] sw-mb-6 xl:sw-text-[24px]">
-            {{ without_title }}
-          </h3>
-        {% endif %}
-
+        <h3 class="sw-text-[16px] sw-font-semibold sw-text-[#FF5B6F] sw-mb-6 xl:sw-text-[24px]">
+          {{ section.settings.without_title }}
+        </h3>
         <ul class="sw-space-y-2.5 xl:sw-space-y-4 sw-text-xs sm:sw-text-sm xl:sw-text-base">
-          {% if without_point_1 != blank %}
-            <li class="sw-flex sw-items-start sw-gap-2.5">
-              <span class="sw-flex sw-items-center sw-justify-center sw-w-3 sw-h-3 xl:sw-w-4 xl:sw-h-4">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5.48369 9.07652C5.48369 9.22128 5.52711 9.34352 5.61397 9.44324C5.70404 9.54297 5.83594 9.59283 6.00965 9.59283C6.18015 9.59283 6.31043 9.54297 6.40051 9.44324C6.4938 9.34352 6.54044 9.22128 6.54044 9.07652C6.54044 8.93819 6.4938 8.81916 6.40051 8.71944C6.31043 8.62293 6.18015 8.57468 6.00965 8.57468C5.83594 8.57468 5.70404 8.62293 5.61397 8.71944C5.52711 8.81916 5.48369 8.93819 5.48369 9.07652Z" fill="white"/>
-                  <path d="M6.44876 7.69164V2.47059H5.55124V7.69164H6.44876Z" fill="white"/>
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M0 6C0 9.31371 2.68629 12 6 12C9.31371 12 12 9.31371 12 6C12 2.68629 9.31371 0 6 0C2.68629 0 0 2.68629 0 6ZM6 11.2941C3.07614 11.2941 0.705882 8.92386 0.705882 6C0.705882 3.07614 3.07614 0.705882 6 0.705882C8.92386 0.705882 11.2941 3.07614 11.2941 6C11.2941 8.92386 8.92386 11.2941 6 11.2941Z" fill="#FF5B6F"/>
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M0.705882 6C0.705882 8.92386 3.07614 11.2941 6 11.2941C8.92386 11.2941 11.2941 8.92386 11.2941 6C11.2941 3.07614 8.92386 0.705882 6 0.705882C3.07614 0.705882 0.705882 3.07614 0.705882 6ZM5.48369 9.07652C5.48369 9.22128 5.52711 9.34352 5.61397 9.44324C5.70404 9.54297 5.83594 9.59283 6.00965 9.59283C6.18015 9.59283 6.31043 9.54297 6.40051 9.44324C6.4938 9.34352 6.54044 9.22128 6.54044 9.07652C6.54044 8.93819 6.4938 8.81916 6.40051 8.71944C6.31043 8.62293 6.18015 8.57468 6.00965 8.57468C5.83594 8.57468 5.70404 8.62293 5.61397 8.71944C5.52711 8.81916 5.48369 8.93819 5.48369 9.07652ZM6.44876 7.69164V2.47059H5.55124V7.69164H6.44876Z" fill="#FF5B6F"/>
-                </svg>
-              </span>
-              <span class="sw-text-[#f3f4f6] sw-text-xs xl:sw-text-[16px]">
-                {{ without_point_1 }}
-              </span>
-            </li>
-          {% endif %}
-
-          {% if without_point_2 != blank %}
-            <li class="sw-flex sw-items-start sw-gap-2.5">
-              <span class="sw-flex sw-items-center sw-justify-center sw-w-3 sw-h-3 xl:sw-w-4 xl:sw-h-4">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5.48369 9.07652C5.48369 9.22128 5.52711 9.34352 5.61397 9.44324C5.70404 9.54297 5.83594 9.59283 6.00965 9.59283C6.18015 9.59283 6.31043 9.54297 6.40051 9.44324C6.4938 9.34352 6.54044 9.22128 6.54044 9.07652C6.54044 8.93819 6.4938 8.81916 6.40051 8.71944C6.31043 8.62293 6.18015 8.57468 6.00965 8.57468C5.83594 8.57468 5.70404 8.62293 5.61397 8.71944C5.52711 8.81916 5.48369 8.93819 5.48369 9.07652Z" fill="white"/>
-                  <path d="M6.44876 7.69164V2.47059H5.55124V7.69164H6.44876Z" fill="white"/>
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M0 6C0 9.31371 2.68629 12 6 12C9.31371 12 12 9.31371 12 6C12 2.68629 9.31371 0 6 0C2.68629 0 0 2.68629 0 6ZM6 11.2941C3.07614 11.2941 0.705882 8.92386 0.705882 6C0.705882 3.07614 3.07614 0.705882 6 0.705882C8.92386 0.705882 11.2941 3.07614 11.2941 6C11.2941 8.92386 8.92386 11.2941 6 11.2941Z" fill="#FF5B6F"/>
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M0.705882 6C0.705882 8.92386 3.07614 11.2941 6 11.2941C8.92386 11.2941 11.2941 8.92386 11.2941 6C11.2941 3.07614 8.92386 0.705882 6 0.705882C3.07614 0.705882 0.705882 3.07614 0.705882 6ZM5.48369 9.07652C5.48369 9.22128 5.52711 9.34352 5.61397 9.44324C5.70404 9.54297 5.83594 9.59283 6.00965 9.59283C6.18015 9.59283 6.31043 9.54297 6.40051 9.44324C6.4938 9.34352 6.54044 9.22128 6.54044 9.07652C6.54044 8.93819 6.4938 8.81916 6.40051 8.71944C6.31043 8.62293 6.18015 8.57468 6.00965 8.57468C5.83594 8.57468 5.70404 8.62293 5.61397 8.71944C5.52711 8.81916 5.48369 8.93819 5.48369 9.07652ZM6.44876 7.69164V2.47059H5.55124V7.69164H6.44876Z" fill="#FF5B6F"/>
-                </svg>
-              </span>
-              <span class="sw-text-[#f3f4f6] sw-text-xs xl:sw-text-[16px]">
-                {{ without_point_2 }}
-              </span>
-            </li>
-          {% endif %}
-
-          {% if without_point_3 != blank %}
-            <li class="sw-flex sw-items-start sw-gap-2.5">
-              <span class="sw-flex sw-items-center sw-justify-center sw-w-3 sw-h-3 xl:sw-w-4 xl:sw-h-4">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5.48369 9.07652C5.48369 9.22128 5.52711 9.34352 5.61397 9.44324C5.70404 9.54297 5.83594 9.59283 6.00965 9.59283C6.18015 9.59283 6.31043 9.54297 6.40051 9.44324C6.4938 9.34352 6.54044 9.22128 6.54044 9.07652C6.54044 8.93819 6.4938 8.81916 6.40051 8.71944C6.31043 8.62293 6.18015 8.57468 6.00965 8.57468C5.83594 8.57468 5.70404 8.62293 5.61397 8.71944C5.52711 8.81916 5.48369 8.93819 5.48369 9.07652Z" fill="white"/>
-                  <path d="M6.44876 7.69164V2.47059H5.55124V7.69164H6.44876Z" fill="white"/>
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M0 6C0 9.31371 2.68629 12 6 12C9.31371 12 12 9.31371 12 6C12 2.68629 9.31371 0 6 0C2.68629 0 0 2.68629 0 6ZM6 11.2941C3.07614 11.2941 0.705882 8.92386 0.705882 6C0.705882 3.07614 3.07614 0.705882 6 0.705882C8.92386 0.705882 11.2941 3.07614 11.2941 6C11.2941 8.92386 8.92386 11.2941 6 11.2941Z" fill="#FF5B6F"/>
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M0.705882 6C0.705882 8.92386 3.07614 11.2941 6 11.2941C8.92386 11.2941 11.2941 8.92386 11.2941 6C11.2941 3.07614 8.92386 0.705882 6 0.705882C3.07614 0.705882 0.705882 3.07614 0.705882 6ZM5.48369 9.07652C5.48369 9.22128 5.52711 9.34352 5.61397 9.44324C5.70404 9.54297 5.83594 9.59283 6.00965 9.59283C6.18015 9.59283 6.31043 9.54297 6.40051 9.44324C6.4938 9.34352 6.54044 9.22128 6.54044 9.07652C6.54044 8.93819 6.4938 8.81916 6.40051 8.71944C6.31043 8.62293 6.18015 8.57468 6.00965 8.57468C5.83594 8.57468 5.70404 8.62293 5.61397 8.71944C5.52711 8.81916 5.48369 8.93819 5.48369 9.07652ZM6.44876 7.69164V2.47059H5.55124V7.69164H6.44876Z" fill="#FF5B6F"/>
-                </svg>
-              </span>
-              <span class="sw-text-[#f3f4f6] sw-text-xs xl:sw-text-[16px]">
-                {{ without_point_3 }}
-              </span>
-            </li>
-          {% endif %}
-
-          {% if without_point_4 != blank %}
-            <li class="sw-flex sw-items-start sw-gap-2.5">
-              <span class="sw-flex sw-items-center sw-justify-center sw-w-3 sw-h-3 xl:sw-w-4 xl:sw-h-4">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5.48369 9.07652C5.48369 9.22128 5.52711 9.34352 5.61397 9.44324C5.70404 9.54297 5.83594 9.59283 6.00965 9.59283C6.18015 9.59283 6.31043 9.54297 6.40051 9.44324C6.4938 9.34352 6.54044 9.22128 6.54044 9.07652C6.54044 8.93819 6.4938 8.81916 6.40051 8.71944C6.31043 8.62293 6.18015 8.57468 6.00965 8.57468C5.83594 8.57468 5.70404 8.62293 5.61397 8.71944C5.52711 8.81916 5.48369 8.93819 5.48369 9.07652Z" fill="white"/>
-                  <path d="M6.44876 7.69164V2.47059H5.55124V7.69164H6.44876Z" fill="white"/>
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M0 6C0 9.31371 2.68629 12 6 12C9.31371 12 12 9.31371 12 6C12 2.68629 9.31371 0 6 0C2.68629 0 0 2.68629 0 6ZM6 11.2941C3.07614 11.2941 0.705882 8.92386 0.705882 6C0.705882 3.07614 3.07614 0.705882 6 0.705882C8.92386 0.705882 11.2941 3.07614 11.2941 6C11.2941 8.92386 8.92386 11.2941 6 11.2941Z" fill="#FF5B6F"/>
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M0.705882 6C0.705882 8.92386 3.07614 11.2941 6 11.2941C8.92386 11.2941 11.2941 8.92386 11.2941 6C11.2941 3.07614 8.92386 0.705882 6 0.705882C3.07614 0.705882 0.705882 3.07614 0.705882 6ZM5.48369 9.07652C5.48369 9.22128 5.52711 9.34352 5.61397 9.44324C5.70404 9.54297 5.83594 9.59283 6.00965 9.59283C6.18015 9.59283 6.31043 9.54297 6.40051 9.44324C6.4938 9.34352 6.54044 9.22128 6.54044 9.07652C6.54044 8.93819 6.4938 8.81916 6.40051 8.71944C6.31043 8.62293 6.18015 8.57468 6.00965 8.57468C5.83594 8.57468 5.70404 8.62293 5.61397 8.71944C5.52711 8.81916 5.48369 8.93819 5.48369 9.07652ZM6.44876 7.69164V2.47059H5.55124V7.69164H6.44876Z" fill="#FF5B6F"/>
-                </svg>
-              </span>
-              <span class="sw-text-[#f3f4f6] sw-text-xs xl:sw-text-[16px]">
-                {{ without_point_4 }}
-              </span>
-            </li>
-          {% endif %}
+          {% for i in (1..4) %}
+            {% assign key = 'without_point_' | append: i %}
+            {% if section.settings[key] != blank %}
+              <li class="sw-flex sw-items-start sw-gap-2.5">
+                <span class="sw-flex sw-items-center sw-justify-center sw-w-3 sw-h-3 xl:sw-w-4 xl:sw-h-4">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.48369 9.07652C5.48369 9.22128 5.52711 9.34352 5.61397 9.44324C5.70404 9.54297 5.83594 9.59283 6.00965 9.59283C6.18015 9.59283 6.31043 9.54297 6.40051 9.44324C6.4938 9.34352 6.54044 9.22128 6.54044 9.07652C6.54044 8.93819 6.4938 8.81916 6.40051 8.71944C6.31043 8.62293 6.18015 8.57468 6.00965 8.57468C5.83594 8.57468 5.70404 8.62293 5.61397 8.71944C5.52711 8.81916 5.48369 8.93819 5.48369 9.07652Z" fill="white"/>
+                    <path d="M6.44876 7.69164V2.47059H5.55124V7.69164H6.44876Z" fill="white"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0 6C0 9.31371 2.68629 12 6 12C9.31371 12 12 9.31371 12 6C12 2.68629 9.31371 0 6 0C2.68629 0 0 2.68629 0 6ZM6 11.2941C3.07614 11.2941 0.705882 8.92386 0.705882 6C0.705882 3.07614 3.07614 0.705882 6 0.705882C8.92386 0.705882 11.2941 3.07614 11.2941 6C11.2941 8.92386 8.92386 11.2941 6 11.2941Z" fill="#FF5B6F"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0.705882 6C0.705882 8.92386 3.07614 11.2941 6 11.2941C8.92386 11.2941 11.2941 8.92386 11.2941 6C11.2941 3.07614 8.92386 0.705882 6 0.705882C3.07614 0.705882 0.705882 3.07614 0.705882 6ZM5.48369 9.07652C5.48369 9.22128 5.52711 9.34352 5.61397 9.44324C5.70404 9.54297 5.83594 9.59283 6.00965 9.59283C6.18015 9.59283 6.31043 9.54297 6.40051 9.44324C6.4938 9.34352 6.54044 9.22128 6.54044 9.07652C6.54044 8.93819 6.4938 8.81916 6.40051 8.71944C6.31043 8.62293 6.18015 8.57468 6.00965 8.57468C5.83594 8.57468 5.70404 8.62293 5.61397 8.71944C5.52711 8.81916 5.48369 8.93819 5.48369 9.07652ZM6.44876 7.69164V2.47059H5.55124V7.69164H6.44876Z" fill="#FF5B6F"/>
+                  </svg>
+                </span>
+                <span class="sw-text-[#f3f4f6] sw-text-xs xl:sw-text-[16px]">{{ section.settings[key] }}</span>
+              </li>
+            {% endif %}
+          {% endfor %}
         </ul>
       </div>
     </div>
 
     {%- comment -%} RIGHT: WITH TRADEDGE PRO {%- endcomment -%}
-    <div class="sw-grid sw-grid-cols-[1fr,88px] sw-gap-6 xl:sw-grid-cols-[1fr,120px] xl:sw-gap-10">
+    <div class="sw-grid sw-grid-cols-[1fr,88px] xl:sw-grid-cols-[120px,1fr] sw-gap-6 xl:sw-gap-10 ">
       <!-- Text block -->
-      <div class="sw-flex-1 sw-text-left">
-        {% if with_title != blank %}
-          <h3 class="sw-text-[16px] sw-font-semibold sw-text-[#22c55e] sw-mb-6 xl:sw-text-[24px]">
-            {{ with_title }}
-          </h3>
-        {% endif %}
-
+      <div class="sw-flex-1 sw-text-left xl:sw-text-right xl:sw-order-2">
+        <h3 class="sw-text-[16px] sw-font-semibold sw-text-[#22c55e] sw-mb-6 xl:sw-text-[24px]">
+          {{ section.settings.with_title }}
+        </h3>
         <ul class="sw-space-y-2.5 xl:sw-space-y-4 sw-text-xs sm:sw-text-sm xl:sw-text-base">
-          {% if with_point_1 != blank %}
-            <li class="sw-flex sw-items-start sw-gap-2.5">
-              <span class="sw-flex sw-items-center sw-justify-center sw-w-3 sw-h-3 xl:sw-w-4 xl:sw-h-4">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 6C12 9.31371 9.31371 12 6 12C2.68629 12 0 9.31371 0 6C0 2.68629 2.68629 0 6 0C9.31371 0 12 2.68629 12 6Z" fill="#16A34A"/>
-                  <path d="M4.98002 8.51043L2.60502 6.13543L3.19877 5.54168L4.98002 7.32293L8.80294 3.50001L9.39669 4.09376L4.98002 8.51043Z" fill="white"/>
-                </svg>
-              </span>
-              <span class="sw-text-[#f3f4f6] sw-text-xs xl:sw-text-[16px]">
-                {{ with_point_1 }}
-              </span>
-            </li>
-          {% endif %}
-
-          {% if with_point_2 != blank %}
-            <li class="sw-flex sw-items-start sw-gap-2.5">
-              <span class="sw-flex sw-items-center sw-justify-center sw-w-3 sw-h-3 xl:sw-w-4 xl:sw-h-4">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 6C12 9.31371 9.31371 12 6 12C2.68629 12 0 9.31371 0 6C0 2.68629 2.68629 0 6 0C9.31371 0 12 2.68629 12 6Z" fill="#16A34A"/>
-                  <path d="M4.98002 8.51043L2.60502 6.13543L3.19877 5.54168L4.98002 7.32293L8.80294 3.50001L9.39669 4.09376L4.98002 8.51043Z" fill="white"/>
-                </svg>
-              </span>
-              <span class="sw-text-[#f3f4f6] sw-text-xs xl:sw-text-[16px]">
-                {{ with_point_2 }}
-              </span>
-            </li>
-          {% endif %}
-
-          {% if with_point_3 != blank %}
-            <li class="sw-flex sw-items-start sw-gap-2.5">
-              <span class="sw-flex sw-items-center sw-justify-center sw-w-3 sw-h-3 xl:sw-w-4 xl:sw-h-4">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 6C12 9.31371 9.31371 12 6 12C2.68629 12 0 9.31371 0 6C0 2.68629 2.68629 0 6 0C9.31371 0 12 2.68629 12 6Z" fill="#16A34A"/>
-                  <path d="M4.98002 8.51043L2.60502 6.13543L3.19877 5.54168L4.98002 7.32293L8.80294 3.50001L9.39669 4.09376L4.98002 8.51043Z" fill="white"/>
-                </svg>
-              </span>
-              <span class="sw-text-[#f3f4f6] sw-text-xs xl:sw-text-[16px]">
-                {{ with_point_3 }}
-              </span>
-            </li>
-          {% endif %}
-
-          {% if with_point_4 != blank %}
-            <li class="sw-flex sw-items-start sw-gap-2.5">
-              <span class="sw-flex sw-items-center sw-justify-center sw-w-3 sw-h-3 xl:sw-w-4 xl:sw-h-4">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 6C12 9.31371 9.31371 12 6 12C2.68629 12 0 9.31371 0 6C0 2.68629 2.68629 0 6 0C9.31371 0 12 2.68629 12 6Z" fill="#16A34A"/>
-                  <path d="M4.98002 8.51043L2.60502 6.13543L3.19877 5.54168L4.98002 7.32293L8.80294 3.50001L9.39669 4.09376L4.98002 8.51043Z" fill="white"/>
-                </svg>
-              </span>
-              <span class="sw-text-[#f3f4f6] sw-text-xs xl:sw-text-[16px]">
-                {{ with_point_4 }}
-              </span>
-            </li>
-          {% endif %}
+          {% for i in (1..4) %}
+            {% assign key = 'with_point_' | append: i %}
+            {% if section.settings[key] != blank %}
+              <li class="sw-flex sw-items-start sw-gap-2.5 xl:sw-flex-row-reverse">
+                <span class="sw-flex sw-items-center sw-justify-center sw-w-3 sw-h-3 xl:sw-w-4 xl:sw-h-4">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 6C12 9.31371 9.31371 12 6 12C2.68629 12 0 9.31371 0 6C0 2.68629 2.68629 0 6 0C9.31371 0 12 2.68629 12 6Z" fill="#16A34A"/>
+                    <path d="M4.98002 8.51043L2.60502 6.13543L3.19877 5.54168L4.98002 7.32293L8.80294 3.50001L9.39669 4.09376L4.98002 8.51043Z" fill="white"/>
+                  </svg>
+                </span>
+                <span class="sw-text-[#f3f4f6] sw-text-xs xl:sw-text-[16px]">{{ section.settings[key] }}</span>
+              </li>
+            {% endif %}
+          {% endfor %}
         </ul>
       </div>
 
-      <!-- Avatar -->
-      <div class="sw-flex-shrink-0 sw-mt-auto">
-        {% if right_avatar_image %}
-          <img
-            src="{{ right_avatar_image | image_url: width: 220 }}"
-            alt="{{ right_avatar_alt | default: with_title }}"
-            class="sw-w-full sw-h-auto sw-object-contain"
-            loading="lazy"
-          >
+      <!-- Avatar / Image -->
+      <div class="sw-flex-shrink-0 sw-mt-auto xl:sw-order-1">
+        {% if section.settings.with_image != blank %}
+          {{ section.settings.with_image
+            | image_url: width: 240
+            | image_tag:
+              class: 'sw-w-full sw-h-auto sw-object-contain',
+              loading: 'lazy',
+              alt: section.settings.with_title | escape
+          }}
         {% endif %}
       </div>
     </div>
@@ -312,14 +107,13 @@
       padding-top: {{ section.settings.desktop_padding_top }}px;
       padding-bottom: {{ section.settings.desktop_padding_bottom }}px;
     }
-    .tradeedge-wrap svg {
+    .tradeedge-wrap img{
       width: 100%;
       height: auto;
+      display: block;
     }
   }
 </style>
-
-{% endif %}
 
 {% schema %}
 {
@@ -365,7 +159,7 @@
       "max": 200,
       "step": 4,
       "unit": "px",
-      "default": 80
+      "default": 64
     },
     {
       "type": "range",
@@ -375,7 +169,7 @@
       "max": 200,
       "step": 4,
       "unit": "px",
-      "default": 80
+      "default": 64
     },
     {
       "type": "html",
@@ -403,15 +197,29 @@
     },
 
     {
-      "type": "header",
-      "content": "Left (Without TradeEdge Pro)"
-    },
-    {
       "type": "text",
       "id": "without_title",
       "label": "Left title (without)",
       "default": "Without TradeEdge Pro"
     },
+    {
+      "type": "image_picker",
+      "id": "without_image",
+      "label": "Left avatar image (without)"
+    },
+
+    {
+      "type": "text",
+      "id": "with_title",
+      "label": "Right title (with)",
+      "default": "With TradeEdge Pro"
+    },
+    {
+      "type": "image_picker",
+      "id": "with_image",
+      "label": "Right avatar image (with)"
+    },
+
     {
       "type": "text",
       "id": "without_point_1",
@@ -436,28 +244,7 @@
       "label": "Without point 4",
       "default": "Struggling to find profitable setups"
     },
-    {
-      "type": "image_picker",
-      "id": "left_avatar_image",
-      "label": "Left avatar image (Without TradeEdge)"
-    },
-    {
-      "type": "text",
-      "id": "left_avatar_alt",
-      "label": "Left avatar alt text",
-      "default": "Trader without TradeEdge Pro"
-    },
 
-    {
-      "type": "header",
-      "content": "Right (With TradeEdge Pro)"
-    },
-    {
-      "type": "text",
-      "id": "with_title",
-      "label": "Right title (with)",
-      "default": "With TradeEdge Pro"
-    },
     {
       "type": "text",
       "id": "with_point_1",
@@ -481,17 +268,6 @@
       "id": "with_point_4",
       "label": "With point 4",
       "default": "Multiple pre-built profitable setups"
-    },
-    {
-      "type": "image_picker",
-      "id": "right_avatar_image",
-      "label": "Right avatar image (With TradeEdge)"
-    },
-    {
-      "type": "text",
-      "id": "right_avatar_alt",
-      "label": "Right avatar alt text",
-      "default": "Trader with TradeEdge Pro"
     }
   ],
   "presets": [
