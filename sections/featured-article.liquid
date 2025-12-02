@@ -1,53 +1,75 @@
 <style>
-    .logo-wrapper img{
-        max-width: 100%;
+  .logo-wrapper img{
+    max-width: 100%;
+  }
+
+  /* Title max 2 lines */
+  #{{ section.id }}-featured-article .sw-fa-title-clamp{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Body clamp */
+  #{{ section.id }}-featured-article .sw-fa-body-clamp{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  @media(min-width: 1024px){
+    #{{ section.id }}-featured-article .sw-fa-body-clamp{
+      -webkit-line-clamp: 4;
     }
-#{{ section.id }}-featured-collection .featured-collection-wrapper{
-  padding-top: {{section.settings.mobile_padding}}px;
-  padding-bottom: {{section.settings.mobile_padding}}px;
-}
+  }
 
-.slider-dots button.is-active {
-  width: 36px;
-  background: #01C5E3 !important;
-  height: 8px;
-}
+  /* 🔹 yahan id ko sahi kiya (single -) */
+  #{{ section.id }}-featured-article .featured-collection-wrapper{
+    padding-top: {{ section.settings.mobile_padding }}px;
+    padding-bottom: {{ section.settings.mobile_padding }}px;
+  }
 
-/* arrows */
-.fc-arrow{
-  display:none;
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  z-index:30;
-  background:transparent;
-  border:none;
-  cursor:pointer;
-  align-items:center;
-  justify-content:center;
-  width:40px;
-  height:40px;
-}
-.fc-arrow-left{ left:8px; }
-.fc-arrow-right{ right:8px; }
+  .slider-dots button.is-active {
+    width: 36px;
+    background: #01C5E3 !important;
+    height: 8px;
+  }
 
-@media(min-width:1200px){
   .fc-arrow{
-    display:flex;
+    display:none;
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:30;
+    background:transparent;
+    border:none;
+    cursor:pointer;
+    align-items:center;
+    justify-content:center;
+    width:40px;
+    height:40px;
   }
-  .fc-arrow{ width:40px; height:40px; }
-  .fc-arrow-left {
-    left: -40px;
-  }
-  .fc-arrow-right {
-    right: -55px;
-  }
+  .fc-arrow-left{ left:8px; }
+  .fc-arrow-right{ right:8px; }
 
-  #{{ section.id }}-featured-collection .featured-collection-wrapper{
-    padding-top: {{section.settings.desktop_padding}}px;
-    padding-bottom: {{section.settings.desktop_padding}}px;
+  @media(min-width:1200px){
+    .fc-arrow{
+      display:flex;
+    }
+    .fc-arrow{ width:40px; height:40px; }
+    .fc-arrow-left { left: -40px; }
+    .fc-arrow-right { right: -55px; }
+
+    /* 🔹 yahan bhi id ko sahi kiya */
+    #{{ section.id }}-featured-article .featured-collection-wrapper{
+      padding-top: {{ section.settings.desktop_padding }}px;
+      padding-bottom: {{ section.settings.desktop_padding }}px;
+    }
   }
-}
 </style>
 
 {% if section.settings.enable_slider %}
