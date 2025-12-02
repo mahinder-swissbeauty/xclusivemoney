@@ -48,7 +48,11 @@
 <section
   class="sw-relative"
   id="{{ section.id }}-featured-collection"
-  style="background-color: {{section.settings.section_bg}}; color:{{section.settings.section_text_color}}"
+  style="background-color: {{section.settings.section_bg}}; color:{{section.settings.section_text_color}}
+  
+  
+  
+  "
 >
   <div class="xl:sw-w-[1152px] xl:sw-mx-auto">
     <div class="featured-collection-wrapper sw-relative sw-p-4">
@@ -185,6 +189,11 @@
       "label": "Section Title Color",
       "id": "section_title_color",
       "default": "#000000"
+    },
+     {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background image"
     }
   ],
   "blocks": [

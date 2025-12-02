@@ -10,62 +10,37 @@
       </h2>
     {%- endif -%}
 
-    <div class="sw-flex sw-flex-wrap xl:sw-flex-nowrap sw-justify-center sw-gap-11 xl:sw-gap-10 sw-mb-[18px] xl:sw-mb-10 sw-place-items-center sw-justify-items-center">
+    {%- if pricing_cards and pricing_cards.size > 0 -%}
+      <div class="sw-grid sw-grid-cols-1 xl:sw-grid-cols-3 sw-gap-11 xl:sw-gap-10 sw-mb-[18px] xl:sw-mb-10">
 
-      {%- comment -%} CARD 1 {%- endcomment -%}
-      {% if section.settings.enable_card1 %}
-      <div
-        class="sw-relative sw-rounded-[16px] sw-w-full xl:sw-w-1/3 sw-border-2 sw-bg-[#05080D] sw-px-2 sw-pt-[25px] sw-pb-2 sw-flex sw-flex-col sw-gap-4 sw-shadow-[0_18px_40px_rgba(0,0,0,0.75)]"
-        style="border-color: {{ section.settings.card1_border_color }};">
-        {%- if section.settings.card1_label != blank -%}
-          <div class="sw-absolute sw--top-[13px] sw-left-1/2 sw--translate-x-1/2">
-            <div
-              class="sw-inline-flex sw-items-center sw-justify-center sw-rounded-full sw-px-4 sw-py-1 sw-text-[12px] sw-font-bold sw-text-[#031015]"
-              style="background: {{ section.settings.card1_accent }};"
-            >
-              {{ section.settings.card1_label }}
-            </div>
-          </div>
-        {%- endif -%}
+        {%- for card in pricing_cards -%}
+          {%- comment -%}
+            Feature array build
+          {%- endcomment -%}
+          {%- assign features_raw = '' -%}
+          {%- if card.feature_1 != blank -%}
+            {%- assign features_raw = features_raw | append: card.feature_1 | append: '||' -%}
+          {%- endif -%}
+          {%- if card.feature_2 != blank -%}
+            {%- assign features_raw = features_raw | append: card.feature_2 | append: '||' -%}
+          {%- endif -%}
+          {%- if card.feature_3 != blank -%}
+            {%- assign features_raw = features_raw | append: card.feature_3 | append: '||' -%}
+          {%- endif -%}
+          {%- assign features = features_raw | split: '||' -%}
 
-        <div class="sw-px-4 sw-pb-9 xl:sw-pb-6">
-          <div class="sw-flex sw-gap-2 sw-items-center sw-mb-2">
-            {% if section.settings.card1_icon != blank %}
-              <div class="sw-w-10 sw-h-10 sw-mb-3">
-                <img
-                  src="{{ section.settings.card1_icon | img_url: '120x' }}"
-                  alt="Plan icon 1"
-                  class="sw-w-10 sw-h-10 sw-object-contain"
+          <div
+            class="sw-relative sw-rounded-[16px] sw-border-2 sw-bg-[#05080D] sw-px-2 sw-pt-[25px] sw-pb-2 sw-flex sw-flex-col sw-gap-4 sw-shadow-[0_18px_40px_rgba(0,0,0,0.75)]"
+            style="border-color: {{ card.border_color | default: '#383838' }};"
+          >
+            {%- if card.label != blank -%}
+              <div class="sw-absolute sw--top-[13px] sw-left-1/2 sw--translate-x-1/2">
+                <div
+                  class="sw-inline-flex sw-items-center sw-justify-center sw-rounded-full sw-px-4 sw-py-1 sw-text-[12px] sw-font-bold sw-text-[#031015]"
+                  style="background: {{ card.accent_color | default: '#01C5E3' }};"
                 >
-              </div>
-            {% endif %}
-
-            <h3 class="sw-text-[20px] xl:sw-text-[24px] sw-font-semibold">
-              {{ section.settings.card1_title }}
-            </h3>
-          </div>
-
-          <div>
-            <div class="sw-flex sw-items-baseline sw-gap-1">
-              <span class="sw-text-[24px] xl:sw-text-[32px] sw-font-bold sw-font-heading">
-                {{ section.settings.card1_price }}
-              </span>
-              {% if section.settings.card1_suffix != blank %}
-                <span class="sw-text-[16px] sw-text-[#ffffff]">
-                  {{ section.settings.card1_suffix }}
-                </span>
-              {% endif %}
-            </div>
-            {% if section.settings.card1_trial != blank %}
-              <p
-                class="sw-text-[14px] sw-font-bold sw-mt-2"
-                style="color: {{ section.settings.card1_accent }};"
-              >
-                {{ section.settings.card1_trial }}
-              </p>
-            {% endif %}
-          </div>
-        </div>
+                  {{ card.label }}
+                </div>
 
         <div class="sw-relative">
           {% if section.settings.card1_refund != blank %}
