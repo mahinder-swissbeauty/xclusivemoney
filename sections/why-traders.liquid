@@ -88,7 +88,11 @@ Metaobject fields (suggested):
 <section
   class="sw-relative"
   id="{{ section.id }}-featured-collection"
-  style="background-color: {{section.settings.section_bg}}; color:{{section.settings.section_text_color}}"
+  style="background-color: {{section.settings.section_bg}}; color:{{section.settings.section_text_color}}
+  
+  
+  
+  "
 >
   <div class="xl:sw-w-[1152px] xl:sw-mx-auto">
     <div class="featured-collection-wrapper sw-relative sw-p-4">
@@ -96,13 +100,21 @@ Metaobject fields (suggested):
       {% render 'section-heading' %}
 
       <!-- Card -->
-      <div
-        class="
-          sw-relative sw-z-10 sw-max-w-5xl sw-mx-auto sw-bg-slate-900/80 sw-border sw-border-teal-500/40
-          sw-rounded-[16px] sw-py-6 sw-px-4 md:sw-p-10 sw-backdrop-blur
-          xl:sw-max-w-[880px] xl:sw-max-auto xl:sw-p-10
-        "
-      >
+     <div
+  class="
+    sw-relative sw-z-10 sw-max-w-5xl sw-mx-auto sw-bg-slate-900/80 sw-border sw-border-teal-500/40
+    sw-rounded-[16px] sw-py-6 sw-px-4 md:sw-p-10 sw-backdrop-blur
+    xl:sw-max-w-[880px] xl:sw-mx-auto xl:sw-p-10
+  "
+  {% if section.settings.bg_image != blank %}
+    style="
+      background-image: url('{{ section.settings.bg_image | image_url: width: 2000 }}');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    "
+  {% endif %}
+>
         <div class="trader-wrapper sw-grid sw-grid-cols-1 md:sw-grid-cols-2 sw-gap-y-6 md:sw-gap-x-12 md:sw-gap-y-8">
 
           {%- if why_traders_cards -%}
@@ -293,6 +305,11 @@ Metaobject fields (suggested):
       "label": "Section Title Color",
       "id": "section_title_color",
       "default": "#000000"
+    },
+     {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background image"
     }
   ],
   "blocks": [
