@@ -126,10 +126,10 @@
                   <div
                     class="fc-item sw-flex sw-flex-col sw-items-center sw-rounded-2xl keen-slider__slide
                       {% if section.settings.show_card_padding %}
-                        xl:sw-rounded-[32px] sw-border sw-border-solid sw-border-[#1e1e1e] sw-px-2 sw-py-4 xl:sw-px-6 xl:sw-py-6
+                        xl:sw-rounded-[32px] sw-border sw-border-solid sw-border-[#A6A6A6] sw-px-2 sw-py-4 xl:sw-px-6 xl:sw-py-6
                       {% endif %}"
                     {% if section.settings.show_card_padding %}
-                      style="background: {{ section.settings.card_bg }};"
+                      style="background: {{ section.settings.card_bg_color }};"
                     {% endif %}
                     {{ block.shopify_attributes }}
                   >
