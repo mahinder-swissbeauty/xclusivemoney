@@ -2,7 +2,7 @@
     .logo-wrapper img{
         max-width: 100%;
     }
-#{{ section.id }}-art .featured-collection-wrapper{
+#{{ section.id }}-featured-article .featured-collection-wrapper{
   padding-top: {{section.settings.mobile_padding}}px;
   padding-bottom: {{section.settings.mobile_padding}}px;
 }
@@ -43,7 +43,7 @@
     right: -55px;
   }
 
-  #{{ section.id }}-featured-collection .featured-collection-wrapper{
+  #{{ section.id }}-featured-article .featured-collection-wrapper{
     padding-top: {{section.settings.desktop_padding}}px;
     padding-bottom: {{section.settings.desktop_padding}}px;
   }
@@ -126,7 +126,7 @@
                   <div
                     class="fc-item sw-flex sw-flex-col sw-items-center sw-rounded-2xl keen-slider__slide
                       {% if section.settings.show_card_padding %}
-                        xl:sw-rounded-[32px] sw-border sw-border-solid sw-border-[#403f3f] sw-px-2 sw-py-4 xl:sw-px-6 xl:sw-py-6
+                        xl:sw-rounded-[32px] sw-border sw-border-solid sw-border-[#1e1e1e] sw-px-2 sw-py-4 xl:sw-px-6 xl:sw-py-6
                       {% endif %}"
                     {% if section.settings.show_card_padding %}
                       style="background: {{ section.settings.card_bg }};"
@@ -170,7 +170,7 @@
                 <div
                   class="fc-item sw-flex sw-flex-col sw-items-center sw-rounded-2xl keen-slider__slide
                     {% if section.settings.show_card_padding %}
-                      xl:sw-rounded-[32px] sw-border sw-border-solid sw-border-[#403f3f] sw-px-2 sw-py-4 xl:sw-px-6 xl:sw-py-6
+                      xl:sw-rounded-[32px] sw-border sw-border-solid sw-border-[#1e1e1e] sw-px-2 sw-py-4 xl:sw-px-6 xl:sw-py-6
                     {% endif %}"
                   {% if section.settings.show_card_padding %}
                     style="background: {{ section.settings.card_bg }};"
@@ -353,13 +353,19 @@
       "type": "color",
       "label": "Card Bg color",
       "id": "card_bg_color",
-      "default": "#000000"
+      "default": "#1e1e1e"
     },
     {
       "type": "html",
       "label": "Section title",
       "id": "section_title",
       "default": "TradeEdge <span> Pro</span> Features"
+    },
+    {
+      "type": "color",
+      "label": "section title color",
+      "id": "section_title_color",
+      "default": "#000000"
     },
     {
       "type": "image_picker",
@@ -371,12 +377,6 @@
       "id": "description",
       "label": "Description text",
       "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>"
-    },
-    {
-      "type": "color",
-      "label": "Section Title Color",
-      "id": "section_title_color",
-      "default": "#000000"
     },
 
     {

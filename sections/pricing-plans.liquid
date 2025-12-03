@@ -1,14 +1,39 @@
+<style>
+   #pricing .section_heading span {
+    font-size: 22px;
+        padding: 4px 12px;
+   
+  }
+
+
+  @media(min-width:1200px){
+  #pricing .section_heading span{
+    font-size: 36px;
+    
+      }
+
+  
+  }
+</style>
+
 <section
-  id="{{ section.id }}-pricing"
-  class="sw-bg-[#05080D] sw-text-white sw-py-10 xl:sw-py-16"
+  id="pricing"
+  class="sw-bg-[#1e1e1e] sw-text-white sw-py-10 xl:sw-py-16"
   style="background-color: {{section.settings.section_bg}}; color:{{section.settings.section_text_color}}"
 >
   <div class="sw-max-w-[1110px] sw-mx-auto sw-px-4 lg:sw-px-0">
-    {%- if section.settings.heading != blank -%}
-      <h2 class="sw-text-center sw-text-[22px] xl:sw-text-[48px] sw-font-heading sw-leading-tight sw-font-semibold sw-mb-7 xl:sw-mb-[76px]">
-        {{ section.settings.heading }}
-      </h2>
-    {%- endif -%}
+  
+    <div class="sw-text-center sw-mb-7 xl:sw-mb-[76px]">
+    {% if section.settings.section_title != blank %}
+      <h3
+        class="section_heading sw-text-center sw-pb-2 sw-text-[22px] sw-text-[#01C5E3] sw-font-semibold xl:sw-text-[48px]"
+        style="color:{{ section.settings.section_title_color }}"
+      >
+        {{ section.settings.section_title }}
+      </h3>
+    {% endif %}
+  </div>
+
 
     {%- if pricing_cards and pricing_cards.size > 0 -%}
       <div class="sw-grid sw-grid-cols-1 xl:sw-grid-cols-3 sw-gap-11 xl:sw-gap-10 sw-mb-[18px] xl:sw-mb-10">
@@ -117,7 +142,7 @@
       {%- comment -%} CARD 2 (same structure as card 1) {%- endcomment -%}
       {% if section.settings.enable_card2 %}
       <div
-        class="sw-relative sw-rounded-[16px] sw-w-full xl:sw-w-1/3 sw-border-2 sw-bg-[#1E1E1E] sw-px-2 sw-pt-[25px] sw-pb-2 sw-flex sw-flex-col sw-gap-4 sw-shadow-[0_18px_40px_rgba(0,0,0,0.75)]"
+        class="sw-relative sw-rounded-[16px] sw-w-full xl:sw-w-1/3 sw-border-2 sw-bg-[#1e1e1e] sw-px-2 sw-pt-[25px] sw-pb-2 sw-flex sw-flex-col sw-gap-4 sw-shadow-[0_18px_40px_rgba(0,0,0,0.75)]"
         style="border-color: {{ section.settings.card2_border_color }};">
         {%- if section.settings.card2_label != blank -%}
           <div class="sw-absolute sw--top-[13px] sw-left-1/2 sw--translate-x-1/2">
@@ -247,7 +272,7 @@
       {%- comment -%} CARD 3 (same structure as card 1) {%- endcomment -%}
       {% if section.settings.enable_card3 %}
       <div
-        class="sw-relative sw-rounded-[16px] sw-w-full xl:sw-w-1/3 sw-border-2 sw-bg-[#1E1E1E] sw-px-2 sw-pt-[25px] sw-pb-2 sw-flex sw-flex-col sw-gap-4 sw-shadow-[0_18px_40px_rgba(0,0,0,0.75)]"
+        class="sw-relative sw-rounded-[16px] sw-w-full xl:sw-w-1/3 sw-border-2 sw-bg-[#1e1e1e] sw-px-2 sw-pt-[25px] sw-pb-2 sw-flex sw-flex-col sw-gap-4 sw-shadow-[0_18px_40px_rgba(0,0,0,0.75)]"
         style="border-color: {{ section.settings.card3_border_color }};">
         {%- if section.settings.card3_label != blank -%}
           <div class="sw-absolute sw--top-[13px] sw-left-1/2 sw--translate-x-1/2">
@@ -375,7 +400,7 @@
     </div>
 
     {%- comment -%} SAFE & SECURE CHECKOUT BOX {%- endcomment -%}
-    <div class="sw-rounded-2xl  sw-border-[#D9D9D9] sw-border-2 sw-bg-[#111827] sw-px-[14px] sw-py-[10px] xl:sw-px-6 xl:sw-py-6 sw-flex sw-flex-col  sw-gap-4 xl:sw-gap-10 sw-items-start xl:sw-items-center
+    <div class="sw-rounded-2xl  sw-border-[#D9D9D9] sw-border-2 sw-bg-[#1e1e1e] sw-px-[14px] sw-py-[10px] xl:sw-px-6 xl:sw-py-6 sw-flex sw-flex-col  sw-gap-4 xl:sw-gap-10 sw-items-start xl:sw-items-center
     xl:sw-flex-col
     ">
       <div class="sw-w-full">
@@ -457,14 +482,14 @@
 
 
 <style>
-  #{{ section.id }}-pricing {
+  #pricing {
     padding-top: {{ section.settings.mobile_padding_top }}px;
     padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
   }
  
 
   @media (min-width: 1200px) {
-    #{{ section.id }}-pricing {
+    #pricing {
       padding-top: {{ section.settings.desktop_padding_top }}px;
       padding-bottom: {{ section.settings.desktop_padding_bottom }}px;
     }
@@ -512,7 +537,18 @@
       "unit": "px",
       "default": 40
     },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Explore Our Plans" },
+    {
+      "type": "html",
+      "label": "Section title",
+      "id": "section_title",
+      "default": "TradeEdge <span> Pro</span> Features"
+    },
+    {
+      "type": "color",
+      "label": "section title color",
+      "id": "section_title_color",
+      "default": "#000000"
+    },
 
     { "type": "header", "content": "Secure checkout strip" },
     { "type": "text", "id": "secure_title", "label": "Title", "default": "Safe and Secure Checkout" },
