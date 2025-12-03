@@ -45,8 +45,8 @@
     <div class="sw-flex sw-items-center sw-gap-4 xl:sw-gap-10">
       <!-- Dynamic Button -->
       <a
-        href="{{ section.settings.button_link }}"
-        class="sw-bg-[#01E3BD] sw-rounded-lg sw-text-black sw-font-heading sw-px-4 sw-py-[6px] sw-text-xs sw-font-semibold sw-hover:sw-bg-teal-300 sw-transition
+        href="#{{section.settings.button_section_scroll}}"
+        class="scroll-link sw-bg-[#01E3BD] sw-rounded-lg hover:sw-bg-[#00C4FF] hover:sw-border-[#00C4FF] sw-text-black sw-font-heading sw-px-4 sw-py-[6px] sw-text-xs sw-font-semibold sw-hover:sw-bg-teal-300 sw-transition
         xl:sw-text-[16px] xl:sw-px-8 xl:sw-py-[11px]
         "
       >
@@ -107,6 +107,23 @@
       });
     }
   });
+
+   document.querySelectorAll('a.scroll-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+
+      const target = document.querySelector(this.getAttribute('href'));
+
+      const topPos = target.getBoundingClientRect().top + window.scrollY;
+
+      const offset = 120; // Yahan apna top spacing define karo
+
+      window.scrollTo({
+        top: topPos - offset,
+        behavior: 'smooth'
+      });
+    });
+  });
 </script>
 
 {% schema %}
@@ -131,9 +148,10 @@
       "default": "Try For Free"
     },
     {
-      "type": "url",
-      "id": "button_link",
-      "label": "Button Link"
+      "type": "text",
+      "id": "button_section_scroll",
+      "label": "Button Section Scroll ID",
+      "default": "pricing"
     }
   ],
   "blocks": [

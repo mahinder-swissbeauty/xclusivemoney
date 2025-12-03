@@ -46,13 +46,15 @@ class FeaturedSlider extends HTMLElement {
             drag: true,
             slides: {
                 perView: perViewMobile,
-                spacing: spacingMobile
+                spacing: spacingMobile,
+                origin: 'auto'  
             },
             breakpoints: {
                 '(min-width: 768px)': {
                     slides: {
                         perView: perViewDesktop,
                         spacing: spacingDesktop,
+                        origin: 'auto' ,
                         rubberband: false,
                         mode: 'free',
                         drag: true
