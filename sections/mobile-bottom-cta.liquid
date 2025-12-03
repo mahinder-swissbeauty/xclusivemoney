@@ -28,8 +28,8 @@
 
   <!-- Right CTA Button -->
   <a
-    href="{{ section.settings.button_link }}"
-    class="sw-bg-[#00D5F6] sw-text-[#000] sw-text-[16px] sw-font-semibold sw-px-6 sw-py-3 sw-rounded-lg sw-whitespace-nowrap"
+    href="#{{section.settings.button_section_scroll}}"
+    class="scroll-link sw-bg-[#00D5F6] sw-text-[#000] sw-text-[16px] sw-font-semibold sw-px-6 sw-py-3 sw-rounded-lg sw-whitespace-nowrap"
   >
     {{ section.settings.button_text }}
   </a>
@@ -66,9 +66,10 @@
       "default": "Explore Plans"
     },
     {
-      "type": "url",
-      "id": "button_link",
-      "label": "Button Link"
+      "type": "text",
+      "id": "button_section_scroll",
+      "label": "button_section_scroll",
+      "default":"pricing"
     }
   ],
   "presets": [
