@@ -4,10 +4,10 @@
 
 <section
   id="{{ section.id }}-who-for"
-  class="sw-w-full"
+  class="sw-w-full sw-relative"
   style="background-color: {{section.settings.section_bg}}; color:{{section.settings.section_text_color}}"
 >
-  <div class="sw-max-w-[912px] sw-mx-auto sw-px-4 xl:sw-px-0">
+  <div class="sw-max-w-[912px] sw-mx-auto sw-px-4 xl:sw-px-0 sw-relative sw-z-10">
 
     {% if section.settings.heading != blank %}
       <h2 class="sw-text-center sw-font-heading sw-font-semibold sw-text-xl xl:sw-text-[28px] sw-mb-4 xl:sw-mb-8">
@@ -63,7 +63,7 @@
       {% if section.settings.traders_label != blank %}
         <div class="sw-flex sw-items-center sw-justify-center sw-gap-2 xl:sw-gap-4 sw-mt-6
          sw-absolute
-  sw-bg-[#05080d]
+  sw-bg-[#1e1e1e]
   sw-left-1/2
   sw-bottom-[-8px]
   xl:sw-bottom-[-18px]

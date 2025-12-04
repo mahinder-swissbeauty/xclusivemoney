@@ -19,7 +19,10 @@
 <section id="banner" class="sw-relative sw-w-full sw-text-white sw-py-10 sw-pb-[56px] sw-px-6
 
 xl:sw-pt-12 xl:sw-pb-[101px]
-">
+"
+{% if section.settings.enable_padding %}
+    style="padding-bottom: {{ section.settings.padding_bottom }}px;"
+  {% endif %}>
   <div class="sw-mx-auto sw-text-center sw-relative sw-z-10 sw-max-w-[340px]
   xl:sw-max-w-[581px]
   ">
@@ -80,7 +83,11 @@ xl:sw-pt-12 xl:sw-pb-[101px]
   </div>
 
   <!-- Background Graph Image -->
-  <div class="sw-absolute sw-bottom-0 sw-z-0 sw-left-0 sw-w-full">
+  <div class="sw-absolute sw-bottom-0 sw-z-0 sw-left-0 sw-w-full"
+  {% if section.settings.enable_padding %}
+  style="bottom: {{ section.settings.bg_bottom_postion }}px;"
+  {% endif %}
+  >
     <div class="sw-block xl:sw-hidden sw-absolute sw-bottom-0 sw-w-full sw-h-auto">
       {% render 'icons-v2'
         , icon: 'icon-banner-mobile'
@@ -182,7 +189,8 @@ xl:sw-pt-12 xl:sw-pb-[101px]
         "id": "subtitle_bottom",
         "label": "Bottom Subtitle",
         "default": "who demand consistent, reliable performance across any market, any time-frame & any instrument."
-      }, {
+      },
+       {
         "type": "range",
         "id": "rotate_speed",
         "min": 1,
@@ -190,6 +198,32 @@ xl:sw-pt-12 xl:sw-pb-[101px]
         "step": 1,
         "label": "Rotation Speed (Seconds)",
         "default": 2
+      },
+      {
+      "type": "checkbox",
+        "id": "enable_padding",
+        "label": "Enable Padding Bottom",
+        "default": false
+      },
+       {
+      "type": "range",
+        "id": "padding_bottom",
+        "label": "Padding Bottom",
+        "min": 0,
+        "max": 250,
+        "step": 10,
+        "default": 250,
+        "unit": "px"
+      },
+      {
+      "type": "range",
+        "id": "bg_bottom_postion",
+        "label": "Bg Bottom Position Minus",
+        "min": 0,
+        "max": 200,
+        "step": 10,
+        "default": 200,
+        "unit": "px"
       }
     ],
     "blocks": [

@@ -7,7 +7,6 @@
 
   section#{{ section.id }}-featured-testimonials{
     position: relative;
-    z-index: 1;
   }
 
   section#{{ section.id }}-featured-testimonials .featured-collection-wrapper{
@@ -25,23 +24,7 @@
     box-sizing: border-box;
   }
 
-  /* arrows */
-  .fc-arrow{
-    display: none;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 30;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-  }
-  .fc-arrow-left{ left: 8px; }
-  .fc-arrow-right{ right: 8px; }
+  
 
   /* thumb bar */
   .featured-collection-slider-bar{
@@ -66,12 +49,6 @@
   }
 
   @media (min-width: 1200px){
-    .fc-arrow{
-      display: flex;
-    }
-    .fc-arrow{ width: 40px; height: 40px; }
-    .fc-arrow-left { left: -40px; }
-    .fc-arrow-right { right: -55px; }
 
     #{{ section.id }}-featured-testimonials .featured-collection-wrapper{
       padding-top: {{ section.settings.desktop_padding }}px;
@@ -89,7 +66,7 @@
   data-id="featured-testimonials"
   style="background-color: {{ section.settings.section_bg }}; color: {{ section.settings.section_text_color }};"
 >
-  <div class="xl:sw-w-[1110px] xl:sw-mx-auto">
+  <div class="xl:sw-w-[1110px] xl:sw-mx-auto sw-relative sw-z-10">
     <div class="featured-collection-wrapper sw-relative">
       {% render 'section-heading' %}
 
@@ -100,7 +77,7 @@
               data-desktop-cards="2.2"
   data-mobile-perview="1.2"
 
-              class="featured-slider-root"
+              class="featured-slider-root sw-relative"
               data-desktop-cards="{{ section.settings.desktop_cards }}"
               data-mobile-perview="{{ section.settings.mobile_perview }}"
               data-show-arrows="{{ section.settings.show_arrows | json }}"
@@ -126,12 +103,42 @@
               </div>
 
               {% if section.settings.show_arrows %}
-                <button class="fc-arrow fc-arrow-left" data-role="arrow-prev" aria-label="Previous slide">
+                <button class="fc-arrow fc-arrow-left
+                sw-hidden
+                sw-absolute
+                sw-top-1/2
+                sw--translate-y-1/2
+                sw-z-30
+                sw-bg-transparent
+                sw-border-none
+                sw-cursor-pointer
+                xl:sw-flex
+                sw-items-center
+                sw-justify-center
+                sw-w-[40px]
+                sw-h-[40px]
+                xl:sw-left-[-55px]
+                " data-role="arrow-prev" aria-label="Previous slide">
                   <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
                     <path d="M13.6667 20L23.6667 30L26 27.6667L18.3333 20L26 12.3333L23.6667 10L13.6667 20Z" fill="white"/>
                   </svg>
                 </button>
-                <button class="fc-arrow fc-arrow-right" data-role="arrow-next" aria-label="Next slide">
+                <button class="fc-arrow fc-arrow-right
+                sw-hidden
+                sw-absolute
+                sw-top-1/2
+                sw--translate-y-1/2
+                sw-z-30
+                sw-bg-transparent
+                sw-border-none
+                sw-cursor-pointer
+                xl:sw-flex
+                sw-items-center
+                sw-justify-center
+                sw-w-[40px]
+                sw-h-[40px]
+                xl:sw-right-[-55px]
+                " data-role="arrow-next" aria-label="Next slide">
                   <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
                     <path d="M26.3333 20L16.3333 30L14 27.6667L21.6667 20L14 12.3333L16.3333 10L26.3333 20Z" fill="white"/>
                   </svg>
