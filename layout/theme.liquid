@@ -94,6 +94,7 @@
 				  margin: 0;
 				  padding: 0;
 				  background-color: #1e1e1e;
+				  color: #fff;
 			}
 			p{
 				margin: 0;
@@ -106,6 +107,11 @@
 				width: 100%;
 				height: 100%;
 				z-index: 1;
+			}
+			.body-overlay-desktop{
+				  background-image: url('{{ "bg-arrow.svg" | asset_url }}');
+					background-repeat: repeat;
+					
 			}
 				
 			
@@ -140,7 +146,12 @@
 			<div class="body-overlay xl:sw-hidden">
 				 {% render 'icons-v2', icon:'icon-body-overlay' %}
 			</div>
+			<div class="body-overlay body-overlay-desktop sw-hidden xl:sw-block"
+		
+			>
+			</div>
 			{% endif %}
+			
 
 	        {{ content_for_layout }}
 

@@ -3,43 +3,14 @@
   padding-top: {{section.settings.mobile_padding}}px;
   padding-bottom: {{section.settings.mobile_padding}}px;
 }
-
 .slider-dots button.is-active {
   width: 36px;
   background: #01C5E3 !important;
   height: 8px;
 }
 
-/* arrows */
-.fc-arrow{
-  display:none;
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  z-index:30;
-  background:transparent;
-  border:none;
-  cursor:pointer;
-  align-items:center;
-  justify-content:center;
-  width:40px;
-  height:40px;
-}
-.fc-arrow-left{ left:8px; }
-.fc-arrow-right{ right:8px; }
 
 @media(min-width:1200px){
-  .fc-arrow{
-    display:flex;
-  }
-  .fc-arrow{ width:40px; height:40px; }
-  .fc-arrow-left {
-    left: -40px;
-  }
-  .fc-arrow-right {
-    right: -55px;
-  }
-
   #{{ section.id }}-featured-collection .featured-collection-wrapper{
     padding-top: {{section.settings.desktop_padding}}px;
     padding-bottom: {{section.settings.desktop_padding}}px;
@@ -55,7 +26,11 @@
   class="sw-px-4 sw-relative {% if section.settings.show_card_padding %} sw-pr-0{% endif %}"
   id="{{ section.id }}-featured-collection"
   data-id="featured-collection-v2"
-  style="background-color: {{section.settings.section_bg}}; color:{{section.settings.section_text_color}}"
+  style="background-color: {{section.settings.section_bg}}; color:{{section.settings.section_text_color}};
+   {% if section.settings.enable_mt_minus %}
+      margin-top: -{{ section.settings.mt_minus }}px;
+  {% endif %}
+  "
   data-autoplay="{{ section.settings.autoplay | default: true }}"
 >
   <div class="xl:sw-w-[880px] xl:sw-mx-auto">
@@ -209,7 +184,22 @@
 
         {% if section.settings.show_arrows %}
           <button
-            class="slider-arrow prev-arrow fc-arrow fc-arrow-left"
+            class="slider-arrow prev-arrow fc-arrow fc-arrow-left 
+            sw-hidden
+            sw-absolute
+            sw-top-1/2
+            sw--translate-y-1/2
+            sw-z-30
+            sw-bg-transparent
+            sw-border-none
+            sw-cursor-pointer
+            xl:sw-flex
+            sw-items-center
+            sw-justify-center
+            sw-w-[40px]
+            sw-h-[40px]
+            xl:sw-left-[-55px]
+            "
             data-role="arrow-prev"
             aria-label="Previous slide"
           >
@@ -219,7 +209,23 @@
           </button>
 
           <button
-            class="slider-arrow next-arrow fc-arrow fc-arrow-right"
+            class="slider-arrow next-arrow fc-arrow fc-arrow-right
+             sw-hidden
+            sw-absolute
+            sw-top-1/2
+            sw--translate-y-1/2
+            sw-z-30
+            sw-bg-transparent
+            sw-border-none
+            sw-cursor-pointer
+            xl:sw-flex
+            sw-items-center
+            sw-justify-center
+            sw-w-[40px]
+            sw-h-[40px]
+            xl:sw-right-[-55px]
+            
+            "
             data-role="arrow-next"
             aria-label="Next slide"
           >
@@ -508,7 +514,24 @@
       "label": "card bg",
       "id": "card_bg",
       "default": "#000000"
-    }
+    },
+
+     {
+      "type": "checkbox",
+        "id": "enable_mt_minus",
+        "label": "Enable Margin Top Minus",
+        "default": false
+      },
+       {
+      "type": "range",
+        "id": "mt_minus",
+        "label": "Margin Top Minus",
+        "min": 0,
+        "max": 250,
+        "step": 10,
+        "default": 250,
+        "unit": "px"
+      }
   ],
 
   "blocks": [

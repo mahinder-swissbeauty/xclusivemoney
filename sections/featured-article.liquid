@@ -13,35 +13,10 @@
   height: 8px;
 }
 
-/* arrows */
-.fc-arrow{
-  display:none;
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  z-index:30;
-  background:transparent;
-  border:none;
-  cursor:pointer;
-  align-items:center;
-  justify-content:center;
-  width:40px;
-  height:40px;
-}
-.fc-arrow-left{ left:8px; }
-.fc-arrow-right{ right:8px; }
+
 
 @media(min-width:1200px){
-  .fc-arrow{
-    display:flex;
-  }
-  .fc-arrow{ width:40px; height:40px; }
-  .fc-arrow-left {
-    left: -40px;
-  }
-  .fc-arrow-right {
-    right: -55px;
-  }
+  
 
   #{{ section.id }}-featured-article .featured-collection-wrapper{
     padding-top: {{section.settings.desktop_padding}}px;
@@ -210,7 +185,22 @@
 
         {% if section.settings.show_arrows %}
           <button
-            class="slider-arrow prev-arrow fc-arrow fc-arrow-left"
+            class="slider-arrow prev-arrow fc-arrow fc-arrow-left
+            sw-hidden
+                sw-absolute
+                sw-top-1/2
+                sw--translate-y-1/2
+                sw-z-30
+                sw-bg-transparent
+                sw-border-none
+                sw-cursor-pointer
+                xl:sw-flex
+                sw-items-center
+                sw-justify-center
+                sw-w-[40px]
+                sw-h-[40px]
+                xl:sw-left-[-55px]
+            "
             data-role="arrow-prev"
             aria-label="Previous slide"
           >
@@ -220,7 +210,23 @@
           </button>
 
           <button
-            class="slider-arrow next-arrow fc-arrow fc-arrow-right"
+            class="slider-arrow next-arrow fc-arrow fc-arrow-right
+            
+            sw-hidden
+                sw-absolute
+                sw-top-1/2
+                sw--translate-y-1/2
+                sw-z-30
+                sw-bg-transparent
+                sw-border-none
+                sw-cursor-pointer
+                xl:sw-flex
+                sw-items-center
+                sw-justify-center
+                sw-w-[40px]
+                sw-h-[40px]
+                xl:sw-right-[-55px]
+            "
             data-role="arrow-next"
             aria-label="Next slide"
           >
