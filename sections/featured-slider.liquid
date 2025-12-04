@@ -183,9 +183,9 @@
                   {% endif %}
 
                   {% if section.settings.show_card_paragraph and block.settings.description != blank %}
-                    <p class="sw-text-center sw-text-xs xl:sw-text-[18px] sw-leading-relaxed sw-mt-4 sw-max-w-[480px] xl:sw-mt-6">
+                    <div class="sw-text-center sw-text-xs xl:sw-text-[18px] sw-leading-relaxed sw-mt-4 sw-max-w-[480px] xl:sw-mt-6">
                       {{ block.settings.description }}
-                    </p>
+                    </div>
                   {% endif %}
 
                   {%- comment -%}
@@ -533,10 +533,10 @@
           "default": "Step 1: Add to your TradingView"
         },
         {
-          "type": "textarea",
+          "type": "richtext",
           "id": "description",
           "label": "Paragraph (below image)",
-          "default": "Run comprehensive backtests with real-world slippage and commission modelling to verify performance."
+          "default": "<p>Run comprehensive backtests with real-world slippage and commission modelling to verify performance.</p>"
         },
         {
           "type": "text",
