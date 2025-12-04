@@ -89,9 +89,9 @@
                   <h3 class="sw-font-heading sw-text-base xl:sw-text-[24px] sw-font-semibold sw-text-[#FFF]">
                     {{ block.settings.title }}
                   </h3>
-                  <p class="sw-font-body sw-mt-2 xl:sw-mt-3 sw-leading-normal  sw-text-xs xl:sw-text-[16px] sw-font-normal sw-leading-relaxed sw-text-[#FFF]">
+                  <div class="sw-font-body sw-mt-2 xl:sw-mt-3 sw-leading-normal  sw-text-xs xl:sw-text-[16px] sw-font-normal sw-leading-relaxed sw-text-[#FFF]">
                     {{ block.settings.description }}
-                  </p>
+                  </div>
                 </div>
               </div>
             {% endif %}
@@ -214,10 +214,10 @@
           "default": "Universal Strategy"
         },
         {
-          "type": "textarea",
+          "type": "richtext",
           "id": "description",
           "label": "Description",
-          "default": "Works on US stocks, Indian equity, crypto, forex, commodities - any market"
+          "default": "<P>Works on US stocks, Indian equity, crypto, forex, commodities - any market</P>"
         }
       ]
     }

@@ -16,9 +16,9 @@
     {% endif %}
 
     {% if section.settings.subheading != blank %}
-      <p class="sw-font-body  sw-text-xs xl:sw-text-[24px] sw-leading-normal sw-text-[#ffffff] sw-mx-auto sw-mb-3 xl:sw-mb-8">
+      <div class="sw-font-body  sw-text-xs xl:sw-text-[24px] sw-leading-normal sw-text-[#ffffff] sw-mx-auto sw-mb-3 xl:sw-mb-8">
         {{ section.settings.subheading }}
-      </p>
+      </div>
     {% endif %}
 
     <div
@@ -111,10 +111,10 @@
       "default": "Who is this for?"
     },
     {
-      "type": "textarea",
+      "type": "richtext",
       "id": "subheading",
       "label": "Subheading",
-      "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam."
+      "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>"
     },
     {
       "type": "text",
