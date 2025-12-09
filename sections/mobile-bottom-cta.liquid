@@ -1,0 +1,81 @@
+{% if section.settings.enable_bar %}
+<style>
+  /* Show only on mobile */
+  @media (min-width: 768px) {
+    #mobileCtaBar {
+      display: none !important;
+    }
+  }
+</style>
+
+<div
+  id="mobileCtaBar"
+  class="sw-fixed sw-bottom-0 sw-left-0 sw-right-0 sw-z-[9999] sw-px-4 sw-py-3 
+   sw-rounded-t-2xl sw-shadow-2xl sw-flex sw-items-center sw-justify-between sw-gap-4"
+  style="background: rgba(35, 48, 82, 0.60); Colors Color format RGB Background colors rgba(35, 48, 82, 0.6); color: #fff;"
+
+>
+  
+  <!-- Left Text -->
+  <div class="sw-flex sw-flex-col sw-text-left sw-text-[#fff] sw-leading-tight sw-space-y-2">
+    <span class="sw-text-[12px] sw-font-medium">
+      {{ section.settings.top_text }}
+    </span>
+    <span class="sw-text-[14px] sw-font-bold">
+      {{ section.settings.bottom_text }}
+    </span>
+  </div>
+
+  <!-- Right CTA Button -->
+  <a
+    href="#{{section.settings.button_section_scroll}}"
+    class="scroll-link sw-bg-[#00D5F6] sw-text-[#000] sw-text-[16px] sw-font-semibold sw-px-6 sw-py-3 sw-rounded-lg sw-whitespace-nowrap"
+  >
+    {{ section.settings.button_text }}
+  </a>
+</div>
+{% endif %}
+
+
+{% schema %}
+{
+  "name": "Mobile Sticky CTA Bar",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_bar",
+      "label": "Enable Sticky Bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "top_text",
+      "label": "Top Small Text",
+      "default": "Explore our plans and get"
+    },
+    {
+      "type": "text",
+      "id": "bottom_text",
+      "label": "Bold Text",
+      "default": "Up to 30 Days Free Trial"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Explore Plans"
+    },
+    {
+      "type": "text",
+      "id": "button_section_scroll",
+      "label": "button_section_scroll",
+      "default":"pricing"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mobile Sticky CTA"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,46 @@
+
+{% if section.settings.whatsapp_link != blank %}
+  <a
+    href="{{ section.settings.whatsapp_link }}"
+    target="_blank"
+    class="sw-fixed sw-w-10 sw-h-10 sw-right-4 sw-z-[9999] sw-bottom-[90px]"
+  >
+    {% if section.settings.whatsapp_image != blank %}
+      <img 
+        src="{{ section.settings.whatsapp_image | image_url: width: master }}" 
+        alt="WhatsApp" 
+         loading="lazy"
+      >
+    {% else %}
+      <!-- fallback: use a default asset -->
+      <img 
+        src="{{ 'whatsapp.png' | asset_url }}" 
+        alt="WhatsApp"
+        loading="lazy"
+      >
+    {% endif %}
+  </a>
+{% endif %}
+
+
+
+
+{% schema %}
+    {
+        "name": "WhatsApp Button",
+        "settings": [
+            {
+            "type": "text",
+            "id": "whatsapp_link",
+            "label": "WhatsApp Link",
+            "default": "https://wa.me/918287502355",
+            "info": "https://wa.me/918287502355"
+            },
+            {
+            "type": "image_picker",
+            "id": "whatsapp_image",
+            "label": "WhatsApp Icon"
+            }
+        ]
+        }
+{% endschema %}

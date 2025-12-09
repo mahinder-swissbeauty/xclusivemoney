@@ -1,0 +1,294 @@
+{% style %}
+  /* padding (mobile) */
+  #{{ section.id }}-featured-testimonials .featured-collection-wrapper{
+    padding-top: {{ section.settings.mobile_padding }}px;
+    padding-bottom: {{ section.settings.mobile_padding }}px;
+  }
+
+  section#{{ section.id }}-featured-testimonials{
+    position: relative;
+  }
+
+  section#{{ section.id }}-featured-testimonials .featured-collection-wrapper{
+    width: 100%;
+  }
+
+  /* slider container */
+  section#{{ section.id }}-featured-testimonials featured-slider{
+    display: block;
+    width: 100%;
+  }
+
+  /* slide base */
+  .fc-slide {
+    box-sizing: border-box;
+  }
+
+  
+
+  /* thumb bar */
+  .featured-collection-slider-bar{
+    position: relative;
+  }
+  [data-role="thumb-wrapper"]{
+    height: 4px;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  [data-role="thumb"]{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    border-radius: 4px;
+    transition:
+      left .2s linear,
+      width .2s linear,
+      transform .2s linear;
+  }
+
+  @media (min-width: 1200px){
+
+    #{{ section.id }}-featured-testimonials .featured-collection-wrapper{
+      padding-top: {{ section.settings.desktop_padding }}px;
+      padding-bottom: {{ section.settings.desktop_padding }}px;
+    }
+  }
+{% endstyle %}
+
+{% if section.settings.enable_slider %}
+  {% render 'vite-tag' with 'featured-testmonial-slider.js' %}
+{% endif %}
+
+<section
+  id="{{ section.id }}-featured-testimonials"
+  data-id="featured-testimonials"
+  style="background-color: {{ section.settings.section_bg }}; color: {{ section.settings.section_text_color }};"
+>
+  <div class="xl:sw-w-[1110px] xl:sw-mx-auto sw-relative sw-z-10">
+    <div class="featured-collection-wrapper sw-relative">
+      {% render 'section-heading' %}
+
+      <div class="featured-collection-content_wrapper">
+        <div class="featured-collection-cards sw-pl-3">
+          {% if section.settings.enable_slider %}
+            <featured-slider
+              data-desktop-cards="2.2"
+  data-mobile-perview="1.2"
+
+              class="featured-slider-root sw-relative"
+              data-desktop-cards="{{ section.settings.desktop_cards }}"
+              data-mobile-perview="{{ section.settings.mobile_perview }}"
+              data-show-arrows="{{ section.settings.show_arrows | json }}"
+            >
+              <div
+                data-role="slider-wrapper"
+                class="keen-slider sw-flex-nowrap sw-overflow-hidden sw-flex sw-w-full"
+              >
+                {% for block in section.blocks %}
+                  <div
+                    class="
+                      fc-slide keen-slider__slide
+                      sw-flex-[0_0_calc(100%/1.2_-_0px)]
+                      lg:sw-flex-[0_0_calc(100%/3_-_0px)]
+                      sw-rounded-2xl
+                    "
+                    data-block-index="{{ forloop.index0 }}"
+                    style="border-color: {{ section.settings.card_border_color }}; background: {{ section.settings.card_bg_color }};"
+                  >
+                    {% render 'testimonial-card', testimonial: block.settings %}
+                  </div>
+                {% endfor %}
+              </div>
+
+              {% if section.settings.show_arrows %}
+                <button class="fc-arrow fc-arrow-left
+                sw-hidden
+                sw-absolute
+                sw-top-1/2
+                sw--translate-y-1/2
+                sw-z-30
+                sw-bg-transparent
+                sw-border-none
+                sw-cursor-pointer
+                xl:sw-flex
+                sw-items-center
+                sw-justify-center
+                sw-w-[40px]
+                sw-h-[40px]
+                xl:sw-left-[-55px]
+                " data-role="arrow-prev" aria-label="Previous slide">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+                    <path d="M13.6667 20L23.6667 30L26 27.6667L18.3333 20L26 12.3333L23.6667 10L13.6667 20Z" fill="white"/>
+                  </svg>
+                </button>
+                <button class="fc-arrow fc-arrow-right
+                sw-hidden
+                sw-absolute
+                sw-top-1/2
+                sw--translate-y-1/2
+                sw-z-30
+                sw-bg-transparent
+                sw-border-none
+                sw-cursor-pointer
+                xl:sw-flex
+                sw-items-center
+                sw-justify-center
+                sw-w-[40px]
+                sw-h-[40px]
+                xl:sw-right-[-55px]
+                " data-role="arrow-next" aria-label="Next slide">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+                    <path d="M26.3333 20L16.3333 30L14 27.6667L21.6667 20L14 12.3333L16.3333 10L26.3333 20Z" fill="white"/>
+                  </svg>
+                </button>
+              {% endif %}
+
+              {% if section.settings.slider_bar %}
+                <div class="featured-collection-slider-bar sw-max-w-[calc(100%_-_16px)] sw-mx-auto sw-mt-3 lg:sw-mt-[26px]">
+                  <div
+                    data-role="thumb-wrapper"
+                    style="background-color: {{ section.settings.thumb_bg }};"
+                    class="sw-w-full sw-relative sw-h-[4px] sw-rounded-sm"
+                  >
+                    <div
+                      data-role="thumb"
+                      style="background-color: {{ section.settings.thumb_color }};"
+                      class=""
+                    ></div>
+                  </div>
+                </div>
+              {% endif %}
+            </featured-slider>
+          {% else %}
+            hello
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "testimonials",
+  "settings": [
+    {
+      "type": "range",
+      "id": "mobile_padding",
+      "label": "Mobile Padding Y axis",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding",
+      "label": "Desktop Padding Y axis",
+      "min": 0,
+      "max": 90,
+      "step": 1,
+      "default": 88
+    },
+    {
+      "type": "color",
+      "label": "section background color",
+      "id": "section_bg",
+      "default": "#1E1E1E"
+    },
+    {
+      "type": "color",
+      "label": "section text color",
+      "id": "section_text_color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "label": "Enable slider",
+      "id": "enable_slider",
+      "default": true
+    },
+    {
+      "type": "text",
+      "label": "Desktop cards to show (per view)",
+      "id": "desktop_cards",
+      "default": "2.2"
+    },
+    {
+      "type": "color",
+      "label": "Card Border color",
+      "id": "card_border_color",
+      "default": "#01C5E3"
+    },
+    {
+      "type": "color",
+      "label": "Card Bg color",
+      "id": "card_bg_color",
+      "default": "#000000"
+    },
+    {
+      "type": "text",
+      "label": "Mobile perView (decimal allowed, e.g. 1.2)",
+      "id": "mobile_perview",
+      "default": "1.2"
+    },
+    {
+      "type": "checkbox",
+      "label": "Show arrows",
+      "id": "show_arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "label": "Display slider thumb bar",
+      "id": "slider_bar",
+      "default": true
+    },
+    {
+      "type": "color",
+      "label": "Thumb slider background color",
+      "id": "thumb_bg",
+      "default": "#155059"
+    },
+    {
+      "type": "color",
+      "label": "Thumb color",
+      "id": "thumb_color",
+      "default": "#01C5E3"
+    },
+    {
+      "type": "html",
+      "label": "Section title",
+      "id": "section_title",
+      "default": "TradeEdge <span> Pro</span> Features"
+    },
+    {
+      "type": "color",
+      "label": "Heading color",
+      "id": "section_title_color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        { "type": "image_picker", "id": "avatar", "label": "Avatar image" },
+        { "type": "text", "id": "name", "label": "Name", "default": "Rajesh Kumar" },
+        { "type": "text", "id": "subtitle", "label": "Subtitle (role, location)", "default": "Algorithmic Trader, Mumbai" },
+        { "type": "text", "id": "time_meta", "label": "Time & meta", "default": "5d · 🌐" },
+        { "type": "richtext", "id": "body", "label": "Testimonial text", "default": "<p>Finally found a strategy that works exactly the same in live trading as in backtests. No more repainting nightmares!</p>" },
+        { "type": "text", "id": "reaction_icons", "label": "Reaction icons (emoji)", "default": "👍 ❤️ 👏" },
+        { "type": "text", "id": "reaction_count", "label": "Reaction count", "default": "358" },
+        { "type": "text", "id": "comments_text", "label": "Comments text", "default": "5 comments" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "testimonials" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,146 @@
+<style>
+  /* Extra smooth effect for scroll state */
+  #siteHeader {
+    transition: all 0.25s ease;
+  }
+
+  #siteHeader.is-scrolled {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  }
+  nav.is-scrolled {
+    position: fixed;
+    top: 0;
+    background: rgba(35, 48, 82, 0.80) !important;
+}
+
+</style>
+
+
+
+<nav
+  id="siteHeader"
+  class="sw-w-full sw-shadow-lg sw-p-2 sw-sticky sw-top-0 sw-z-50"
+  style="background: linear-gradient(180deg, #233052 0%, #233052 100%);"
+>
+  <div class="sw-relative sw-max-w-7xl sw-mx-auto sw-flex sw-items-center sw-justify-between sw-border sw-border-[#32436e] sw-rounded-lg sw-py-3 sw-px-4
+    xl:sw-w-[1152px] xl:sw-mx-auto xl:sw-px-10 xl:sw-py-2
+  ">
+    <!-- Dynamic Logo -->
+    <a href="javascript:void()" class="sw-flex sw-items-center sw-gap-2">
+      {% if section.settings.logo != blank %}
+        <img
+          src="{{ section.settings.logo | img_url: 'master' }}"
+          alt="Logo"
+          class="sw-w-[88px] xl:sw-w-[117px]"
+          loading="lazy"
+        >
+      {% else %}
+        <span class="sw-text-white sw-font-semibold sw-text-xl">{{ section.settings.store_name }}</span>
+      {% endif %}
+    </a>
+
+    <!-- Right Side -->
+    <div class="sw-flex sw-items-center sw-gap-4 xl:sw-gap-10">
+      <!-- Dynamic Button -->
+      <a
+        href="#{{section.settings.button_section_scroll}}"
+        class="scroll-link sw-bg-[#01E3BD] sw-rounded-lg hover:sw-bg-[#00C4FF] hover:sw-border-[#00C4FF] sw-text-black sw-font-heading sw-px-4 sw-py-[6px] sw-text-xs sw-font-semibold sw-hover:sw-bg-teal-300 sw-transition
+        xl:sw-text-[16px] xl:sw-px-8 xl:sw-py-[11px]
+        "
+      >
+        {{- section.settings.button_text -}}
+      </a>
+
+      <!-- Menu Toggle Button -->
+      <button id="menuToggle" class="sw-text-white sw-text-3xl sw-focus:sw-outline-none">
+        {% render 'icons-v2', icon: 'icon-menu' %}
+      </button>
+    </div>
+
+    <!-- Dropdown Menu (Dynamic) -->
+    <div
+      id="dropdownMenu"
+      class="sw-hidden sw-absolute sw-right-0 sw-top-full sw-w-56 sw-bg-[#1a2d4a] sw-text-white sw-rounded-2xl sw-shadow-xl sw-py-3 sw-px-4 sw-space-y-3
+      sw-border sw-border-[#32436e]
+      "
+    >
+      {% for block in section.blocks %}
+        <a
+          href="{{ block.settings.link }}"
+          class="{% if block.settings.button_section_scroll != blank %} scroll-link {% endif %} sw-flex sw-items-center sw-gap-3 sw-text-lg sw-hover:sw-text-teal-300 sw-transition"
+        >
+          <span class="sw-text-[16px] sw-font-medium sw-font-heading">{{ block.settings.icon }}</span>
+          {{ block.settings.label }}
+        </a>
+
+        {% if forloop.last == false %}
+          <hr class="sw-border-gray-600">
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</nav>
+
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "store_name",
+      "label": "Store Name",
+      "default": "Xclusive MONEY"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Try For Free"
+    },
+    {
+      "type": "text",
+      "id": "button_section_scroll",
+      "label": "Button Section Scroll ID",
+      "default": "pricing"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu_item",
+      "name": "Menu Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Menu"
+        },
+        {
+          "type": "html",
+          "id": "icon",
+          "label": "Icon (Emoji)"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "button_section_scroll",
+          "label": "Button Section Scroll ID",
+          "default": "pricing"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

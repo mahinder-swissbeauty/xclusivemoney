@@ -1,0 +1,249 @@
+<style>
+  #banner {
+    background: linear-gradient(180deg, #233052 0%, #1E1E1E 100%);
+     position: relative;
+    z-index: 9;
+  }
+  
+
+  @media(min-width: 1441px) {
+    .desktop_banner svg {
+      height: auto !important;
+    }
+  }
+
+
+</style>
+
+<!-- TradeEdge Pro Section -->
+<section id="banner" class="sw-relative sw-w-full sw-text-white sw-py-10 sw-pb-[56px] sw-px-6
+
+xl:sw-pt-12 xl:sw-pb-[101px]
+"
+{% if section.settings.enable_padding %}
+    style="padding-bottom: {{ section.settings.padding_bottom }}px;"
+  {% endif %}>
+  <div class="sw-mx-auto sw-text-center sw-relative sw-z-10 sw-max-w-[340px]
+  xl:sw-max-w-[581px]
+  ">
+
+    <!-- Heading Logo + Title -->
+    <div class="sw-flex sw-items-center sw-justify-center sw-gap-3 sw-mb-6 xl:sw-gap-6">
+      {% if section.settings.logo_image != blank %}
+        <img
+          src="{{ section.settings.logo_image | image_url }}"
+          class="sw-w-6 sw-h-6 xl:sw-w-[46px] xl:sw-h-[48px]"
+          loading="lazy"
+          alt="Logo">
+      {% endif %}
+      <h2 class="sw-text-2xl sw-font-semibold xl:sw-text-[48px]">
+        {{ section.settings.title_main }}
+        <span class="sw-text-[#233052] sw-inline-block sw-text-[18px] sw-bg-[#01C5E3] sw-rounded-2xl  sw-leading-none sw-font-semibold
+            sw-ml-1
+            sw-py-1
+            sw-px-2
+            
+            xl:sw-text-[36px]
+            xl:sw-ml-5
+            xl:sw-h-auto
+            xl:sw-w-auto
+            xl:sw-px-4
+            xl:sw-py-3
+            xl:sw-rounded-[32px]
+            xl:sw-leading-[26px]
+
+
+        ">
+{{ section.settings.title_highlight }}</span>
+      </h2>
+    </div>
+
+    <p class="sw-text-[16px] sw-text-white sw-font-semibold xl:sw-text-[24px]">{{ section.settings.subtitle_top }}</p>
+
+    <!-- Rotating Text Slide-Up Dynamic -->
+    <div id="sw-announcement-slider" class="sw-py-5">
+      <div class="sw-slider-wrapper sw-overflow-hidden sw-relative sw-w-full sw-h-12">
+        <div class="sw-slider-track sw-flex sw-flex-col sw-transition-transform sw-duration-500 sw-ease-out">
+          {% for block in section.blocks %}
+            <div class="sw-slide sw-min-h-10 sw-flex sw-items-center sw-justify-center sw-text-center 
+            sw-text-2xl sw-font-heading sw-text-[#01C5E3] sw-font-semibold sw-leading-normal
+            xl:sw-text-[36px]
+            ">
+              {{ block.settings.text }}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+
+    <p class="sw-text-[14px] sw-text-white  sw-font-semibold sw-mt-0 xl:sw-text-[24px]">
+      {{ section.settings.subtitle_bottom }} 
+    </p>
+  </div>
+
+  <!-- Background Graph Image -->
+  <div class="sw-absolute sw-bottom-0 sw-z-0 sw-left-0 sw-w-full"
+  {% if section.settings.enable_padding %}
+  style="bottom: {{ section.settings.bg_bottom_postion }}px;"
+  {% endif %}
+  >
+    <div class="sw-block xl:sw-hidden sw-absolute sw-bottom-0 sw-w-full sw-h-auto">
+      {% render 'icons-v2'
+        , icon: 'icon-banner-mobile'
+        , class: 'sw-w-full sw-h-auto sw-w-[14px] sw-h-[14px] sw-transition-all group-[&.copied]:sw-opacity-0'
+      %}
+    </div>
+
+    <div class="desktop_banner sw-absolute sw-bottom-0 sw-hidden xl:sw-block sw-w-full sw-h-auto ">
+      {% render 'icons-v2'
+        , icon: 'icon-banner-desktop'
+        , class: 'sw-w-full sw-h-auto  sw-hidden sw-w-[14px] sw-h-[14px] sw-transition-all group-[&.copied]:sw-opacity-0'
+      %}
+
+    </div>
+
+  </div>
+</section>
+
+<!-- JavaScript Slide Animation (No blank effect) -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+
+  const track = document.querySelector(".sw-slider-track");
+  const slides = document.querySelectorAll(".sw-slide");
+
+  if (!slides.length) return;
+
+  let index = 1;
+  const speed = 500;  
+  const autoTime = 2500;
+
+  const firstClone = slides[0].cloneNode(true);
+  const lastClone = slides[slides.length - 1].cloneNode(true);
+
+  track.appendChild(firstClone);
+  track.insertBefore(lastClone, slides[0]);
+
+  let allSlides = document.querySelectorAll(".sw-slide");
+
+  // Each slide height
+  const slideHeight = slides[0].offsetHeight;
+
+  // Start from first original
+  track.style.transform = `translateY(-${index * slideHeight}px)`;
+
+  function goNext() {
+    index++;
+    track.style.transition = `${speed}ms ease-out`;
+    track.style.transform = `translateY(-${index * slideHeight}px)`;
+
+    track.addEventListener("transitionend", function handler() {
+
+      if (allSlides[index] === firstClone) {
+        track.style.transition = "none";
+        index = 1;
+        track.style.transform = `translateY(-${index * slideHeight}px)`;
+      }
+
+      track.removeEventListener("transitionend", handler);
+    });
+  }
+
+  setInterval(goNext, autoTime);
+  });
+
+
+</script>
+
+{% schema %}
+  {
+    "name": "Banner",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo_image",
+        "label": "Logo Image"
+      },
+
+      {
+        "type": "text",
+        "id": "title_main",
+        "label": "Main Title",
+        "default": "TradeEdge"
+      },
+      {
+        "type": "text",
+        "id": "title_highlight",
+        "label": "Highlighted Title",
+        "default": "Pro"
+      },
+
+      {
+        "type": "text",
+        "id": "subtitle_top",
+        "label": "Top Subtitle",
+        "default": "A revolutionary Pine Script strategy designed specifically for"
+      }, {
+        "type": "text",
+        "id": "subtitle_bottom",
+        "label": "Bottom Subtitle",
+        "default": "who demand consistent, reliable performance across any market, any time-frame & any instrument."
+      },
+       {
+        "type": "range",
+        "id": "rotate_speed",
+        "min": 1,
+        "max": 5,
+        "step": 1,
+        "label": "Rotation Speed (Seconds)",
+        "default": 2
+      },
+      {
+      "type": "checkbox",
+        "id": "enable_padding",
+        "label": "Enable Padding Bottom",
+        "default": false
+      },
+       {
+      "type": "range",
+        "id": "padding_bottom",
+        "label": "Padding Bottom",
+        "min": 0,
+        "max": 250,
+        "step": 10,
+        "default": 250,
+        "unit": "px"
+      },
+      {
+      "type": "range",
+        "id": "bg_bottom_postion",
+        "label": "Bg Bottom Position Minus",
+        "min": 0,
+        "max": 200,
+        "step": 10,
+        "default": 200,
+        "unit": "px"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "message",
+        "name": "Slide Message",
+        "settings": [
+          {
+            "type": "text",
+            "id": "text",
+            "label": "Message Text",
+            "default": "Welcome to our store!"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Banner"
+      }
+    ]
+  }
+{% endschema %}

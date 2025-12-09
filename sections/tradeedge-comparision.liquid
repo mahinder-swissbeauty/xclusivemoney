@@ -1,0 +1,280 @@
+{% comment %}
+  Section: TradeEdge Pro Comparison (Desktop layout tuned)
+{% endcomment %}
+
+<section id="{{ section.id }}-tradeedge-comparison"
+  class="sw-bg-[#151515] sw-text-white sw-py-10 sw-px-4 xl:sw-py-16 sw-relative "
+  style="background-color: {{section.settings.section_bg}}; color:{{section.settings.section_text_color}}"
+>
+
+  <!-- MAIN HEADING -->
+  {% render 'section-heading' %}
+
+  <!-- TWO COLUMNS -->
+  <div class="tradeedge-wrap sw-relative sw-z-10 sw-max-w-[360px] xl:sw-max-w-[1080px] sw-mx-auto sw-grid sw-gap-8 xl:sw-gap-[120px] xl:sw-grid-cols-[1fr,1fr]">
+
+    {%- comment -%} LEFT: WITHOUT TRADEDGE PRO {%- endcomment -%}
+    <div class="sw-grid sw-grid-cols-[88px,1fr] sw-gap-6 xl:sw-grid-cols-[120px,1fr] xl:sw-gap-10">
+      <!-- Avatar / Image -->
+      <div class="sw-flex-shrink-0 sw-mt-auto">
+        {% if section.settings.without_image != blank %}
+          {{ section.settings.without_image
+            | image_url: width: 240
+            | image_tag:
+              class: 'sw-w-full sw-h-auto sw-object-contain',
+              loading: 'lazy',
+              alt: section.settings.without_title | escape
+          }}
+        {% endif %}
+      </div>
+
+      <!-- Text block -->
+      <div class="sw-flex-1 sw-text-left">
+        <h3 class="sw-text-[16px] sw-font-semibold sw-text-[#FF5B6F] sw-mb-6 xl:sw-text-[24px]">
+          {{ section.settings.without_title }}
+        </h3>
+        <ul class="sw-space-y-2.5 xl:sw-space-y-4 sw-text-xs sm:sw-text-sm xl:sw-text-base">
+          {% for i in (1..4) %}
+            {% assign key = 'without_point_' | append: i %}
+            {% if section.settings[key] != blank %}
+              <li class="sw-flex sw-items-start sw-gap-2.5">
+                <span class="sw-flex sw-items-center sw-justify-center sw-w-3 sw-h-3 xl:sw-w-4 xl:sw-h-4">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.48369 9.07652C5.48369 9.22128 5.52711 9.34352 5.61397 9.44324C5.70404 9.54297 5.83594 9.59283 6.00965 9.59283C6.18015 9.59283 6.31043 9.54297 6.40051 9.44324C6.4938 9.34352 6.54044 9.22128 6.54044 9.07652C6.54044 8.93819 6.4938 8.81916 6.40051 8.71944C6.31043 8.62293 6.18015 8.57468 6.00965 8.57468C5.83594 8.57468 5.70404 8.62293 5.61397 8.71944C5.52711 8.81916 5.48369 8.93819 5.48369 9.07652Z" fill="white"/>
+                    <path d="M6.44876 7.69164V2.47059H5.55124V7.69164H6.44876Z" fill="white"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0 6C0 9.31371 2.68629 12 6 12C9.31371 12 12 9.31371 12 6C12 2.68629 9.31371 0 6 0C2.68629 0 0 2.68629 0 6ZM6 11.2941C3.07614 11.2941 0.705882 8.92386 0.705882 6C0.705882 3.07614 3.07614 0.705882 6 0.705882C8.92386 0.705882 11.2941 3.07614 11.2941 6C11.2941 8.92386 8.92386 11.2941 6 11.2941Z" fill="#FF5B6F"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0.705882 6C0.705882 8.92386 3.07614 11.2941 6 11.2941C8.92386 11.2941 11.2941 8.92386 11.2941 6C11.2941 3.07614 8.92386 0.705882 6 0.705882C3.07614 0.705882 0.705882 3.07614 0.705882 6ZM5.48369 9.07652C5.48369 9.22128 5.52711 9.34352 5.61397 9.44324C5.70404 9.54297 5.83594 9.59283 6.00965 9.59283C6.18015 9.59283 6.31043 9.54297 6.40051 9.44324C6.4938 9.34352 6.54044 9.22128 6.54044 9.07652C6.54044 8.93819 6.4938 8.81916 6.40051 8.71944C6.31043 8.62293 6.18015 8.57468 6.00965 8.57468C5.83594 8.57468 5.70404 8.62293 5.61397 8.71944C5.52711 8.81916 5.48369 8.93819 5.48369 9.07652ZM6.44876 7.69164V2.47059H5.55124V7.69164H6.44876Z" fill="#FF5B6F"/>
+                  </svg>
+                </span>
+                <span class="sw-text-[#f3f4f6] sw-text-xs xl:sw-text-[16px]">{{ section.settings[key] }}</span>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    {%- comment -%} RIGHT: WITH TRADEDGE PRO {%- endcomment -%}
+    <div class="sw-grid sw-grid-cols-[1fr,88px] xl:sw-grid-cols-[120px,1fr] sw-gap-6 xl:sw-gap-10 ">
+      <!-- Text block -->
+      <div class="sw-flex-1 sw-text-left xl:sw-text-right xl:sw-order-2">
+        <h3 class="sw-text-[16px] sw-font-semibold sw-text-[#22c55e] sw-mb-6 xl:sw-text-[24px] xl:sw-text-left">
+          {{ section.settings.with_title }}
+        </h3>
+        <ul class="sw-space-y-2.5 xl:sw-space-y-4 sw-text-xs sm:sw-text-sm xl:sw-text-base">
+          {% for i in (1..4) %}
+            {% assign key = 'with_point_' | append: i %}
+            {% if section.settings[key] != blank %}
+              <li class="sw-flex sw-items-start sw-gap-2.5 ">
+                <span class="sw-flex sw-items-center sw-justify-center sw-w-3 sw-h-3 xl:sw-w-4 xl:sw-h-4">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 6C12 9.31371 9.31371 12 6 12C2.68629 12 0 9.31371 0 6C0 2.68629 2.68629 0 6 0C9.31371 0 12 2.68629 12 6Z" fill="#16A34A"/>
+                    <path d="M4.98002 8.51043L2.60502 6.13543L3.19877 5.54168L4.98002 7.32293L8.80294 3.50001L9.39669 4.09376L4.98002 8.51043Z" fill="white"/>
+                  </svg>
+                </span>
+                <span class="sw-text-[#f3f4f6] sw-text-xs xl:sw-text-[16px]">{{ section.settings[key] }}</span>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Avatar / Image -->
+      <div class="sw-flex-shrink-0 sw-mt-auto xl:sw-order-1">
+        {% if section.settings.with_image != blank %}
+          {{ section.settings.with_image
+            | image_url: width: 240
+            | image_tag:
+              class: 'sw-w-full sw-h-auto sw-object-contain',
+              loading: 'lazy',
+              alt: section.settings.with_title | escape
+          }}
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  #{{ section.id }}-tradeedge-comparison {
+    padding-top: {{ section.settings.mobile_padding_top }}px;
+    padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+  }
+
+  @media (min-width: 1200px) {
+    #{{ section.id }}-tradeedge-comparison {
+      padding-top: {{ section.settings.desktop_padding_top }}px;
+      padding-bottom: {{ section.settings.desktop_padding_bottom }}px;
+    }
+    .tradeedge-wrap img{
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "TradeEdge Pro comparison",
+  "settings": [
+    {
+      "type": "color",
+      "label": "section background color",
+      "id": "section_bg",
+      "default": "#1E1E1E"
+    },
+    {
+      "type": "color",
+      "label": "section text color",
+      "id": "section_text_color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile padding top (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile padding bottom (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_top",
+      "label": "Desktop padding top (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_bottom",
+      "label": "Desktop padding bottom (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "html",
+      "label": "Section title",
+      "id": "section_title",
+      "default": "TradeEdge <span> Pro</span> Features"
+    },
+    {
+      "type": "color",
+      "label": "Heading color",
+      "id": "section_title_color",
+      "default": "#000000"
+    },
+    {
+      "type": "text",
+      "id": "heading_prefix",
+      "label": "Heading prefix",
+      "default": "Why TradeEdge"
+    },
+    {
+      "type": "text",
+      "id": "heading_highlight",
+      "label": "Heading highlight (pill)",
+      "default": "Pro"
+    },
+
+    {
+      "type": "text",
+      "id": "without_title",
+      "label": "Left title (without)",
+      "default": "Without TradeEdge Pro"
+    },
+    {
+      "type": "image_picker",
+      "id": "without_image",
+      "label": "Left avatar image (without)"
+    },
+
+    {
+      "type": "text",
+      "id": "with_title",
+      "label": "Right title (with)",
+      "default": "With TradeEdge Pro"
+    },
+    {
+      "type": "image_picker",
+      "id": "with_image",
+      "label": "Right avatar image (with)"
+    },
+
+    {
+      "type": "text",
+      "id": "without_point_1",
+      "label": "Without point 1",
+      "default": "Emotional trading, frequent losses"
+    },
+    {
+      "type": "text",
+      "id": "without_point_2",
+      "label": "Without point 2",
+      "default": "Wrong timing, miss winning trades"
+    },
+    {
+      "type": "text",
+      "id": "without_point_3",
+      "label": "Without point 3",
+      "default": "Blind trading setup, getting trapped"
+    },
+    {
+      "type": "text",
+      "id": "without_point_4",
+      "label": "Without point 4",
+      "default": "Struggling to find profitable setups"
+    },
+
+    {
+      "type": "text",
+      "id": "with_point_1",
+      "label": "With point 1",
+      "default": "Emotion-free trading, higher profits"
+    },
+    {
+      "type": "text",
+      "id": "with_point_2",
+      "label": "With point 2",
+      "default": "Precise entry timing, higher success"
+    },
+    {
+      "type": "text",
+      "id": "with_point_3",
+      "label": "With point 3",
+      "default": "Trading with data driven confidence"
+    },
+    {
+      "type": "text",
+      "id": "with_point_4",
+      "label": "With point 4",
+      "default": "Multiple pre-built profitable setups"
+    }
+  ],
+  "presets": [
+    {
+      "name": "TradeEdge Pro comparison",
+      "category": "Custom sections"
+    }
+  ]
+}
+{% endschema %}

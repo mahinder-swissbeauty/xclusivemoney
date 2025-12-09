@@ -1,0 +1,285 @@
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}" dir="{{ settings.text_direction }}">
+  <head>
+    {% comment %}
+         <script>(function(){var dbpr=100;if(Math.random()*100>100-dbpr){var d="dbbRum",w=window,o=document,a=addEventListener,scr=o.createElement("script");w[d]=w[d]||[];w[d].push(["presampling",dbpr]);["error","unhandledrejection"].forEach(function(t){a(t,function(e){w[d].push([t,e])});});}scr.src="https://cdn.debugbear.com/aTlB6OkqAUMF.js";o.head.appendChild(scr);})()</script>
+      <script>
+          (()=>{try{var e=navigator,t=e.userAgent,r=0,a=(e,t,r)=>e.setAttribute(t,r),o=(e,t)=>e.removeAttribute(t),d="tagName",n="forEach",l="indexOf";(e.platform[l]("x86_64")>-1&&0>t[l]("CrOS")||t[l]("power")>-1||t[l]("rix")>-1)&&new MutationObserver((e=>{e[n]((({addedNodes:e})=>{e[n]((e=>{1===e.nodeType&&("IFRAME"===e[d]&&(a(e,"loading","lazy"),a(e,"data-src",e.src),o(e,"src")),"IMG"===e[d]&&r++>20&&a(e,"loading","lazy"),"SCRIPT"===e[d]&&(a(e,"data-src",e.src),o(e,"src"),e.type="text/lazyload"))}))}))})).observe(document.documentElement,{childList:!0,subtree:!0});var c=e=>document.querySelector(e),s=()=>Date.now(),i=s(),u=()=>{if(!(s()-i>500)){if(!c("body>meta"))return setTimeout(u,5);var e=c("head");document.querySelectorAll("meta,link:not([rel='stylesheet']),title")[n]((t=>e.append(t)))}};u()}catch(e){}})();
+      </script>
+    {% endcomment %}
+
+    <!-- Google Tag Manager -->
+    <script async="async">
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', 'GTM-T4BBQJT');
+    </script>
+
+    {% if page.handle contains 'careers' %}
+      <script src="https://app.pyjamahr.com/asset-objects/careers-page-integration.js" defer="defer"></script>
+    {% endif %}
+    <!-- Added by AVADA SEO Suite -->
+    <!-- /Added by AVADA SEO Suite -->
+    {% comment %}
+      <script src='{{ 'sealapps_email_config.js' | asset_url }}' defer='defer' ></script>
+      <script src='{{ 'product_restore_email.js' | asset_url }}' defer='defer' ></script>
+    {% endcomment %}
+    <script id="em_product_variants" type="application/json">
+      {{ product.variants | json }}
+    </script>
+    <script id="em_product_selected_or_first_available_variant" type="application/json">
+      {{ product.selected_or_first_available_variant | json }}
+    </script>
+
+    <!-- EASYGIFT SCRIPT -->
+    {% if customer %}
+      <script
+        type="text/javascript"
+        src="https://cdn.506.io/eg/script.js?shop=swiss-beauty-dev.myshopify.com&isCustomer=true&tags={{ customer.tags | join: "," }}"
+        defer
+      ></script>
+    {% else %}
+      <script
+        type="text/javascript"
+        src="https://cdn.506.io/eg/script.js?shop=swiss-beauty-dev.myshopify.com"
+        defer
+      ></script>
+    {% endif %}
+    <!-- END EASYGIFT SCRIPT -->
+
+    {% unless template contains 'collection' or template contains 'index' %}
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"
+        integrity="sha512-yHknP1/AwR+yx26cB1y0cjvQUMvEa2PFzt1c9LlS4pRQ5NOTZFWbhBig+X9G9eYW/8m0/4OXNx8pxJ6z57x0dw=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+      >
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"
+        integrity="sha512-17EgCFERpgZKcm0j0fEq1YCJuyAWdz9KUtv1EjVuaOz8pDnh/0nZxmU6BBXwaaxqoi9PQXnRWqlcDB027hgv9A=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+      >
+      <script
+        defer
+        src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"
+        integrity="sha512-XtmMtDEcNz2j7ekrtHvOVR4iwwaD6o/FUJe6+Zq+HgcCsk3kj4uSQQR8weQ2QVj1o0Pk6PwYLohm206ZzNfubg=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+      ></script>
+    {% endunless %}
+    <meta name="google-site-verification" content="6xghSyy5ErWxdrwvVuDDrW8qG5Nh7srDcoFehDYJF7A">
+    <meta name="p:domain_verify" content="50315ebfeffb5bdf64cb8ae15408d4fe">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="theme-color" content="{{ settings.color_button }}">
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="preconnect" href="https://cdn.shopify.com">
+    <link rel="preconnect" href="https://fonts.shopifycdn.com">
+    <link rel="dns-prefetch" href="https://ajax.googleapis.com">
+    <link rel="dns-prefetch" href="https://maps.googleapis.com">
+    <link rel="dns-prefetch" href="https://maps.gstatic.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!--
+      <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    {%- if settings.favicon != blank -%}
+      <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
+    {%- endif -%}
+    {%- if page_description -%}
+      {% if settings.sale_layout and template contains 'index' %}
+        {% assign page_description = settings.sale_meta_description %}
+      {% endif %}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    {% if template contains 'index' %}
+      <link
+        rel="preload"
+        as="style"
+        href="{{ 'index.css' | asset_url }}"
+        onload="this.onload=null;this.rel='stylesheet'"
+      >
+    {% else %}
+      <link
+        rel="preload"
+        as="style"
+        href="{{ 'theme.css' | asset_url }}"
+        onload="this.onload=null;this.rel='stylesheet'"
+      >
+      <link
+        rel="preload"
+        as="style"
+        href="{{ 'custom.min.css' | asset_url }}"
+        onload="this.onload=null;this.rel='stylesheet'"
+      >
+    {% endif %}
+
+    {% render 'vite-tag' with 'base.css' %}
+    {% render 'vite-tag' with 'keen-slider.js' %}
+    {% comment %}{% render 'vite-tag' with 'jquery-v2.js' %}{% endcomment %}
+
+    {{ content_for_header }}
+    <style>
+      html {
+      scroll-behavior: smooth;
+      }
+      h1,h2,h3,h4,h5,h6{
+      	  font-family: "Inter", sans-serif;
+      }
+      body{
+      	  font-family: "Open Sans", sans-serif;
+      	  margin: 0;
+      	  padding: 0;
+      	  background-color: #1e1e1e;
+      	  color: #fff;
+      }
+      p{
+      	margin: 0;
+      }
+
+      {% if settings.show-overlay  %}
+      	.body-overlay {
+      	position: fixed;
+      	top: 0;
+      	width: 100%;
+      	height: 100%;
+      	z-index: 1;
+      }
+      .body-overlay-desktop{
+      	  background-image: url('{{ "bg-arrow.svg" | asset_url }}');
+      		background-repeat: repeat;
+
+      }
+
+
+      {% endif %}
+    </style>
+  </head>
+
+  <body
+    class="template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}{% if request.path == '/challenge' %} template-challange{% endif %} {% if template contains "collection" %}{{ collection.title | replace:' '}}{% endif %} {% if request.path == '/pages/contact' %}contact__us{% endif %} {% if template contains 'page' %}{{ page.title | handelize }}{% endif %} {{ page.title }}"
+    data-center-text="{{ settings.type_body_align_text }}"
+    data-button_style="{{ settings.button_style }}"
+    data-type_header_capitalize="{{ settings.type_header_capitalize }}"
+    data-type_headers_align_text="{{ settings.type_headers_align_text }}"
+    data-type_product_capitalize="{{ settings.type_product_capitalize }}"
+    data-swatch_style="{{ settings.swatch_style }}"
+    {% if settings.disable_animations %}
+      data-disable-animations="true"
+    {% endif %}
+  >
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-T4BBQJT"
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <noscript
+      ><img
+        height="1"
+        width="1"
+        style="display:none;"
+        src="https://www.facebook.com/tr?id=2545825318899046&ev=PageView&noscript=1"
+    ></noscript>
+
+    <div id="PageContainer" class="page-container">
+      <div class="transition-body">
+        {% section 'announcementbar' %}
+        {% section 'header' %}
+        <main class="main-content sw-min-h-screen sw-relative" id="MainContent">
+          {% if settings['show-overlay'] %}
+            <div class="body-overlay xl:sw-hidden">
+              {% render 'icons-v2', icon: 'icon-body-overlay' %}
+            </div>
+            <div class="body-overlay body-overlay-desktop sw-hidden xl:sw-block"></div>
+          {% endif %}
+
+          {{ content_for_layout }}
+        </main>
+        {% section 'whatsapp-widget' %}
+        {% section 'mobile-bottom-cta' %}
+        {% section 'footer' %}
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const menuBtn = document.getElementById('menuToggle');
+        const menu = document.getElementById('dropdownMenu');
+        const header = document.getElementById('siteHeader');
+
+        // Mobile menu toggle
+        if (menuBtn && menu) {
+          menuBtn.addEventListener('click', () => {
+            menu.classList.toggle('sw-hidden');
+          });
+
+          // Click outside to close
+          document.addEventListener('click', (e) => {
+            const clickedInsideMenu = menu.contains(e.target);
+            const clickedMenuBtn = menuBtn.contains(e.target);
+
+            if (!clickedInsideMenu && !clickedMenuBtn) {
+              menu.classList.add('sw-hidden');
+            }
+          });
+        }
+
+        // Smooth sticky effect on scroll
+        if (header) {
+          window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+              header.classList.add('is-scrolled');
+            } else {
+              header.classList.remove('is-scrolled');
+            }
+          });
+        }
+
+        // Scroll links with offset + close menu on click
+        document.querySelectorAll('a.scroll-link').forEach((link) => {
+          link.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const href = this.getAttribute('href');
+            const target = href ? document.querySelector(href) : null;
+            if (!target) return;
+
+            const topPos = target.getBoundingClientRect().top + window.scrollY;
+            const offset = 120;
+
+            window.scrollTo({
+              top: topPos - offset,
+              behavior: 'smooth',
+            });
+
+            if (menu && !menu.classList.contains('sw-hidden')) {
+              menu.classList.add('sw-hidden');
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
