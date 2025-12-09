@@ -1,0 +1,214 @@
+name: Deploy to Shopify
+
+on:
+  push:
+    branches:
+      - feature
+      - feature-shade
+      - feature-shade-alter
+      - staging
+      - main  # Trigger the workflow for pushes to both the staging and main branches
+
+jobs:
+  deploy_feature:
+    name: Deploy to feature
+    runs-on: self-hosted
+    if: github.ref == 'refs/heads/feature'  # This job runs only for the 'feature' branch
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
+      - name: Install Shopify CLI
+        run: npm install -g @shopify/cli
+
+      - name: Install Modules
+        run: npm install
+
+      - name: Build Theme Files
+        run: npm run build
+
+      - name: Upload theme to Staging
+        run: |
+          shopify theme push \
+            --nodelete \
+            --ignore config/settings_data.json templates/*/*.json templates/*.json sections/*.json locales/*.json jsconfig.json pacakge-lock.json package.json postcss.config.cjs Readme.md tailwind.config.ts tsconfig.json vite.config.ts assets/.vite/*  \
+            --theme ${{ secrets.SHOPIFY_FEATURE_THEME }} \
+            --store ${{ secrets.SHOPIFY_STORE }} \
+            --password ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
+
+  deploy_feature_shade:
+    name: Deploy to feature shade
+    runs-on: self-hosted
+    if: github.ref == 'refs/heads/feature-shade'  # This job runs only for the 'feature-shade' branch
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
+      - name: Install Shopify CLI
+        run: npm install -g @shopify/cli
+
+      - name: Install Modules
+        run: npm install
+
+      - name: Build Theme Files
+        run: npm run build
+        
+      - name: Upload theme to Production
+        run: |
+          shopify theme push \
+            --nodelete \
+            --ignore config/settings_data.json templates/*/*.json templates/*.json sections/*.json locales/*.json jsconfig.json pacakge-lock.json package.json postcss.config.cjs Readme.md tailwind.config.ts tsconfig.json vite.config.ts assets/.vite/*  \
+            --theme ${{ secrets.SHOPIFY_SHADE_THEME }} \
+            --store ${{ secrets.SHOPIFY_STORE }} \
+            --password ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }} \
+            --allow-live
+
+  deploy_feature_shade_alter:
+    name: Deploy to feature shade alter
+    runs-on: self-hosted
+    if: github.ref == 'refs/heads/feature-shade-alter'  # This job runs only for the 'feature-shade-alter' branch
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
+      - name: Install Shopify CLI
+        run: npm install -g @shopify/cli
+
+      - name: Install Modules
+        run: npm install
+
+      - name: Build Theme Files
+        run: npm run build
+        
+      - name: Upload theme to Production
+        run: |
+          shopify theme push \
+            --nodelete \
+            --ignore config/settings_data.json templates/*/*.json templates/*.json sections/*.json locales/*.json jsconfig.json pacakge-lock.json package.json postcss.config.cjs Readme.md tailwind.config.ts tsconfig.json vite.config.ts assets/.vite/*  \
+            --theme ${{ secrets.SHOPIFY_SHADE_THEME_ALTER }} \
+            --store ${{ secrets.SHOPIFY_STORE }} \
+            --password ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }} \
+            --allow-live
+          
+  deploy_staging:
+    name: Deploy to Staging
+    runs-on: self-hosted
+    if: github.ref == 'refs/heads/staging'  # This job runs only for the 'staging' branch
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
+      - name: Install Shopify CLI
+        run: npm install -g @shopify/cli
+
+      - name: Install Modules
+        run: npm install
+
+      - name: Build Theme Files
+        run: npm run build
+
+      - name: Upload theme to Staging
+        run: |
+          shopify theme push \
+            --nodelete \
+            --ignore config/settings_data.json templates/*/*.json templates/*.json locales/*.json sections/*.json jsconfig.json pacakge-lock.json package.json postcss.config.cjs Readme.md tailwind.config.ts tsconfig.json vite.config.ts assets/.vite/*  \
+            --theme ${{ secrets.SHOPIFY_STAGING_THEME }} \
+            --store ${{ secrets.SHOPIFY_STORE }} \
+            --password ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
+
+  deploy_main:
+    name: Deploy to Main
+    runs-on: self-hosted
+    if: github.ref == 'refs/heads/main'  # This job runs only for the 'main' branch
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
+      - name: Install Shopify CLI
+        run: npm install -g @shopify/cli
+
+      - name: Install Modules
+        run: npm install
+
+      - name: Build Theme Files
+        run: npm run build
+        
+      - name: Upload theme to Production
+        run: |
+          shopify theme push \
+            --nodelete \
+            --ignore config/settings_data.json templates/*/*.json templates/*.json sections/*.json locales/*.json jsconfig.json pacakge-lock.json package.json postcss.config.cjs Readme.md tailwind.config.ts tsconfig.json vite.config.ts assets/.vite/*  \
+            --theme ${{ secrets.SHOPIFY_PRODUCTION_THEME }} \
+            --store ${{ secrets.SHOPIFY_STORE }} \
+            --password ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }} \
+            --allow-live
