@@ -1,210 +1,859 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
-    "image_banner": {
-      "type": "image-banner",
+    "hero_FdpLfp": {
+      "type": "xs-hero",
       "blocks": {
-        "heading": {
-          "type": "heading",
+        "message_Pn9Fee": {
+          "type": "message",
           "settings": {
-            "heading": "Image banner",
-            "heading_size": "h0"
+            "text": "Swing Traders"
           }
         },
-        "text": {
-          "type": "text",
+        "message_JRyHNE": {
+          "type": "message",
           "settings": {
-            "text": "Give customers details about the banner image(s) or content on the template.",
-            "text_style": "body"
+            "text": "Positional Traders"
           }
         },
-        "button": {
-          "type": "buttons",
+        "message_4TKMx9": {
+          "type": "message",
           "settings": {
-            "button_label_1": "Shop all",
-            "button_link_1": "shopify://collections/all",
-            "button_style_secondary_1": true,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
+            "text": "Algorithmic Traders"
           }
         }
       },
       "block_order": [
-        "heading",
-        "text",
-        "button"
+        "message_Pn9Fee",
+        "message_JRyHNE",
+        "message_4TKMx9"
       ],
+      "name": "Banner",
       "settings": {
-        "image_overlay_opacity": 40,
-        "image_height": "large",
-        "desktop_content_position": "bottom-center",
-        "show_text_box": false,
-        "desktop_content_alignment": "center",
-        "color_scheme": "scheme-3",
-        "mobile_content_alignment": "center",
-        "stack_images_on_mobile": false,
-        "show_text_below": false
+        "logo_image": "shopify://shop_images/Subtract_2.png",
+        "title_main": "TradeEdge",
+        "title_highlight": "PRO",
+        "subtitle_top": "A revolutionary TradingView strategy designed specifically for",
+        "subtitle_bottom": "who demand consistent, reliable performance across any market, any time-frame & any instrument.",
+        "rotate_speed": 2,
+        "enable_padding": true,
+        "padding_bottom": 250,
+        "bg_bottom_postion": 200
       }
     },
-    "rich_text": {
-      "type": "rich-text",
+    "featured_slider_3yBwc9": {
+      "type": "xs-featured-slider",
       "blocks": {
-        "heading": {
-          "type": "heading",
+        "image_text_PqBjny": {
+          "type": "image_text",
           "settings": {
-            "heading": "Talk about your brand",
-            "heading_size": "h1"
+            "image": "shopify://shop_images/Group_3.jpg",
+            "url": "",
+            "title": "",
+            "description": "",
+            "button_label": "",
+            "button_url": ""
           }
         },
-        "text": {
-          "type": "text",
+        "image_text_XFWbtL": {
+          "type": "image_text",
           "settings": {
-            "text": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.<\/p>"
+            "image": "shopify://shop_images/Group_3.jpg",
+            "url": "",
+            "title": "",
+            "description": "",
+            "button_label": "",
+            "button_url": ""
+          }
+        },
+        "image_text_nUVBMT": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify://shop_images/Group_3.jpg",
+            "url": "",
+            "title": "",
+            "description": "",
+            "button_label": "",
+            "button_url": ""
           }
         }
       },
       "block_order": [
-        "heading",
-        "text"
+        "image_text_PqBjny",
+        "image_text_XFWbtL",
+        "image_text_nUVBMT"
       ],
+      "custom_css": [],
+      "name": "Featured slider (blocks)",
       "settings": {
-        "color_scheme": "scheme-1",
-        "full_width": true,
-        "padding_top": 40,
-        "padding_bottom": 0
+        "enable_header_left": false,
+        "enable_header_right": false,
+        "mobile_padding": 28,
+        "desktop_padding": 44,
+        "section_bg": "#1e1e1e",
+        "section_text_color": "#ffffff",
+        "enable_slider": true,
+        "card_border_color": "#01c5e3",
+        "card_bg_color": "#1e1e1e",
+        "heading": "Works on Stocks, Crypto, Forex, Options",
+        "heading_color": "#000000",
+        "heading_bg_color": "#01c5e3",
+        "subheading": "The Only TradingView Strategy That Actually Works",
+        "subheading_color": "#ffffff",
+        "bottom_subheading": "Real Backtested Results",
+        "bottom_subheading_color": "#01c5e3",
+        "section_title": "TradeEdge <span> Pro</span> Features",
+        "section_title_color": "#000000",
+        "show_arrows": true,
+        "show_dots": true,
+        "show_play_pause": true,
+        "autoplay": true,
+        "slide_interval": 5000,
+        "enable_mobile_multi": false,
+        "mobile_slides_per_view": "1.2",
+        "show_card_heading": false,
+        "show_card_paragraph": false,
+        "show_card_padding": false,
+        "show_card_bg": false,
+        "show_body_shade": false,
+        "card_bg": "#000000",
+        "enable_mt_minus": true,
+        "mt_minus": 200
       }
     },
-    "featured_collection": {
-      "type": "featured-collection",
-      "settings": {
-        "title": "Featured products",
-        "heading_size": "h2",
-        "collection": "all",
-        "products_to_show": 8,
-        "columns_desktop": 4,
-        "color_scheme": "scheme-1",
-        "show_view_all": false,
-        "swipe_on_mobile": false,
-        "image_ratio": "adapt",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "columns_mobile": "2",
-        "padding_top": 28,
-        "padding_bottom": 36
-      }
-    },
-    "collage": {
-      "type": "collage",
+    "featured_collection_jGPhHc": {
+      "type": "xs-featured-collection",
       "blocks": {
-        "collection-0": {
-          "type": "collection",
+        "image_text_wtghNm": {
+          "type": "image_text",
           "settings": {
-            "collection": ""
+            "image": "shopify://shop_images/Frame_149_2.jpg",
+            "title": "Real Time Alerts/Signals",
+            "paragraph": "<p>No more Missed Opportunities </p><p>Automated analysis that delivers instant BUY/SELL alerts based on Supertrend crossovers.<br/><br/>Multiple timeframe analysis (15m/4h)<br/>Technical indicators for signal quality measurement<br/>Minimal signal delay averaging 1m</p>",
+            "button_label": "",
+            "button_url": "shopify://blogs/what-is-algo-trading/algo-trading-with-zerodha-a-complete-guide-for-2025"
           }
         },
-        "product": {
-          "type": "product",
+        "image_text_6WiEr4": {
+          "type": "image_text",
           "settings": {
-            "product": "",
-            "second_image": false
+            "image": "shopify://shop_images/Frame_149_1.jpg",
+            "title": "Advanced Risk Management",
+            "paragraph": "<p>Protect your capital with precise stop-loss and take-profit levels automatically calculated for each trade.</p>",
+            "button_label": "",
+            "button_url": ""
           }
         },
-        "collection-1": {
-          "type": "collection",
+        "image_text_jTWPVE": {
+          "type": "image_text",
           "settings": {
-            "collection": ""
+            "image": "shopify://shop_images/Frame_149_2.jpg",
+            "title": "Auto Exit Signals",
+            "paragraph": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>",
+            "button_label": "Submit",
+            "button_url": "shopify://policies/privacy-policy"
+          }
+        },
+        "image_text_n4yHan": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify://shop_images/Frame_149_2.jpg",
+            "title": "Auto Exit Signals",
+            "paragraph": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>",
+            "button_label": "Submit",
+            "button_url": "shopify://pages/trade-edge-pro-2"
           }
         }
       },
       "block_order": [
-        "collection-0",
-        "product",
-        "collection-1"
+        "image_text_wtghNm",
+        "image_text_6WiEr4",
+        "image_text_jTWPVE",
+        "image_text_n4yHan"
       ],
+      "name": "Featured Card (blocks)",
       "settings": {
-        "heading": "Multimedia collage",
-        "heading_size": "h2",
-        "desktop_layout": "left",
-        "mobile_layout": "collage",
-        "color_scheme": "scheme-1",
-        "padding_top": 36,
-        "padding_bottom": 36
+        "mobile_padding": 28,
+        "desktop_padding": 44,
+        "section_bg": "#1e1e1e",
+        "section_text_color": "#ffffff",
+        "enable_slider": true,
+        "desktop_cards": 3,
+        "card_border_color": "#01c5e3",
+        "card_bg_color": "#1e1e1e",
+        "mobile_perview": "1.2",
+        "show_arrows": true,
+        "slider_bar": true,
+        "thumb_bg": "#155059",
+        "thumb_color": "#01c5e3",
+        "section_title": "Everything You Need For <span>  Successful Trading</span>",
+        "heading_color": "#01c5e3",
+        "section_title_color": "#ffffff",
+        "enable_mt_minus": false,
+        "mt_minus": 250
       }
     },
-    "video": {
-      "type": "video",
+    "why_traders_gUxGbh": {
+      "type": "xs-why-traders",
+      "blocks": {
+        "feature_fbeLmU": {
+          "type": "feature",
+          "settings": {
+            "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"36\" height=\"36\" viewbox=\"0 0 36 36\" fill=\"none\">\n  <path d=\"M18 33C15.95 33 14.0125 32.6062 12.1875 31.8187C10.3625 31.0312 8.76875 29.9562 7.40625 28.5938C6.04375 27.2313 4.96875 25.6375 4.18125 23.8125C3.39375 21.9875 3 20.05 3 18C3 15.925 3.39375 13.9813 4.18125 12.1688C4.96875 10.3563 6.04375 8.76875 7.40625 7.40625C8.76875 6.04375 10.3625 4.96875 12.1875 4.18125C14.0125 3.39375 15.95 3 18 3C20.075 3 22.0187 3.39375 23.8312 4.18125C25.6437 4.96875 27.2313 6.04375 28.5938 7.40625C29.9562 8.76875 31.0312 10.3563 31.8187 12.1688C32.6062 13.9813 33 15.925 33 18C33 20.05 32.6062 21.9875 31.8187 23.8125C31.0312 25.6375 29.9562 27.2313 28.5938 28.5938C27.2313 29.9562 25.6437 31.0312 23.8312 31.8187C22.0187 32.6062 20.075 33 18 33ZM18 29.925C18.65 29.025 19.2125 28.0875 19.6875 27.1125C20.1625 26.1375 20.55 25.1 20.85 24H15.15C15.45 25.1 15.8375 26.1375 16.3125 27.1125C16.7875 28.0875 17.35 29.025 18 29.925ZM14.1 29.325C13.65 28.5 13.2563 27.6438 12.9188 26.7563C12.5813 25.8688 12.3 24.95 12.075 24H7.65C8.375 25.25 9.28125 26.3375 10.3687 27.2625C11.4562 28.1875 12.7 28.875 14.1 29.325ZM21.9 29.325C23.3 28.875 24.5438 28.1875 25.6313 27.2625C26.7188 26.3375 27.625 25.25 28.35 24H23.925C23.7 24.95 23.4187 25.8688 23.0812 26.7563C22.7437 27.6438 22.35 28.5 21.9 29.325ZM6.375 21H11.475C11.4 20.5 11.3437 20.0062 11.3062 19.5187C11.2687 19.0312 11.25 18.525 11.25 18C11.25 17.475 11.2687 16.9688 11.3062 16.4813C11.3437 15.9938 11.4 15.5 11.475 15H6.375C6.25 15.5 6.15625 15.9938 6.09375 16.4813C6.03125 16.9688 6 17.475 6 18C6 18.525 6.03125 19.0312 6.09375 19.5187C6.15625 20.0062 6.25 20.5 6.375 21ZM14.475 21H21.525C21.6 20.5 21.6563 20.0062 21.6938 19.5187C21.7313 19.0312 21.75 18.525 21.75 18C21.75 17.475 21.7313 16.9688 21.6938 16.4813C21.6563 15.9938 21.6 15.5 21.525 15H14.475C14.4 15.5 14.3437 15.9938 14.3062 16.4813C14.2687 16.9688 14.25 17.475 14.25 18C14.25 18.525 14.2687 19.0312 14.3062 19.5187C14.3437 20.0062 14.4 20.5 14.475 21ZM24.525 21H29.625C29.75 20.5 29.8437 20.0062 29.9062 19.5187C29.9688 19.0312 30 18.525 30 18C30 17.475 29.9688 16.9688 29.9062 16.4813C29.8437 15.9938 29.75 15.5 29.625 15H24.525C24.6 15.5 24.6563 15.9938 24.6938 16.4813C24.7313 16.9688 24.75 17.475 24.75 18C24.75 18.525 24.7313 19.0312 24.6938 19.5187C24.6563 20.0062 24.6 20.5 24.525 21ZM23.925 12H28.35C27.625 10.75 26.7188 9.6625 25.6313 8.7375C24.5438 7.8125 23.3 7.125 21.9 6.675C22.35 7.5 22.7437 8.35625 23.0812 9.24375C23.4187 10.1312 23.7 11.05 23.925 12ZM15.15 12H20.85C20.55 10.9 20.1625 9.8625 19.6875 8.8875C19.2125 7.9125 18.65 6.975 18 6.075C17.35 6.975 16.7875 7.9125 16.3125 8.8875C15.8375 9.8625 15.45 10.9 15.15 12ZM7.65 12H12.075C12.3 11.05 12.5813 10.1312 12.9188 9.24375C13.2563 8.35625 13.65 7.5 14.1 6.675C12.7 7.125 11.4562 7.8125 10.3687 8.7375C9.28125 9.6625 8.375 10.75 7.65 12Z\" fill=\"white\"></path>\n</svg>",
+            "title": "Universal Strategy",
+            "description": "<p>Works on US stocks, Indian equity, crypto, forex, commodities - any market</p>"
+          }
+        },
+        "feature_bQWH8Y": {
+          "type": "feature",
+          "settings": {
+            "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"36\" height=\"36\" viewbox=\"0 0 36 36\" fill=\"none\">\n  <path d=\"M30.0001 15.0001C31.6539 15.0001 33 13.6548 33 12.0002V8.99993C33 7.34534 31.6539 6 30.0001 6H5.99993C4.34534 6 3 7.34534 3 8.99993V11.9999C3 13.6544 4.34534 14.9998 5.99993 14.9998H16.5002V16.4999H8.99986C7.34527 16.4999 5.99993 17.8453 5.99993 19.4999V21C4.34534 21 3 22.3461 3 23.9999V27.0002C3 28.6541 4.34534 30.0001 5.99993 30.0001H8.99986C10.6544 30.0001 11.9998 28.6541 11.9998 27.0002V24.0003C11.9998 22.3464 10.6544 21.0004 8.99986 21.0004V19.5002H16.4999V21.0004C14.8453 21.0004 13.4999 22.3464 13.4999 24.0003V27.0002C13.4999 28.6541 14.8453 30.0001 16.4999 30.0001H19.4998C21.1537 30.0001 22.4997 28.6541 22.4997 27.0002V24.0003C22.4997 22.3464 21.1537 21.0004 19.4998 21.0004V19.5002H27.0001V21.0004C25.3463 21.0004 24.0002 22.3464 24.0002 24.0003V27.0002C24.0002 28.6541 25.3463 30.0001 27.0001 30.0001H30.0001C31.6539 30.0001 33 28.6541 33 27.0002V24.0003C33 22.3464 31.6539 21.0004 30.0001 21.0004V19.5002C30.0001 17.8456 28.654 16.5003 27.0001 16.5003H19.5001V15.0001H30.0001ZM8.99986 27.0002H5.99993V24.0003H8.99986V27.0002ZM19.5001 27.0002H16.5002V24.0003H19.5001V27.0002ZM30.0001 27.0002H27.0001V24.0003H30.0001V27.0002ZM5.99993 8.99993H30.0004L30.0019 11.9999H5.99993V8.99993Z\" fill=\"white\"></path>\n</svg>",
+            "title": "Alert2Trade Integration",
+            "description": "<p>Seamless automation with 99.9% reliability</p>"
+          }
+        },
+        "feature_Qzk99j": {
+          "type": "feature",
+          "settings": {
+            "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"36\" height=\"36\" viewbox=\"0 0 36 36\" fill=\"none\">\n  <path d=\"M18 33C15.9167 33 13.9653 32.6042 12.1458 31.8125C10.3264 31.0208 8.74306 29.9514 7.39583 28.6042C6.04861 27.2569 4.97917 25.6736 4.1875 23.8542C3.39583 22.0347 3 20.0833 3 18C3 15.9167 3.39583 13.9653 4.1875 12.1458C4.97917 10.3264 6.04861 8.74305 7.39583 7.39583C8.74306 6.04861 10.3264 4.97917 12.1458 4.1875C13.9653 3.39583 15.9167 3 18 3C20.0833 3 22.0347 3.39583 23.8542 4.1875C25.6736 4.97917 27.2569 6.04861 28.6042 7.39583C29.9514 8.74305 31.0208 10.3264 31.8125 12.1458C32.6042 13.9653 33 15.9167 33 18C33 20.0833 32.6042 22.0347 31.8125 23.8542C31.0208 25.6736 29.9514 27.2569 28.6042 28.6042C27.2569 29.9514 25.6736 31.0208 23.8542 31.8125C22.0347 32.6042 20.0833 33 18 33ZM22.6667 25L25 22.6667L19.6667 17.3333V9.66667H16.3333V18.6667L22.6667 25ZM18 29.6667C21.25 29.6667 24.0069 28.5347 26.2708 26.2708C28.5347 24.0069 29.6667 21.25 29.6667 18C29.6667 14.75 28.5347 11.9931 26.2708 9.72917C24.0069 7.46528 21.25 6.33333 18 6.33333C14.75 6.33333 11.9931 7.46528 9.72917 9.72917C7.46528 11.9931 6.33333 14.75 6.33333 18C6.33333 21.25 7.46528 24.0069 9.72917 26.2708C11.9931 28.5347 14.75 29.6667 18 29.6667Z\" fill=\"white\"></path>\n</svg>",
+            "title": "Universal Strategy",
+            "description": "<p>Works on US stocks, Indian equity, crypto, forex, commodities - any market</p>"
+          }
+        },
+        "feature_mAW4Xf": {
+          "type": "feature",
+          "settings": {
+            "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"36\" height=\"36\" viewbox=\"0 0 36 36\" fill=\"none\">\n  <path d=\"M16.0645 2.98389V4.06776C15.5866 4.17474 15.1302 4.36155 14.7145 4.62034L13.9529 3.85873L12.5845 5.22711L13.349 5.99163C13.0885 6.40608 12.8997 6.8615 12.7906 7.33873H11.7097V9.27421H12.7935C12.9005 9.75208 13.0873 10.2085 13.3461 10.6242L12.5845 11.3858L13.9529 12.7542L14.7174 11.9897C15.1319 12.2502 15.5873 12.439 16.0645 12.5481V13.629H18V12.5452C18.4779 12.4382 18.9343 12.2514 19.35 11.9926L20.1116 12.7542L21.48 11.3858L20.7155 10.6213C20.976 10.2068 21.1648 9.75143 21.2739 9.27421H22.3548V7.33873H21.271C21.164 6.86086 20.9772 6.40446 20.7184 5.98873L21.48 5.22711L20.1116 3.85873L19.3471 4.62324C18.9326 4.36272 18.4772 4.17395 18 4.06485V2.98389H16.0645ZM17.0323 5.55421C17.3938 5.55408 17.7519 5.62517 18.0859 5.76342C18.42 5.90166 18.7236 6.10436 18.9794 6.35993C19.2351 6.6155 19.438 6.91894 19.5765 7.25293C19.715 7.58691 19.7863 7.94491 19.7865 8.30647C19.7866 8.66819 19.7154 9.02639 19.5771 9.3606C19.4387 9.69481 19.2358 9.99848 18.98 10.2543C18.7243 10.51 18.4206 10.7129 18.0864 10.8513C17.7522 10.9896 17.394 11.0608 17.0323 11.0607C16.6705 11.0608 16.3123 10.9896 15.9781 10.8513C15.6439 10.7129 15.3402 10.51 15.0845 10.2543C14.8287 9.99848 14.6258 9.69481 14.4875 9.3606C14.3491 9.02639 14.2779 8.66819 14.2781 8.30647C14.2782 7.94491 14.3495 7.58691 14.488 7.25293C14.6265 6.91894 14.8294 6.6155 15.0851 6.35993C15.3409 6.10436 15.6445 5.90166 15.9786 5.76342C16.3127 5.62517 16.6707 5.55408 17.0323 5.55421ZM25.5658 12.6613V13.9407C25.0011 14.0681 24.4619 14.2899 23.971 14.5968L23.071 13.6949L21.4529 15.3129L22.3568 16.2149C22.0488 16.7049 21.8256 17.2435 21.6968 17.8078H20.4194V20.0955H21.6987C21.8256 20.6601 22.0467 21.1993 22.3529 21.6903L21.4529 22.5903L23.071 24.2084L23.9729 23.3045C24.463 23.6125 25.0015 23.8357 25.5658 23.9645V25.2419H27.8535V23.9626C28.4182 23.8357 28.9573 23.6146 29.4484 23.3084L30.3484 24.2084L31.9664 22.5903L31.0626 21.6884C31.3706 21.1983 31.5937 20.6598 31.7226 20.0955H33V17.8078H31.7206C31.5938 17.2431 31.3726 16.704 31.0665 16.2129L31.9664 15.3129L30.3484 13.6949L29.4464 14.5987C28.9564 14.2907 28.4179 14.0676 27.8535 13.9387V12.6613H25.5658ZM9.73064 15.5645V17.2387C8.99206 17.4042 8.28668 17.6931 7.64419 18.0932L6.46645 16.9174L4.3529 19.0329L5.53355 20.2126C5.13111 20.8534 4.8396 21.5574 4.67129 22.2952H3V25.2855H4.67419C4.83969 26.0241 5.12858 26.7295 5.52871 27.372L4.3529 28.5497L6.46645 30.6652L7.6471 29.4836C8.28825 29.8858 8.99264 30.1769 9.73064 30.3449V32.0161H12.721V30.3429C13.4596 30.1771 14.165 29.8879 14.8074 29.4874L15.9852 30.6652L18.0987 28.5497L16.9181 27.369C17.3206 26.728 17.6121 26.0236 17.7803 25.2855H19.4516V22.2952H17.7774C17.6119 21.5566 17.323 20.8512 16.9229 20.2087L18.0987 19.0329L15.9852 16.9174L14.8045 18.0981C14.1634 17.6955 13.459 17.404 12.721 17.2358V15.5645H9.73064ZM26.7097 15.699C27.5722 15.6993 28.3994 16.0421 29.0093 16.652C29.6192 17.2619 29.962 18.0891 29.9623 18.9516C29.9624 19.3789 29.8784 19.802 29.715 20.1968C29.5516 20.5916 29.312 20.9503 29.01 21.2525C28.708 21.5547 28.3494 21.7945 27.9547 21.9581C27.56 22.1217 27.1369 22.206 26.7097 22.2061C26.2824 22.206 25.8594 22.1217 25.4647 21.9581C25.07 21.7945 24.7114 21.5547 24.4094 21.2525C24.1073 20.9503 23.8678 20.5916 23.7044 20.1968C23.541 19.802 23.457 19.3789 23.4571 18.9516C23.4574 18.0891 23.8001 17.2619 24.41 16.652C25.02 16.0421 25.8471 15.6993 26.7097 15.699ZM11.2258 19.5361C12.354 19.5364 13.4359 19.9847 14.2337 20.7825C15.0315 21.5802 15.4797 22.6621 15.48 23.7903C15.4797 24.9185 15.0315 26.0005 14.2337 26.7982C13.4359 27.596 12.354 28.0443 11.2258 28.0445C10.0976 28.0443 9.01568 27.596 8.21792 26.7982C7.42016 26.0005 6.97187 24.9185 6.97161 23.7903C6.97187 22.6621 7.42016 21.5802 8.21792 20.7825C9.01568 19.9847 10.0976 19.5364 11.2258 19.5361Z\" fill=\"white\"></path>\n</svg>",
+            "title": "Memory Optimized",
+            "description": "<p>Never crashes, even on complex multi-timeframe analysis</p>"
+          }
+        },
+        "feature_7iCJM9": {
+          "type": "feature",
+          "settings": {
+            "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"36\" height=\"36\" viewbox=\"0 0 36 36\" fill=\"none\">\n  <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M18 3C26.2843 3 33 9.71573 33 18C33 26.2843 26.2843 33 18 33C9.71573 33 3 26.2843 3 18C3 9.71573 9.71573 3 18 3ZM8.49196 10.5636C6.8867 12.6131 5.92969 15.1948 5.92969 18C5.92969 24.6663 11.3338 30.0703 18 30.0703C20.8052 30.0703 23.3868 29.1132 25.4364 27.508L19.349 21.4206C19.2785 21.6484 19.2773 21.8327 19.2773 21.8352C19.2773 23.6173 19.5971 24.5028 19.7019 24.7453C19.7104 24.7641 19.7193 24.782 19.727 24.8007L19.7355 24.8182H19.7325C19.8173 25.0317 19.867 25.2631 19.867 25.5064C19.867 25.7518 19.8187 25.9948 19.7249 26.2215C19.6311 26.4482 19.4936 26.6542 19.3202 26.8277C19.1468 27.0012 18.941 27.1388 18.7145 27.2327C18.488 27.3267 18.2452 27.375 18 27.375C17.7548 27.375 17.512 27.3267 17.2855 27.2327C17.059 27.1388 16.8532 27.0012 16.6798 26.8277C16.5064 26.6542 16.3689 26.4482 16.2751 26.2215C16.1813 25.9948 16.133 25.7518 16.133 25.5064C16.1338 25.2705 16.1794 25.0369 16.2675 24.8182H16.2645L16.273 24.8011C16.2807 24.7819 16.2901 24.7636 16.2981 24.7449C16.4033 24.5015 16.7227 23.6164 16.7227 21.8352C16.7227 20.5599 15.4515 20.5568 15.4453 20.5568H12.4648C12.239 20.5568 12.0224 20.467 11.8627 20.3072C11.703 20.1474 11.6133 19.9306 11.6133 19.7045V15.8693H13.7977L11.667 13.7386H11.6133V13.6849L8.49196 10.5636ZM18 5.92969C15.1948 5.92969 12.6131 6.8867 10.5636 8.49196L11.6133 9.54167V9.4773C11.6133 9.25127 11.703 9.03448 11.8627 8.87465C12.0224 8.71482 12.239 8.625 12.4648 8.625H23.5352C23.761 8.625 23.9776 8.71482 24.1373 8.87465C24.297 9.03448 24.3867 9.25127 24.3867 9.4773V14.804C24.3867 14.9735 24.3194 15.1361 24.1997 15.2559C24.0799 15.3758 23.9174 15.4432 23.748 15.4432C23.5786 15.4432 23.4162 15.3758 23.2964 15.2559C23.1767 15.1361 23.1094 14.9735 23.1094 14.804V14.3778C23.1094 14.2083 23.0421 14.0457 22.9223 13.9258C22.8026 13.806 22.6401 13.7386 22.4707 13.7386C22.3013 13.7386 22.1389 13.806 22.0191 13.9258C21.8993 14.0457 21.8321 14.2083 21.8321 14.3778V15.6562C21.8321 15.7312 21.8167 15.8024 21.7929 15.8693H24.3867V19.7045C24.3867 19.9306 24.297 20.1474 24.1373 20.3072C23.9776 20.467 23.761 20.5568 23.5352 20.5568H22.6284L27.508 25.4364C29.1132 23.3868 30.0703 20.8052 30.0703 18C30.0703 11.3338 24.6663 5.92969 18 5.92969ZM17.9409 15.8693H20.5939C20.57 15.8024 20.5547 15.7312 20.5547 15.6562V14.3778C20.5547 14.2083 20.4874 14.0457 20.3676 13.9258C20.2478 13.806 20.0854 13.7386 19.916 13.7386C19.7466 13.7386 19.5842 13.806 19.4644 13.9258C19.3521 14.0382 19.286 14.1882 19.2781 14.3461L19.2765 14.4095C19.2687 14.5675 19.2026 14.7174 19.0903 14.8298C18.9705 14.9497 18.8081 15.017 18.6387 15.017C18.4693 15.017 18.3068 14.9497 18.1871 14.8298C18.0673 14.7099 18 14.5474 18 14.3778C18 14.025 17.501 13.7386 17.1484 13.7386H15.8102L17.9409 15.8693Z\" fill=\"white\"></path>\n</svg>",
+            "title": "Non-Repainting Algorithm",
+            "description": "<p>What you see in back-test is what you get live</p>"
+          }
+        },
+        "feature_Q4hrpw": {
+          "type": "feature",
+          "settings": {
+            "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"36\" height=\"36\" viewbox=\"0 0 36 36\" fill=\"none\">\n  <path d=\"M9.32141 19.1451H7.39284V16.3728H9.32141V19.1451Z\" fill=\"white\"></path>\n  <path d=\"M13.1786 19.1451H11.25V12.3951H13.1786V19.1451Z\" fill=\"white\"></path>\n  <path d=\"M17.0357 19.1451H15.1071V14.625H17.0357V19.1451Z\" fill=\"white\"></path>\n  <path d=\"M20.8928 19.1451H18.9643V10.4665H20.8928V19.1451Z\" fill=\"white\"></path>\n  <path d=\"M24.8103 19.1451H22.8817V12.3951H24.8103V19.1451Z\" fill=\"white\"></path>\n  <path d=\"M28.6674 19.1451H26.7388V8.77902H28.6674V19.1451Z\" fill=\"white\"></path>\n  <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M30.8571 4.5C32.2752 4.5 33.4286 5.65331 33.4286 7.07145V23.7857C33.4286 25.2039 32.2752 26.3572 30.8571 26.3572H19.2857V28.9286H24.4286V31.5H11.5714V28.9286H16.7143V26.3572H5.14286C3.72472 26.3572 2.57141 25.2039 2.57141 23.7857V7.07145C2.57141 5.65331 3.72472 4.5 5.14286 4.5H30.8571ZM5.14286 23.7857H30.8533V22.5H5.14286V23.7857ZM5.14286 19.9286H30.8546L30.8571 7.07145H5.14286V19.9286Z\" fill=\"white\"></path>\n</svg>",
+            "title": "Real-World Backtesting",
+            "description": "<p>Includes slippage, commissions, and realistic fill modeling</p>"
+          }
+        }
+      },
+      "block_order": [
+        "feature_fbeLmU",
+        "feature_bQWH8Y",
+        "feature_Qzk99j",
+        "feature_mAW4Xf",
+        "feature_7iCJM9",
+        "feature_Q4hrpw"
+      ],
+      "name": "Why traders choose",
       "settings": {
+        "enable_header_left": false,
+        "enable_header_right": true,
+        "section_bg": "#1e1e1e",
+        "section_text_color": "#ffffff",
+        "mobile_padding": 28,
+        "desktop_padding": 44,
+        "section_title": "TradeEdge <span> Pro</span> Features",
+        "section_title_color": "#ffffff"
+      }
+    },
+    "featured_collection_PRjipx": {
+      "type": "xs-featured-collection",
+      "blocks": {
+        "video_VjyFpi": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/o/v/f7517878c68240b1994f56dbe0a06c80.mp4",
+            "poster": "shopify://shop_images/Frame_149_1.jpg",
+            "title": "",
+            "button_label": "",
+            "button_url": ""
+          }
+        },
+        "video_gQhF3N": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/o/v/f7517878c68240b1994f56dbe0a06c80.mp4",
+            "title": "",
+            "button_label": "",
+            "button_url": ""
+          }
+        },
+        "video_YjqF8p": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/o/v/f7517878c68240b1994f56dbe0a06c80.mp4",
+            "title": "",
+            "button_label": "",
+            "button_url": ""
+          }
+        },
+        "video_LdFD6k": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/o/v/f7517878c68240b1994f56dbe0a06c80.mp4",
+            "title": "",
+            "button_label": "",
+            "button_url": ""
+          }
+        },
+        "video_RhkiRw": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/o/v/f7517878c68240b1994f56dbe0a06c80.mp4",
+            "title": "",
+            "button_label": "",
+            "button_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "video_VjyFpi",
+        "video_gQhF3N",
+        "video_YjqF8p",
+        "video_LdFD6k",
+        "video_RhkiRw"
+      ],
+      "name": "Featured Card (blocks)",
+      "settings": {
+        "mobile_padding": 28,
+        "desktop_padding": 44,
+        "section_bg": "#1e1e1e",
+        "section_text_color": "#ffffff",
+        "enable_slider": true,
+        "desktop_cards": 4,
+        "card_border_color": "#01c5e3",
+        "card_bg_color": "#1e1e1e",
+        "mobile_perview": "1.2",
+        "show_arrows": true,
+        "slider_bar": true,
+        "thumb_bg": "#155059",
+        "thumb_color": "#01c5e3",
+        "section_title": "TradeEdge <span> Pro</span> Explained",
+        "heading_color": "#ffffff",
+        "section_title_color": "#ffffff",
+        "enable_mt_minus": false,
+        "mt_minus": 250
+      }
+    },
+    "who_is_this_for_aMyCUK": {
+      "type": "xs-who-is-this-for",
+      "blocks": {
+        "trader_EyYted": {
+          "type": "trader",
+          "settings": {
+            "icon": "shopify://shop_images/Frame_163.png",
+            "title": "Retail"
+          }
+        },
+        "trader_k78qtz": {
+          "type": "trader",
+          "settings": {
+            "icon": "shopify://shop_images/Frame_164_8a087db7-bc76-4037-8b8e-258a2c9426eb.png",
+            "title": "Algorithmic"
+          }
+        },
+        "trader_qV3Yqd": {
+          "type": "trader",
+          "settings": {
+            "icon": "shopify://shop_images/icon.png",
+            "title": "Intra-Day"
+          }
+        },
+        "trader_A6QPFC": {
+          "type": "trader",
+          "settings": {
+            "icon": "shopify://shop_images/Frame_165.png",
+            "title": "Swing"
+          }
+        }
+      },
+      "block_order": [
+        "trader_EyYted",
+        "trader_k78qtz",
+        "trader_qV3Yqd",
+        "trader_A6QPFC"
+      ],
+      "name": "Who is this for",
+      "settings": {
+        "heading": "Who is this for?",
+        "subheading": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>",
+        "traders_label": "TRADERS",
+        "section_bg": "#1e1e1e",
+        "section_text_color": "#ffffff",
+        "mobile_padding_top": 40,
+        "mobile_padding_bottom": 40,
+        "desktop_padding_top": 44,
+        "desktop_padding_bottom": 44
+      }
+    },
+    "featured_slider_7MbRRf": {
+      "type": "xs-featured-slider",
+      "blocks": {
+        "image_text_BCMa49": {
+          "type": "image_text",
+          "settings": {
+            "url": "",
+            "title": "Step 1: Add to your TradingView",
+            "description": "<p>Run comprehensive backtests with real-world slippage and commission modelling to verify performance.</p>",
+            "button_label": "",
+            "button_url": ""
+          }
+        },
+        "image_text_eUrzWb": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify://shop_images/Rectangle_7.png",
+            "url": "",
+            "title": "Step 1: Add to your TradingView",
+            "description": "<p>Run comprehensive backtests with real-world slippage and commission modelling to verify performance.</p>",
+            "button_label": "",
+            "button_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "image_text_BCMa49",
+        "image_text_eUrzWb"
+      ],
+      "name": "Featured slider (blocks)",
+      "settings": {
+        "enable_header_left": true,
+        "enable_header_right": false,
+        "mobile_padding": 28,
+        "desktop_padding": 44,
+        "section_bg": "#1e1e1e",
+        "section_text_color": "#ffffff",
+        "enable_slider": true,
+        "card_border_color": "#01c5e3",
+        "card_bg_color": "#ffffff",
         "heading": "",
-        "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
-        "heading_size": "h1",
-        "description": "",
-        "full_width": false,
-        "color_scheme": "scheme-1",
-        "padding_top": 36,
-        "padding_bottom": 36
+        "heading_color": "#000000",
+        "heading_bg_color": "#01e3bd",
+        "subheading": "",
+        "subheading_color": "#ffffff",
+        "bottom_subheading": "",
+        "bottom_subheading_color": "#01c5e3",
+        "section_title": "How DoesTradeEdge <span> Pro</span> Work ?",
+        "section_title_color": "#ffffff",
+        "show_arrows": false,
+        "show_dots": false,
+        "show_play_pause": false,
+        "autoplay": false,
+        "slide_interval": 2000,
+        "enable_mobile_multi": false,
+        "mobile_slides_per_view": "1.2",
+        "show_card_heading": false,
+        "show_card_paragraph": false,
+        "show_card_padding": false,
+        "show_card_bg": false,
+        "show_body_shade": false,
+        "card_bg": "#000000",
+        "enable_mt_minus": false,
+        "mt_minus": 250
       }
     },
-    "multicolumn": {
-      "type": "multicolumn",
+    "featured_slider_WEXeFt": {
+      "type": "xs-featured-slider",
       "blocks": {
-        "column1": {
-          "type": "column",
+        "image_text_d8yPhd": {
+          "type": "image_text",
           "settings": {
-            "title": "Column",
-            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.<\/p>",
-            "link_label": "",
-            "link": ""
+            "image": "shopify://shop_images/Screenshot_2025-12-04_at_1.05.06_PM.png",
+            "url": "",
+            "title": "Step 1: Create a free TradingView account",
+            "description": "<p>Create a free TradingView account.<br/>If you already have an account, skip to step 2 post login in your TradingView Account</p>",
+            "button_label": "",
+            "button_url": ""
           }
         },
-        "column2": {
-          "type": "column",
+        "image_text_xjnnt6": {
+          "type": "image_text",
           "settings": {
-            "title": "Column",
-            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.<\/p>",
-            "link_label": "",
-            "link": ""
+            "image": "shopify://shop_images/Rectangle_7.png",
+            "url": "",
+            "title": "Step 2: Subscribe TradeEdge Pro",
+            "description": "<p>Subscribe a plan and receive an email with a link to connect your TradingView and Discord accounts to our system.</p>",
+            "button_label": "",
+            "button_url": ""
           }
         },
-        "column3": {
-          "type": "column",
+        "image_text_ewty9N": {
+          "type": "image_text",
           "settings": {
-            "title": "Column",
-            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.<\/p>",
-            "link_label": "",
-            "link": ""
+            "image": "shopify://shop_images/Frame_27_6.png",
+            "url": "",
+            "title": "Step 3: Click on “Indicators”",
+            "description": "<p>Go to the TradingView chart page and click on “Indicators” to find your new tools (TradeEdge Pro) under 'Invite-Only Scripts.'</p>",
+            "button_label": "",
+            "button_url": ""
+          }
+        },
+        "image_text_pgLfa4": {
+          "type": "image_text",
+          "settings": {
+            "image": "shopify://shop_images/Frame_27_6.png",
+            "url": "",
+            "title": "Step 4: Enjoy your Membership",
+            "description": "<p>Click TradeEdge Pro under 'Invite-Only Scripts'.\nRestart TradingView and Enjoy using the Strategy</p>",
+            "button_label": "",
+            "button_url": ""
           }
         }
       },
       "block_order": [
-        "column1",
-        "column2",
-        "column3"
+        "image_text_d8yPhd",
+        "image_text_xjnnt6",
+        "image_text_ewty9N",
+        "image_text_pgLfa4"
       ],
+      "name": "Featured slider (blocks)",
       "settings": {
-        "title": "",
-        "heading_size": "h1",
-        "image_width": "third",
-        "image_ratio": "adapt",
-        "columns_desktop": 3,
-        "column_alignment": "center",
-        "background_style": "none",
-        "button_label": "",
-        "button_link": "",
-        "swipe_on_mobile": false,
-        "color_scheme": "scheme-1",
-        "columns_mobile": "1",
-        "padding_top": 36,
-        "padding_bottom": 36
+        "enable_header_left": false,
+        "enable_header_right": false,
+        "mobile_padding": 28,
+        "desktop_padding": 0,
+        "section_bg": "#1e1e1e",
+        "section_text_color": "#ffffff",
+        "enable_slider": false,
+        "card_border_color": "#01c5e3",
+        "card_bg_color": "#1e1e1e",
+        "heading": "",
+        "heading_color": "#000000",
+        "heading_bg_color": "#01e3bd",
+        "subheading": "",
+        "subheading_color": "#ffffff",
+        "bottom_subheading": "",
+        "bottom_subheading_color": "#01c5e3",
+        "section_title": "How Does TradeEdge <span> Pro</span> Work ?",
+        "section_title_color": "#ffffff",
+        "show_arrows": true,
+        "show_dots": false,
+        "show_play_pause": false,
+        "autoplay": false,
+        "slide_interval": 2000,
+        "enable_mobile_multi": true,
+        "mobile_slides_per_view": "1.2",
+        "show_card_heading": true,
+        "show_card_paragraph": true,
+        "show_card_padding": true,
+        "show_card_bg": true,
+        "show_body_shade": true,
+        "card_bg": "#1e1e1e",
+        "enable_mt_minus": false,
+        "mt_minus": 250
+      }
+    },
+    "tradeedge_comparision_cqF7n9": {
+      "type": "xs-tradeedge-comparision",
+      "name": "TradeEdge Pro comparison",
+      "settings": {
+        "section_bg": "#1e1e1e",
+        "section_text_color": "#ffffff",
+        "mobile_padding_top": 28,
+        "mobile_padding_bottom": 28,
+        "desktop_padding_top": 44,
+        "desktop_padding_bottom": 44,
+        "section_title": "Why TradeEdge <span> Pro</span> ?",
+        "section_title_color": "#f9f9f9",
+        "heading_prefix": "",
+        "heading_highlight": "Pro",
+        "without_title": "Without TradeEdge <span>Pro</span>",
+        "without_image": "shopify://shop_images/Gemini_Generated_Image_ic8rmbic8rmbic8r.png",
+        "with_title": "With TradeEdge Pro",
+        "with_image": "shopify://shop_images/Gemini_Generated_Image_2cf4q92cf4q92cf4.png",
+        "without_point_1": "Emotional trading, frequent losses",
+        "without_point_2": "Wrong timing, miss winning trades",
+        "without_point_3": "Blind trading setup, getting trapped",
+        "without_point_4": "Struggling to find profitable setups",
+        "with_point_1": "Emotion-free trading, higher profits",
+        "with_point_2": "Precise entry timing, higher success",
+        "with_point_3": "Trading with data driven confidence",
+        "with_point_4": "Multiple pre-built profitable setups"
+      }
+    },
+    "pricing_plans_JU7zVT": {
+      "type": "xs-pricing-plans",
+      "name": "Pricing – 3 fixed cards",
+      "settings": {
+        "section_bg": "#1e1e1e",
+        "section_text_color": "#ffffff",
+        "mobile_padding_top": 28,
+        "mobile_padding_bottom": 44,
+        "section_title": "Start Trading With TradeEgde<span>Pro</span>",
+        "section_title_color": "#ffffff",
+        "secure_title": "Safe and Secure Checkout",
+        "secure_subtitle": "Payments are processed by",
+        "payment_text": "We accept the following payment methods",
+        "show_upi": true,
+        "show_visa": true,
+        "show_mastercard": true,
+        "show_custom_logo": false,
+        "enable_card1": true,
+        "card1_label": "TRIAL PLAN",
+        "card1_icon": "shopify://shop_images/Vector_5.png",
+        "card1_title": "Weekly Access",
+        "card1_price": "₹49",
+        "card1_suffix": "/week",
+        "card1_trial": "For traders who wants Trial",
+        "card1_refund": "7-Day Money-Back Guarantee",
+        "card1_feature1": "Get complete access of TradeEdge Pro",
+        "card1_feature2": "Standard Discord support",
+        "card1_feature3": "Cancel anytime",
+        "card1_btn_label": "START 7-DAY  TRIAL",
+        "card1_btn_link": "",
+        "card1_accent": "#01e3bd",
+        "card1_inner_bg": "#01e3bd",
+        "card1_border_color": "#01e3bd",
+        "card1_btn_bg": "#01e3bd",
+        "card1_inner_bg_img": "shopify://shop_images/Frame_27_3.png",
+        "enable_card2": true,
+        "card2_label": "MOST POPULAR",
+        "card2_title": "Quarterly Access",
+        "card2_price": "₹149",
+        "card2_suffix": "/month",
+        "card2_trial": "Perfect for traders who want flexibility",
+        "card2_refund": "7-Day Money-Back Guarantee",
+        "card2_feature1": "Everything in Weekly plan",
+        "card2_feature2": "+ Future updates included",
+        "card2_feature3": "+ Priority Discord Support",
+        "card2_btn_label": "START 30-DAY FREE TRIAL",
+        "card2_btn_link": "",
+        "card2_accent": "#00c4ff",
+        "card2_inner_bg": "#00c4ff",
+        "card2_border_color": "#00c4ff",
+        "card2_btn_bg": "#00e5ff",
+        "card2_inner_bg_img": "shopify://shop_images/Frame_27_6.png",
+        "enable_card3": true,
+        "card3_label": "BEST VALUE",
+        "card3_title": "Lifetime Access",
+        "card3_price": "₹999",
+        "card3_suffix": "One-Time",
+        "card3_trial": "Best value for long-term traders planning to use the strategy for years.",
+        "card3_refund": "7-Day Money-Back Guarantee",
+        "card3_feature1": "Everything in monthly plan",
+        "card3_feature2": "+ Premium WhatsApp support",
+        "card3_feature3": "+ Lifetime access - No recurring fees",
+        "card3_btn_label": "GET LIFETIME ACCESS",
+        "card3_btn_link": "",
+        "card3_accent": "#d56dff",
+        "card3_inner_bg": "#d56dff",
+        "card3_border_color": "#d56dff",
+        "card3_btn_bg": "#d56dff",
+        "card3_inner_bg_img": "shopify://shop_images/Frame_27_5.png"
+      }
+    },
+    "testimonials_nVndqB": {
+      "type": "xs-testimonials",
+      "blocks": {
+        "testimonial_GMGLCH": {
+          "type": "testimonial",
+          "settings": {
+            "avatar": "shopify://shop_images/Subtract_2.png",
+            "name": "Rajesh Kumar",
+            "subtitle": "Algorithmic Trader, Mumbai",
+            "time_meta": "5d ·",
+            "body": "<p>Finally found a strategy that works exactly the same in live trading as in backtests. No more repainting nightmares!</p>",
+            "reaction_icons": "👍 ❤️ 👏",
+            "reaction_count": "12",
+            "comments_text": "1 comments"
+          }
+        },
+        "testimonial_G9WNRE": {
+          "type": "testimonial",
+          "settings": {
+            "avatar": "shopify://shop_images/Frame_163.png",
+            "name": "Rajesh Kumar",
+            "subtitle": "Algorithmic Trader, Mumbai",
+            "time_meta": "5d · 🌐",
+            "body": "<p>Finally found a strategy that works exactly the same in live trading as in backtests. No more repainting nightmares!</p>",
+            "reaction_icons": "👍 ❤️ 👏",
+            "reaction_count": "358",
+            "comments_text": "5 comments"
+          }
+        },
+        "testimonial_gz4cHW": {
+          "type": "testimonial",
+          "settings": {
+            "avatar": "shopify://shop_images/Frame_163.png",
+            "name": "Rajesh Kumar",
+            "subtitle": "Algorithmic Trader, Mumbai",
+            "time_meta": "5d · 🌐",
+            "body": "<p>Finally found a strategy that works exactly the same in live trading as in backtests. No more repainting nightmares!</p>",
+            "reaction_icons": "👍 ❤️ 👏",
+            "reaction_count": "358",
+            "comments_text": "5 comments"
+          }
+        },
+        "testimonial_XihVTq": {
+          "type": "testimonial",
+          "settings": {
+            "avatar": "shopify://shop_images/Frame_163.png",
+            "name": "Rajesh Kumar",
+            "subtitle": "Algorithmic Trader, Mumbai",
+            "time_meta": "5d · 🌐",
+            "body": "<p>Finally found a strategy that works exactly the same in live trading as in backtests. No more repainting nightmares!</p>",
+            "reaction_icons": "👍 ❤️ 👏",
+            "reaction_count": "358",
+            "comments_text": "5 comments"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_GMGLCH",
+        "testimonial_G9WNRE",
+        "testimonial_gz4cHW",
+        "testimonial_XihVTq"
+      ],
+      "name": "testimonials",
+      "settings": {
+        "mobile_padding": 28,
+        "desktop_padding": 44,
+        "section_bg": "#1e1e1e",
+        "section_text_color": "#ffffff",
+        "enable_slider": true,
+        "desktop_cards": "2.2",
+        "card_border_color": "#01c5e3",
+        "card_bg_color": "#1e1e1e",
+        "mobile_perview": "1.2",
+        "show_arrows": true,
+        "slider_bar": true,
+        "thumb_bg": "#155059",
+        "thumb_color": "#01c5e3",
+        "section_title": "Trusted by <span> Thousands</span> of Traders",
+        "section_title_color": "#ffffff"
+      }
+    },
+    "faq_QKmpCG": {
+      "type": "xs-faq",
+      "blocks": {
+        "faq_YUNBWP": {
+          "type": "faq",
+          "settings": {
+            "question": "Does this work with my broker?",
+            "answer": "<p>Your answer text goes here. Explain clearly in 1–3 short sentences.</p>"
+          }
+        },
+        "faq_BmgVWF": {
+          "type": "faq",
+          "settings": {
+            "question": "What if I'm new to Pine Script?",
+            "answer": "<p>Your answer text goes here. Explain clearly in 1–3 short sentences.</p>"
+          }
+        },
+        "faq_k9mMJa": {
+          "type": "faq",
+          "settings": {
+            "question": "How is this different from other TradingView strategies?",
+            "answer": "<p>Your answer text goes here. Explain clearly in 1–3 short sentences.</p>"
+          }
+        },
+        "faq_UqrgVE": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I use this for crypto trading?",
+            "answer": "<p>Your answer text goes here. Explain clearly in 1–3 short sentences.</p>"
+          }
+        },
+        "faq_A8FLxx": {
+          "type": "faq",
+          "settings": {
+            "question": "What about risk management?",
+            "answer": "<p>Your answer text goes here. Explain clearly in 1–3 short sentences.</p>"
+          }
+        },
+        "faq_BeU8Fa": {
+          "type": "faq",
+          "settings": {
+            "question": "Is there a money-back guarantee?",
+            "answer": "<p>Your answer text goes here. Explain clearly in 1–3 short sentences.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_YUNBWP",
+        "faq_BmgVWF",
+        "faq_k9mMJa",
+        "faq_UqrgVE",
+        "faq_A8FLxx",
+        "faq_BeU8Fa"
+      ],
+      "name": "FAQ",
+      "settings": {
+        "mobile_padding": 28,
+        "desktop_padding": 44,
+        "section_bg": "#1e1e1e",
+        "section_text_color": "#ffffff",
+        "heading": "Got Questions? We've Got Answers (FAQs)",
+        "open_first": true
+      }
+    },
+    "featured_article_XFqJte": {
+      "type": "xs-featured-article",
+      "name": "Featured Article (blocks)",
+      "settings": {
+        "enable_header_left": true,
+        "enable_header_right": false,
+        "mobile_padding": 28,
+        "desktop_padding": 44,
+        "section_bg": "#1e1e1e",
+        "section_text_color": "#ffffff",
+        "enable_slider": true,
+        "card_border_color": "#01c5e3",
+        "card_bg_color": "#1e1e1e",
+        "section_title": "What is",
+        "section_title_color": "#ffffff",
+        "logo": "shopify://shop_images/Vector_4.png",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+        "article_source": "blog",
+        "source_blog": "what-is-algo-trading",
+        "articles_limit": 3,
+        "show_arrows": false,
+        "show_dots": false,
+        "show_play_pause": false,
+        "autoplay": false,
+        "slide_interval": 2000,
+        "enable_mobile_multi": true,
+        "desktop_per_view": 3,
+        "mobile_slides_per_view": "1.2",
+        "show_card_heading": true,
+        "show_card_paragraph": true,
+        "show_card_padding": true,
+        "show_card_bg": false,
+        "show_body_shade": false,
+        "card_bg": "#1e1e1e"
       }
     }
   },
   "order": [
-    "image_banner",
-    "rich_text",
-    "featured_collection",
-    "collage",
-    "video",
-    "multicolumn"
+    "hero_FdpLfp",
+    "featured_slider_3yBwc9",
+    "featured_collection_jGPhHc",
+    "why_traders_gUxGbh",
+    "featured_collection_PRjipx",
+    "who_is_this_for_aMyCUK",
+    "featured_slider_7MbRRf",
+    "featured_slider_WEXeFt",
+    "tradeedge_comparision_cqF7n9",
+    "pricing_plans_JU7zVT",
+    "testimonials_nVndqB",
+    "faq_QKmpCG",
+    "featured_article_XFqJte"
   ]
 }

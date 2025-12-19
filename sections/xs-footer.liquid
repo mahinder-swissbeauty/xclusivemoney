@@ -1,0 +1,279 @@
+{% style %}
+ #{{ section.id }}-footer{
+   position: relative;
+    z-index: 9;
+ }
+
+
+  /* Accordion marker hide */
+  #{{ section.id }}-footer details summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* Plus / minus icon */
+  #{{ section.id }}-footer .footer-acc-icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+  }
+
+  #{{ section.id }}-footer .footer-acc-icon::before,
+  #{{ section.id }}-footer .footer-acc-icon::after {
+    content: "";
+    position: absolute;
+    border-radius: 9999px;
+    background: #ffffff;
+  }
+
+  /* horizontal bar */
+  #{{ section.id }}-footer .footer-acc-icon::before {
+    width: 14px;
+    height: 2px;
+  }
+
+  /* vertical bar (hidden when open => minus) */
+  #{{ section.id }}-footer .footer-acc-icon::after {
+    width: 2px;
+    height: 14px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  #{{ section.id }}-footer details[open] .footer-acc-icon::after {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+{% endstyle %}
+
+<section
+  id="{{ section.id }}-footer"
+  class="xcl-w-full xcl-text-white xcl-pt-8 xcl-pb-10"
+  style="background: linear-gradient(180deg, #233052 0%, #1E1E1E 100%);
+  padding-top: {{section.settings.desktop_padding}}px;
+    padding-bottom: {{section.settings.desktop_padding}}px;
+  "
+  
+>
+  <div class="xcl-max-w-[563px] xcl-mx-auto xcl-px-4">
+
+    {%- comment -%} JOIN US ON CARD {%- endcomment -%}
+    <div
+      class="xcl-border xcl-border-[#01C5E3] xcl-rounded-[20px] xcl-bg-[#111827] xcl-px-6 xcl-py-4
+             xl:xcl-py-6 xcl-flex xcl-flex-col xcl-items-center xcl-gap-4 xcl-gap-y-6 xl:xcl-px-8  xl:xcl-gap-y-7 "
+    >
+      <h3 class="xcl-text-[20px] xcl-font-bold xcl-text-[#01C5E3] xl:xcl-text-[28px]"                                                                                                                                                                                                                                                                                     >
+        {{ section.settings.social_heading }}
+      </h3>              
+
+      <div class="xcl-flex xcl-flex-wrap xcl-items-center xcl-w-full xcl-justify-between xcl-gap-4 xl:xcl-gap-6">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'social' -%}
+            {%- if block.settings.url != blank and block.settings.icon != blank -%}
+              <a
+                href="{{ block.settings.url }}"
+                class="xcl-inline-flex xcl-items-center xcl-justify-center xcl-w-[24px] xcl-h-[24px] xl:xcl-w-[40px] xl:xcl-h-[40px]"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="{{ block.settings.label | escape }}"
+              >
+                <img
+                  src="{{ block.settings.icon | img_url: '80x' }}"
+                  alt="{{ block.settings.label | escape }}"
+                  class="xcl-max-w-full xcl-max-h-full"
+                  loading="lazy"
+                >
+              </a>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    {%- comment -%} ACCORDION GROUPS (USEFUL LINKS, etc.) {%- endcomment -%}
+    <div class="xcl-mt-6 xl:xcl-mt-12">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'links_group' -%}
+          <details
+            class="xcl-border-t xcl-border-[#ffffff]/60 last:xcl-border-b"
+            {{ block.shopify_attributes }}
+            {% if block.settings.open_by_default %}open{% endif %}
+          >
+            <summary
+              class="xcl-flex xcl-items-center xcl-justify-between xcl-py-3  xl:xcl-py-5 xcl-cursor-pointer xcl-select-none"
+            >
+              <span class="xcl-text-[16px] xl:xcl-text-[20px] xcl-font-medium xcl-text-[#ffffff]">
+                {{ block.settings.title }}
+              </span>
+
+              <span class="footer-acc-icon"></span>
+            </summary>
+
+            <div class="xcl-pt-2 xcl-pb-4">
+              {%- if block.settings.menu != blank and linklists[block.settings.menu] != blank -%}
+                <nav
+                  class="xcl-grid xcl-grid-cols-1 xl:xcl-grid-cols-2 xcl-gap-y-2 xl:xcl-gap-y-6 xcl-gap-x-12
+                         xcl-text-[14px] xl:xcl-text-[15px] xcl-text-[#E5E7EB]"
+                >
+                  {%- for link in linklists[block.settings.menu].links -%}
+                    <a
+                      href="{{ link.url }}"
+                      class="xcl-block hover:xcl-text-[#01C5E3] xcl-transition-colors"
+                    >
+                      {{ link.title }}
+                    </a>
+                  {%- endfor -%}
+                </nav>
+              {%- else -%}
+                <p class="xcl-text-[13px] xl:xcl-text-[15px] xcl-text-gray-400">
+                  Add a menu in the section settings.
+                </p>
+              {%- endif -%}
+            </div>
+          </details>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+     {
+      "type": "range",
+      "id": "mobile_padding",
+      "label": "Mobile Padding Y axis",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding",
+      "label": "Desktop Padding Y axis",
+      "min": 0,
+      "max": 90,
+      "step": 1,
+      "default": 88
+    },
+    {
+      "type": "color",
+      "label": "section text color",
+      "id": "section_text_color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "social_heading",
+      "label": "Social card heading",
+      "default": "Join Us On"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "social",
+      "name": "Social icon",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Name (for alt text)",
+          "default": "Facebook"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Profile URL"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon image (40×40 PNG/SVG)"
+        }
+      ]
+    },
+    {
+      "type": "links_group",
+      "name": "Links accordion group",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Accordion title",
+          "default": "Useful Links"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu",
+          "default": "footer"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_by_default",
+          "label": "Open by default",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "Footer – Social + links",
+      "blocks": [
+        {
+          "type": "social",
+          "settings": {
+            "label": "Facebook"
+          }
+        },
+        {
+          "type": "social",
+          "settings": {
+            "label": "Discord"
+          }
+        },
+        {
+          "type": "social",
+          "settings": {
+            "label": "Instagram"
+          }
+        },
+        {
+          "type": "social",
+          "settings": {
+            "label": "LinkedIn"
+          }
+        },
+        {
+          "type": "social",
+          "settings": {
+            "label": "X"
+          }
+        },
+        {
+          "type": "social",
+          "settings": {
+            "label": "YouTube"
+          }
+        },
+        {
+          "type": "links_group",
+          "settings": {
+            "title": "Useful Links",
+            "open_by_default": true
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+

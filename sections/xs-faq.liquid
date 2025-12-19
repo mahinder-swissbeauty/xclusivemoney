@@ -1,0 +1,187 @@
+{% style %}
+.border-top{
+    border-top: 1px solid rgba(1,197,227,0.2);
+}
+  /* Marker hatana */
+  #{{ section.id }}-faq details summary::-webkit-details-marker {
+    display: none;
+  }
+
+  #{{ section.id }}faq{
+  padding-top: {{section.settings.mobile_padding}}px;
+  padding-bottom: {{section.settings.mobile_padding}}px;
+}
+
+
+  /* Plus icon */
+  #{{ section.id }}-faq [data-faq-icon-plus] {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+  }
+
+  #{{ section.id }}-faq [data-faq-icon-plus]::before,
+  #{{ section.id }}-faq [data-faq-icon-plus]::after {
+    content: "";
+    position: absolute;
+    background: #fff;
+    border-radius: 9999px;
+  }
+
+  /* horizontal line */
+  #{{ section.id }}-faq [data-faq-icon-plus]::before {
+    width: 12px;
+    height: 2px;
+  }
+
+  /* vertical line (hide when open => minus sign) */
+  #{{ section.id }}-faq [data-faq-icon-plus]::after {
+    width: 2px;
+    height: 12px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  #{{ section.id }}-faq details[open] [data-faq-icon-plus]::after {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+
+  @media(min-width:1200px){
+    #{{ section.id }}faq{
+   padding-top: {{section.settings.desktop_padding}}px;
+    padding-bottom: {{section.settings.desktop_padding}}px;
+}
+}
+{% endstyle %}
+
+<section
+  id="{{ section.id }}-faq"
+  class="xcl-w-full xcl-bg-[#05080D] xcl-text-white xcl-py-10 xl:xcl-py-16"
+   style="background-color: {{section.settings.section_bg}}; color:{{section.settings.section_text_color}}"
+>
+  <div class="xcl-max-w-[610px] xcl-mx-auto xcl-px-4 xcl-relative xcl-z-10">
+    {%- if section.settings.heading != blank -%}
+      <h2
+        class="xcl-text-center xcl-text-[20px] xcl-leading-[28px] xcl-font-semibold xl:xcl-text-[28px] xl:xcl-leading-[34px] xcl-text-[#01C5E3] xcl-mb-6 xl:xcl-mb-8"
+      >
+        {{ section.settings.heading }}
+      </h2>
+    {%- endif -%}
+
+    <div class="xcl-border-y xcl-border-[#01C5E3]/40">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'faq' -%}
+          <details
+            class=""
+            {{ block.shopify_attributes }}
+            {% if section.settings.open_first and forloop.first %}open{% endif %}
+          >
+            <summary
+              class=" border-top xcl-flex xcl-items-center xcl-justify-between xcl-py-4 xl:xcl-py-5 xcl-gap-4 xcl-cursor-pointer 
+                
+              "
+            >
+              <span class="xcl-text-[16px] xl:xcl-text-[20px] xcl-font-normal xcl-text-[#ffffff] xcl-text-left">
+                {{ block.settings.question }}
+              </span>
+
+              <span data-faq-icon-plus></span>
+            </summary>
+
+            <div class="xcl-pb-4 xcl-text-sm xl:xcl-text-[16px] xl:xcl-pb-5 xcl-text-[#C8C8C8]">
+              {{ block.settings.answer }}
+            </div>
+          </details>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [
+     {
+      "type": "range",
+      "id": "mobile_padding",
+      "label": "Mobile Padding Y axis",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding",
+      "label": "Desktop Padding Y axis",
+      "min": 0,
+      "max": 90,
+      "step": 1,
+      "default": 88
+    },
+    {
+      "type": "color",
+      "label": "section background color",
+      "id": "section_bg",
+      "default": "#1E1E1E"
+    },
+    {
+      "type": "color",
+      "label": "section text color",
+      "id": "section_text_color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_first",
+      "label": "Open first FAQ by default",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Does this work with my broker?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Your answer text goes here. Explain clearly in 1–3 short sentences.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "FAQ",
+      "category": "Text",
+      "blocks": [
+        { "type": "faq", "settings": { "question": "Does this work with my broker?" } },
+        { "type": "faq", "settings": { "question": "What if I'm new to Pine Script?" } },
+        { "type": "faq", "settings": { "question": "How is this different from other TradingView strategies?" } },
+        { "type": "faq", "settings": { "question": "Can I use this for crypto trading?" } },
+        { "type": "faq", "settings": { "question": "What about risk management?" } },
+        { "type": "faq", "settings": { "question": "Is there a money-back guarantee?" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
