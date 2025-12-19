@@ -1,0 +1,215 @@
+{% comment %}
+  sections/who-is-this-for.liquid
+{% endcomment %}
+
+<section
+  id="{{ section.id }}-who-for"
+  class="xcl-w-full xcl-relative"
+  style="background-color: {{section.settings.section_bg}}; color:{{section.settings.section_text_color}}"
+>
+  <div class="xcl-max-w-[912px] xcl-mx-auto xcl-px-4 xl:xcl-px-0 xcl-relative xcl-z-10">
+
+    {% if section.settings.heading != blank %}
+      <h2 class="xcl-text-center xcl-font-heading xcl-text-white xcl-font-semibold xcl-text-xl xl:xcl-text-[28px] xcl-mb-4 xl:xcl-mb-8">
+        {{ section.settings.heading }}
+      </h2>
+    {% endif %}
+
+    {% if section.settings.subheading != blank %}
+      <div class="xcl-font-body  xcl-text-xs xl:xcl-text-[24px] xcl-leading-normal xcl-text-[#ffffff] xcl-mx-auto xcl-mb-3 xl:xcl-mb-8">
+        {{ section.settings.subheading }}
+      </div>
+    {% endif %}
+
+    <div
+      class="xcl-relative xcl-rounded-2xl xcl-border-solid xcl-border xcl-border-[#01C5E3] xcl-bg-[#1E1E1E]
+             xcl-pt-[19px] xcl-px-[18px] xcl-pb-[21px]
+             xl:xcl-pt-[24px] xl:xcl-px-[38px] xl:xcl-pb-[40px] xcl-mx-auto"
+    >
+      {%- comment -%} ICON ROW {%- endcomment -%}
+      <div class="xcl-grid xcl-grid-cols-4 xcl-gap-4 xl:xcl-gap-10 xcl-items-center xcl-justify-items-center">
+        {% for block in section.blocks %}
+          <div
+            class="xcl-flex xcl-flex-col xcl-items-center xcl-gap-1"
+            {{ block.shopify_attributes }}
+          >
+            {% if block.settings.icon != blank %}
+              <div class="xcl-w-10 xcl-h-10 xl:xcl-w-20 xl:xcl-h-20 xcl-flex xcl-items-center xcl-justify-center">
+                <img
+                  src="{{ block.settings.icon | image_url: width: 64 }}"
+                  alt="{{ block.settings.title | escape }}"
+                  class="xcl-w-full xcl-h-full xcl-object-contain"
+                  loading="lazy"
+                >
+              </div>
+            {% else %}
+              <div
+                class="xcl-w-10 xcl-h-10 xl:xcl-w-12 xl:xcl-h-12 xcl-rounded-full  xcl-flex xcl-items-center xcl-justify-center"
+              >
+                <span class="xcl-text-lg"> 🌍</span>
+              </div>
+            {% endif %}
+
+            {% if block.settings.title != blank %}
+              <span class="xcl-text-[10px] xl:xcl-text-[16px] xcl-font-semibold"> 
+                {{ block.settings.title }}
+              </span>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+
+      {%- comment -%} TRADERS LABEL WITH ARROWS {%- endcomment -%}
+      {% if section.settings.traders_label != blank %}
+        <div class="xcl-flex xcl-items-center xcl-justify-center xcl-gap-2 xl:xcl-gap-4 xcl-mt-6
+         xcl-absolute
+  xcl-bg-[#1e1e1e]
+  xcl-left-1/2
+  xcl-bottom-[-8px]
+  xl:xcl-bottom-[-18px]
+  xcl--translate-x-1/2
+        ">
+<span class="xcl-w-0 xcl-h-0
+            xcl-border-solid
+            xcl-border-r-0
+             xcl-border-t-[4px] xcl-border-t-transparent 
+             xcl-border-b-[4px] xcl-border-b-transparent 
+             xcl-border-l-[6px] xcl-border-l-[#01C5E3]"></span>
+          <span class=" xcl-font-heading xcl-text-[11px] xl:xcl-text-[24px] xcl-font-semibold  xcl-uppercase">
+            {{ section.settings.traders_label }}
+          </span>
+         <span class="xcl-w-0 xcl-h-0 
+         xcl-border-solid
+         xcl-border-l-0
+               xcl-border-t-[4px] xcl-border-t-transparent 
+               xcl-border-b-[4px] xcl-border-b-transparent 
+               xcl-border-r-[6px] xcl-border-r-[#01C5E3]"></span>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  #{{ section.id }}-who-for {
+    padding-top: {{ section.settings.mobile_padding_top }}px;
+    padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+  }
+
+  @media (min-width: 1024px) {
+    #{{ section.id }}-who-for {
+      padding-top: {{ section.settings.desktop_padding_top }}px;
+      padding-bottom: {{ section.settings.desktop_padding_bottom }}px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Who is this for",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Who is this for?"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>"
+    },
+    {
+      "type": "text",
+      "id": "traders_label",
+      "label": "Bottom label",
+      "default": "TRADERS"
+    },
+    {
+      "type": "color",
+      "label": "section background color",
+      "id": "section_bg",
+      "default": "#1E1E1E"
+    },
+    {
+      "type": "color",
+      "label": "section text color",
+      "id": "section_text_color",
+      "default": "#ffffff" 
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile padding top (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile padding bottom (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_top",
+      "label": "Desktop padding top (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "desktop_padding_bottom",
+      "label": "Desktop padding bottom (px)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    } 
+  ],
+  "blocks": [
+    {
+      "type": "trader",
+      "name": "Trader type",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon (40x40px suggested)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Label",
+          "default": "Retail"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Who is this for",
+      "blocks": [
+        { "type": "trader", "settings": { "title": "Retail" } },
+        { "type": "trader", "settings": { "title": "Algorithmic" } },
+        { "type": "trader", "settings": { "title": "Intra-Day" } },
+        { "type": "trader", "settings": { "title": "Swing" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
+ 

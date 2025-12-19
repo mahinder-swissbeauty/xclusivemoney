@@ -1,0 +1,146 @@
+<style>
+  /* Extra smooth effect for scroll state */
+  #siteHeader {
+    transition: all 0.25s ease;
+  }
+
+  #siteHeader.is-scrolled {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  }
+  nav.is-scrolled {
+    position: fixed;
+    top: 0;
+    background: rgba(35, 48, 82, 0.80) !important;
+}
+
+</style>
+
+
+
+<nav
+  id="siteHeader"
+  class="xcl-w-full xcl-shadow-lg xcl-p-2 xcl-sticky xcl-top-0 xcl-z-50"
+  style="background: linear-gradient(180deg, #233052 0%, #233052 100%);"
+>
+  <div class="xcl-relative xcl-max-w-7xl xcl-mx-auto xcl-flex xcl-items-center xcl-justify-between xcl-border-solid xcl-border xcl-border-[#32436e] xcl-rounded-lg xcl-py-2 xcl-px-4
+    xl:xcl-w-[1152px] xl:xcl-mx-auto xl:xcl-px-10 xl:xcl-py-2
+  ">
+    <!-- Dynamic Logo -->
+    <a href="javascript:void()" class="xcl-flex xcl-items-center xcl-gap-2">
+      {% if section.settings.logo != blank %}
+        <img
+          src="{{ section.settings.logo | img_url: 'master' }}"
+          alt="Logo"
+          class="xcl-w-[88px] xl:xcl-w-[117px]"
+          loading="lazy"
+        >
+      {% else %}
+        <span class="xcl-text-white xcl-font-semibold xcl-text-xl">{{ section.settings.store_name }}</span>
+      {% endif %}
+    </a> 
+
+    <!-- Right Side -->
+    <div class="xcl-flex xcl-items-center xcl-gap-4 xl:xcl-gap-10">
+      <!-- Dynamic Button -->
+      <a
+        href="#{{section.settings.button_section_scroll}}"
+        class="scroll-link xcl-bg-[#01E3BD] xcl-rounded-lg hover:xcl-bg-[#00C4FF] hover:xcl-border-[#00C4FF] xcl-text-black xcl-font-heading xcl-px-4 xcl-py-[6px] xcl-text-xs xcl-font-semibold xcl-hover:xcl-bg-teal-300 xcl-transition
+        xl:xcl-text-[16px] xl:xcl-px-8 xl:xcl-py-[11px]
+        "
+      >
+        {{- section.settings.button_text -}}
+      </a>
+
+      <!-- Menu Toggle Button -->
+      <button id="menuToggle" class="xcl-text-white xcl-text-3xl xcl-focus:xcl-outline-none xcl-bg-transparent xcl-outline-none xcl-border-none">
+        {% render 'icons-v2', icon: 'icon-menu' %}
+      </button>
+    </div>
+
+    <!-- Dropdown Menu (Dynamic) -->
+    <div
+      id="dropdownMenu"
+      class="xcl-hidden xcl-absolute xcl-right-0 xcl-top-full xcl-w-56 xcl-bg-[#1a2d4a] xcl-text-white xcl-rounded-2xl xcl-shadow-xl xcl-py-3 xcl-px-4 xcl-space-y-3
+      xcl-border xcl-border-[#32436e]
+      "
+    >
+      {% for block in section.blocks %}
+        <a
+          href="{{ block.settings.link }}"
+          class="{% if block.settings.button_section_scroll != blank %} scroll-link {% endif %} xcl-flex xcl-items-center xcl-gap-3 xcl-text-lg xcl-hover:xcl-text-teal-300 xcl-transition xcl-text-white "
+        >
+          <span class="xcl-text-[16px] xcl-font-medium xcl-font-heading xcl-h-6">{{ block.settings.icon }}</span>
+          <span>{{ block.settings.label }}</span>
+        </a>
+
+        {% if forloop.last == false %}
+          <hr class="xcl-border-gray-600">
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</nav>
+
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "store_name",
+      "label": "Store Name",
+      "default": "Xclusive MONEY"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Try For Free"
+    },
+    {
+      "type": "text",
+      "id": "button_section_scroll",
+      "label": "Button Section Scroll ID",
+      "default": "pricing"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu_item",
+      "name": "Menu Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Menu"
+        },
+        {
+          "type": "html",
+          "id": "icon",
+          "label": "Icon (Emoji)"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "button_section_scroll",
+          "label": "Button Section Scroll ID",
+          "default": "pricing"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

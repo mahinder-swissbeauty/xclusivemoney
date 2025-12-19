@@ -10,6 +10,12 @@
   {
     "name": "t:settings_schema.logo.name",
     "settings": [
+       {
+        "type": "checkbox",
+        "id": "show-overlay",
+        "label": "Show Overlay",
+        "default": false
+      },
       {
         "type": "image_picker",
         "id": "logo",

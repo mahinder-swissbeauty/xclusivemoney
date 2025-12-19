@@ -1,0 +1,205 @@
+{% liquid
+  assign sales = settings.sale_layout
+  assign bg_type = section.settings.background_type
+  assign bg_image = section.settings.bg_image
+  assign text_color = section.settings.text_color
+  if sales
+    assign block_type = 'sale-announcement'
+  else
+    assign block_type = 'announcement'
+  endif
+  assign blocks_to_render = 0
+  for block in section.blocks
+    if block.type == block_type
+      assign blocks_to_render = blocks_to_render | plus: 1
+    endif
+  endfor
+%}
+{% if blocks_to_render > 0 %}
+    <div style="background: linear-gradient(180deg, #233052 0%, #233052 100%);" class="xcl-pt-4 xcl-pb-2 xcl-px-2 xl:xcl-px-0">
+    <div class="xcl-max-w-[1152px] xcl-mx-auto">
+  <section id="announcement-bar={{ section.id }}"> 
+    <announcement-bar
+      class="xcl-relative"
+      data-section="{{ section.id }}"
+      data-autoplay="{{ section.settings.autoplay }}"
+      data-time="{{ section.settings.autoplay_time }}"
+      data-blocks="{{ blocks_to_render }}"
+    >
+      <div
+        style="{% if bg_type == 'image' %}background-image:url('{{ bg_image | image_url : 400 }}'){% else %}background:linear-gradient(0deg, #01C5E3 0%, #01E3BD 100%);{% endif %}"
+        data-role="container"
+        class="xcl-flex xcl-flex-nowrap xcl-rounded-2xl  {% if blocks_to_render > 1 %}keen-slider{% endif %}"
+      >
+        {% for block in section.blocks %}
+          {% if block.type == block_type %}
+            {% liquid
+              assign behavior = block.settings.behavior
+              assign text = block.settings.announcement_text
+              assign link = block.settings.announcement_link
+              assign copy_text = block.settings.copy_text_content
+              assign copy_icon = block.settings.copy_icon
+            %}
+            <div
+              class="xcl-flex-[0_0_100%] xcl-max-w-[100%] xcl-flex xcl-justify-center xcl-items-center xcl-px-3 xcl-py-2 xcl-group xcl-font-heading xcl-text-xs xcl-text-[#000] {% if blocks_to_render > 1 %}keen-slider__slide{% endif %}"
+              data-beahavior="{{ behavior }}"
+              data-role="announcement-strip"
+              data-content="{{ copy_text }}"
+              data-text="{{ text }}"
+            >
+              {% if behavior == 'redirect' %}
+                <a
+                  href="{{ link }}"
+                  style="color:{{ text_color }};"
+                  class="xcl-no-underline xcl-font-semibold xcl-font-heading xcl-text-xs xcl-text-[#000]"
+                >
+                  {{- text -}}
+                </a>
+              {% else %}
+                <div
+                  data-role="copy"
+                  style="color:{{ text_color }};"
+                  class="xcl-flex xcl-items-center xcl-gap-[4px] xcl-cursor-pointer *:xcl-mb-0"
+                >
+                  <span class="xcl-opacity xcl-no-underline xcl-font-semibold xcl-font-heading xcl-text-xs xcl-text-[#000]">
+                    {{ text }}
+                  </span>
+                  {% if copy_icon %}
+                    <span class="xcl-relative xcl-w-[20px] xcl-h-[20px] xcl-flex xcl-justify-center xcl-items-center">
+                      {% render 'icons-v2',
+                        icon: 'icon-copy',
+                        class: 'xcl-w-[14px] xcl-h-[14px] xcl-transition-all group-[&.copied]:xcl-opacity-0'
+                      %}
+                      {% render 'icons-v2',
+                        icon: 'icon-copy-check',
+                        class: 'xcl-w-[14px] xcl-h-[14px] xcl-absolute xcl-opacity-0 group-[&.copied]:xcl-opacity-100 xcl-top-[50%] xcl-left-[50%] xcl-translate-x-[-50%] xcl-translate-y-[-50%]'
+                      %}
+                    </span>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% if section.settings.arrows and blocks_to_render > 1 %}
+        <button
+          class="xcl-absolute xcl-top-[50%] xcl-translate-y-[-50%] xcl-left-[10px] xcl-z-[1] xcl-w-[20px] xcl-h-[20px] xcl-flex xcl-justify-center xcl-items-center"
+          data-role="prev"
+          style="color:{{ text_color }}"
+        >
+          {% render 'icons-v2', icon: 'icon-caret-left', class: 'xcl-w-4 xcl-h-4' %}
+        </button>
+        <button
+          class="xcl-absolute xcl-top-[50%] xcl-translate-y-[-50%] xcl-right-[10px] xcl-z-[1] xcl-w-[20px] xcl-h-[20px] xcl-flex jxcl-ustify-center xcl-items-center"
+          data-role="next"
+          style="color:{{ text_color }}"
+        >
+          {% render 'icons-v2', icon: 'icon-caret-right', class: 'xcl-w-4 xcl-h-4' %}
+        </button>
+      {% endif %}
+    </announcement-bar>
+  </section>
+  </div>
+  </div>
+{% endif %}
+{% if blocks_to_render > 1 %}
+  {% render 'vite-tag' with 'xs-announcementbar.js' %}
+{% endif %}
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "settings": [
+    {
+      "type": "select",
+      "label": "Background Type",
+      "id": "background_type",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "color",
+          "label": "Color"
+        }
+      ],
+      "default": "color"
+    },
+    {
+      "type": "image_picker",
+      "label": "Choose Background Image",
+      "id": "bg_image"
+    },
+
+    {
+      "type": "color",
+      "label": "Text Color",
+      "id": "text_color",
+      "default": "#000000"
+    },
+    {
+      "type": "checkbox",
+      "label": "Display Arrows",
+      "id": "arrows"
+    },
+    {
+      "type": "checkbox",
+      "label": "Enable autoplay",
+      "id": "autoplay"
+    },
+    {
+      "type": "number",
+      "label": "Autoplay time in seconds",
+      "id": "autoplay_time",
+      "default": 3
+    }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Announcement",
+      "settings": [
+        {
+          "type": "richtext",
+          "label": "Announcement Bar Text",
+          "id": "announcement_text"
+        },
+        {
+          "type": "text",
+          "label": "Announcement Bar Link",
+          "id": "announcement_link"
+        },
+        {
+          "type": "select",
+          "label": "Link Behavior",
+          "id": "behavior",
+          "default": "redirect",
+          "options": [
+            {
+              "value": "redirect",
+              "label": "Redirection"
+            },
+            {
+              "value": "copy",
+              "label": "Copy Code"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "label": "Display copy icon",
+          "id": "copy_icon",
+          "info": "If behavior is selected to be Copy Code"
+        },
+        {
+          "type": "text",
+          "label": "Copy text content",
+          "id": "copy_text_content",
+          "info": "If Bhevaior set to Copy code then the copied code will be needed to enter here"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
