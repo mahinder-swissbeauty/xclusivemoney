@@ -111,20 +111,22 @@
                     {%- comment -%} TITLE → max ~2 lines {%- endcomment -%}
                     {% if section.settings.show_card_heading and article.title != blank %}
                       {% assign fa_title = article.title | strip_html | truncatewords: 10, '…' %}
-                      <h3 class="xcl-text-center xcl-font-heading xcl-font-semibold xcl-text-[14px] xl:xcl-text-[24px] xcl-mb-6 xcl-mt-4 xl:xcl-mt-0">
+                      <h3 class="xcl-text-center   xcl-text-white xcl-font-heading xcl-font-semibold xcl-text-[14px] xl:xcl-text-[24px] xcl-mb-6 xcl-mt-4 xl:xcl-mt-0">
                         {{ fa_title }}
                       </h3>
                     {% endif %}
 
-                    {% if article.image %}
-                      <a href="{{ article.url }}" class="xcl-block xcl-rounded-2xl xcl-overflow-hidden">
-                        <img
-                          src="{{ article.image | img_url: 'master' }}"
-                          alt="{{ article.image.alt | escape }}"
-                          loading="lazy"
-                        >
-                      </a>
-                    {% endif %}
+                   {% if article.image %}
+                    <a href="{{ article.url }}" class="xcl-block xcl-rounded-2xl xcl-overflow-hidden">
+                      <img
+                        src="{{ article.image | img_url: 'master' }}"
+                        alt="{{ article.image.alt | escape }}"
+                        loading="lazy"
+                        class="xcl-w-full xcl-max-h-[300px] xcl-object-cover"
+                      >
+                    </a>
+                  {% endif %}
+
 
                     {%- comment -%} BODY → max ~4 lines {%- endcomment -%}
                     {% if section.settings.show_card_paragraph and article.content %}
@@ -154,20 +156,22 @@
                   {%- comment -%} TITLE → max ~2 lines {%- endcomment -%}
                   {% if section.settings.show_card_heading and article.title != blank %}
                     {% assign fa_title = article.title | strip_html | truncatewords: 10, '…' %}
-                    <h3 class="xcl-text-center xcl-font-heading xcl-font-semibold xcl-text-[14px] xl:xcl-text-[24px] xcl-mb-6 xcl-mt-4 xl:xcl-mt-0">
+                    <h3 class="xcl-text-center xcl-text-white xcl-font-heading xcl-font-semibold xcl-text-[14px] xl:xcl-text-[24px] xcl-mb-6 xcl-mt-4 xl:xcl-mt-0">
                       {{ fa_title }}
                     </h3>
                   {% endif %}
 
-                  {% if article.image %}
-                    <a href="{{ article.url }}" class="xcl-block xcl-rounded-2xl xcl-overflow-hidden">
-                      <img
-                        src="{{ article.image | img_url: 'master' }}"
-                        alt="{{ article.image.alt | escape }}"
-                        loading="lazy"
-                      >
-                    </a>
-                  {% endif %}
+               {% if article.image %}
+                  <a href="{{ article.url }}" class="xcl-block xcl-rounded-2xl xcl-overflow-hidden">
+                    <img
+                      src="{{ article.image | img_url: 'master' }}"
+                      alt="{{ article.image.alt | escape }}"
+                      loading="lazy"
+                      class="xcl-w-full xcl-max-h-[300px] xcl-object-cover"
+                    >
+                  </a>
+                {% endif %}
+
 
                   {%- comment -%} BODY → max ~4 lines {%- endcomment -%}
                   {% if section.settings.show_card_paragraph and article.content %}

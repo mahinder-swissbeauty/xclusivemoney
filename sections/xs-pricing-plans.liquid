@@ -204,8 +204,8 @@
               {% else %}
                 <button
                   type="button"
-                  class="xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center  xcl-border-none xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-2 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
-                  style="background: {{ section.settings.card1_btn_bg }};"
+                   class="xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center xcl-cursor-pointer xcl-border-none xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-3 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
+                      style="background: {{ section.settings.card1_btn_bg }}"
                   disabled
                 >
                   Sold Out
@@ -339,8 +339,8 @@
               {% else %}
                 <button
                   type="button"
-                  class="xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center  xcl-border-none xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-2 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
-                  style="background: {{ section.settings.card2_btn_bg }};"
+                   class="xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center xcl-cursor-pointer xcl-border-none xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-3 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
+                      style="background: {{ section.settings.card2_btn_bg }}"
                   disabled
                 >
                   Sold Out
@@ -468,7 +468,11 @@
                     </button>
                   </form>
               {% else %}
-                <button type="button" class="xcl-my-6 xcl-w-full xcl-rounded-[16px] xcl-border-none" disabled>
+                <button type="button" 
+                
+                class="xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center xcl-border-none xcl-cursor-pointer xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-3 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
+                      style="background: {{ section.settings.card3_btn_bg }};"
+                disabled>
                   Sold Out
                 </button>
               {% endif %}
