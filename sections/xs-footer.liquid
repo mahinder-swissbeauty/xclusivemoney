@@ -60,7 +60,7 @@
 
     {%- comment -%} JOIN US ON CARD {%- endcomment -%}
     <div
-      class="xcl-border xcl-border-[#01C5E3] xcl-rounded-[20px] xcl-bg-[#111827] xcl-px-6 xcl-py-4
+      class="xcl-border xcl-border-[#01C5E3] xcl-rounded-[20px] xcl-border-solid xcl-bg-[#111827] xcl-px-6 xcl-py-4
              xl:xcl-py-6 xcl-flex xcl-flex-col xcl-items-center xcl-gap-4 xcl-gap-y-6 xl:xcl-px-8  xl:xcl-gap-y-7 "
     >
       <h3 class="xcl-text-[20px] xcl-font-bold xcl-text-[#01C5E3] xl:xcl-text-[28px]"                                                                                                                                                                                                                                                                                     >
@@ -96,7 +96,7 @@
       {%- for block in section.blocks -%}
         {%- if block.type == 'links_group' -%}
           <details
-            class="xcl-border-t xcl-border-[#ffffff]/60 last:xcl-border-b"
+            class="xcl-border-t xcl-border-[#ffffff]/60 last:xcl-border-b xcl-border-solid xcl-border-r-0 xcl-border-l-0"
             {{ block.shopify_attributes }}
             {% if block.settings.open_by_default %}open{% endif %}
           >
@@ -119,7 +119,7 @@
                   {%- for link in linklists[block.settings.menu].links -%}
                     <a
                       href="{{ link.url }}"
-                      class="xcl-block hover:xcl-text-[#01C5E3] xcl-transition-colors"
+                      class="xcl-block xcl-text-white hover:xcl-text-[#01C5E3] xcl-transition-colors"
                     >
                       {{ link.title }}
                     </a>
