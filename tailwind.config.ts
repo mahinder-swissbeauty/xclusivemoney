@@ -1,7 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 
 module.exports = {
-  prefix: 'sw-',
+  prefix: 'xcl-',
+   corePlugins: {
+    preflight: false,
+  },
   content: [
     './assets/*.{liquid,js,mjs}',
     '!./assets/*.min.{js,mjs}',
@@ -30,15 +33,11 @@ module.exports = {
         'offer-orange': 'linear-gradient(180deg, #FFE8BF 30%, #FFF7E9 100%)',
         'offer-pink': ' linear-gradient(180deg, #FFD8DE 30%, #FFF3F4 100%)',
         'mainbg': 'linear-gradient(180deg, #FFF3F4 0%, #FFFFFF 100%)',
-      },
-    
-      translate:{
-        '-1/2': '-50%',
       }
     },
   },
   plugins: [
-    function ({ addUtilities }) { 
+    function ({ addUtilities }) {   
       addUtilities({
         '.scrollbar-hide': {
           /* Hide scrollbar for Webkit browsers */

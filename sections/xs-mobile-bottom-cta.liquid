@@ -1,0 +1,81 @@
+{% if section.settings.enable_bar %}
+<style>
+  /* Show only on mobile */
+  @media (min-width: 768px) {
+    #mobileCtaBar {
+      display: none !important;
+    }
+  }
+</style>
+
+<div
+  id="mobileCtaBar"
+  class="xcl-fixed xcl-bottom-0 xcl-left-0 xcl-right-0 xcl-z-[9999] xcl-px-4 xcl-py-3 
+   xcl-rounded-t-2xl xcl-shadow-2xl xcl-flex xcl-items-center xcl-justify-between xcl-gap-4"
+  style="background: rgba(35, 48, 82, 0.60); Colors Color format RGB Background colors rgba(35, 48, 82, 0.6); color: #fff;"
+
+>
+  
+  <!-- Left Text -->
+  <div class="xcl-flex xcl-flex-col xcl-text-left xcl-text-[#fff] xcl-leading-tight xcl-space-y-2">
+    <span class="xcl-text-[12px] xcl-font-medium">
+      {{ section.settings.top_text }}
+    </span>
+    <span class="xcl-text-[14px] xcl-font-bold">
+      {{ section.settings.bottom_text }}
+    </span>
+  </div>
+
+  <!-- Right CTA Button -->
+  <a
+    href="#{{section.settings.button_section_scroll}}"
+    class="scroll-link xcl-bg-[#00D5F6] xcl-text-[#000] xcl-text-[16px] xcl-font-semibold xcl-px-6 xcl-py-3 xcl-rounded-lg xcl-whitespace-nowrap"
+  >
+    {{ section.settings.button_text }}
+  </a>
+</div>
+{% endif %}
+
+
+{% schema %}
+{
+  "name": "Mobile Sticky CTA Bar",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_bar",
+      "label": "Enable Sticky Bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "top_text",
+      "label": "Top Small Text",
+      "default": "Explore our plans and get"
+    },
+    {
+      "type": "text",
+      "id": "bottom_text",
+      "label": "Bold Text",
+      "default": "Up to 30 Days Free Trial"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Explore Plans"
+    },
+    {
+      "type": "text",
+      "id": "button_section_scroll",
+      "label": "button_section_scroll",
+      "default":"pricing"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mobile Sticky CTA"
+    }
+  ]
+}
+{% endschema %}
