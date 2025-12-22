@@ -4,6 +4,19 @@
     padding: 4px 12px;
   }
 
+
+ #pricing   .section_heading span {
+    border-radius: 16px;
+    background: #01c5e3;
+    padding: 4px 6px;
+    display: inline-flex;
+    color: #233052;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600; 
+  }
+
+
   @media (min-width: 1200px) {
     #pricing .section_heading span {
       font-size: 36px;
@@ -31,13 +44,14 @@
 >
   <div class="xcl-max-w-[1110px] xcl-mx-auto xcl-px-4 lg:xcl-px-0 xcl-relative xcl-z-10">
     {%- comment -%} SECTION HEADING {%- endcomment -%}
+    {%- comment -%} SECTION HEADING {%- endcomment -%}
     <div class="xcl-text-center xcl-mb-7 xl:xcl-mb-[76px]">
       {% if section.settings.section_title != blank %}
         <h3
           class="section_heading xcl-text-center xcl-pb-2 xcl-text-[22px] xcl-text-[#01C5E3] xcl-font-semibold xl:xcl-text-[48px]"
           style="color: {{ section.settings.section_title_color }};"
         >
-          {{ section.settings.section_title }} 
+          {{ section.settings.section_title }}
         </h3>
       {% endif %}
     </div>
@@ -173,7 +187,6 @@
                 {% endif %}
               {% endcomment %}
               {% if v1 and v1.available %}
-                <div class="xcl-pt-6">
                   <form method="post" action="/cart/add" class="xcl-pt-6">
                     <input type="hidden" name="id" value="{{ v1.id }}">
                     <input type="hidden" name="quantity" value="1">
@@ -181,14 +194,13 @@
 
                     <button
                       type="submit"
-                      class="xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center xcl-cursor-pointer xcl-border-none xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-2 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
+                      class="xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center xcl-cursor-pointer xcl-border-none xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-3 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
                       style="background: {{ section.settings.card1_btn_bg }}"
                     >
                       {{ section.settings.card1_btn_label }}
                       <span>➜</span>
                     </button>
                   </form>
-                </div>
               {% else %}
                 <button
                   type="button"
@@ -310,31 +322,32 @@
               {% endfor %}
 
               {% if v2 and v2.available %}
-                <div class="xcl-pt-6">
                   <form method="post" action="/cart/add" class="xcl-pt-6">
                     <input type="hidden" name="id" value="{{ v2.id }}">
                     <input type="hidden" name="quantity" value="1">
                     <input type="hidden" name="return_to" value="/checkout">
+
                     <button
-                      type="button"
-                      class="xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center xcl-border-none xcl-cursor-pointer xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-2 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
-                      style="background: {{ section.settings.card2_btn_bg }};"
+                      type="submit"
+                      class="xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center xcl-cursor-pointer xcl-border-none xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-3 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
+                      style="background: {{ section.settings.card2_btn_bg }}"
                     >
                       {{ section.settings.card2_btn_label }}
                       <span>➜</span>
                     </button>
                   </form>
-                </div>
               {% else %}
                 <button
                   type="button"
-                  class="xcl-mt-6 xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center xcl-border-none xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-2 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
+                  class="xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center  xcl-border-none xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-2 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
                   style="background: {{ section.settings.card2_btn_bg }};"
                   disabled
                 >
                   Sold Out
                 </button>
               {% endif %}
+
+
             </div>
           </div>
         </div>
@@ -440,22 +453,20 @@
               {% endfor %}
 
               {% if v3 and v3.available %}
-                <div class="xcl-pt-6">
-                  <form method="post" action="/cart/add" class="xcl-pt-6">
+                <form method="post" action="/cart/add" class="xcl-pt-6">
                     <input type="hidden" name="id" value="{{ v3.id }}">
                     <input type="hidden" name="quantity" value="1">
                     <input type="hidden" name="return_to" value="/checkout">
 
                     <button
                       type="submit"
-                      class="xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center xcl-border-none xcl-cursor-pointer xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-2 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
+                      class="xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center xcl-border-none xcl-cursor-pointer xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-3 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
                       style="background: {{ section.settings.card3_btn_bg }};"
                     >
                       {{ section.settings.card3_btn_label }}
                       <span>➜</span>
                     </button>
                   </form>
-                </div>
               {% else %}
                 <button type="button" class="xcl-my-6 xcl-w-full xcl-rounded-[16px] xcl-border-none" disabled>
                   Sold Out
