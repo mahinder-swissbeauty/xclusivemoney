@@ -474,28 +474,19 @@
     </script>
     
     <script>
-  (function () {
-    // If user comes back from Shopify checkout, clear cart once
-    var ref = document.referrer || "";
-    var cameFromCheckout =
-      ref.includes("/checkouts/") ||
-      ref.includes("checkout.shopify.com") ||
-      ref.includes("myshopify.com/checkouts/");
+    (function () {
+      // If user previously went to checkout from storefront, clear cart once when they return
+      var shouldClear = sessionStorage.getItem("xcl_clear_cart_on_return") === "1";
+      if (!shouldClear) return;
 
-    if (!cameFromCheckout) return;
+      // run once
+      sessionStorage.removeItem("xcl_clear_cart_on_return");
 
-    // prevent repeated clears on same session
-    if (sessionStorage.getItem("cleared_cart_after_checkout") === "1") return;
-    sessionStorage.setItem("cleared_cart_after_checkout", "1");
-
-    fetch("/cart/clear.js", { method: "POST", headers: { "Content-Type": "application/json" } })
-      .then(function () {
-        // optional: refresh cart badge/UI
-        // location.reload();
-      })
-      .catch(function(){});
-  })();
-</script>
+      fetch("/cart/clear.js", { method: "POST" })
+        .then(function(){ /* optional: update UI */ })
+        .catch(function(){});
+    })();
+    </script>
   </body>
 
   
