@@ -234,16 +234,12 @@
       a{
         text-decoration:none;
       }
-     
-
-     
     {% endstyle %}
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
       rel="stylesheet"
     >
     {{ 'global.css' | asset_url | stylesheet_tag }}
-   
 
     <link rel="stylesheet" href="{{ 'component-cart-items.css' | asset_url }}" media="print" onload="this.media='all'">
 
@@ -285,7 +281,7 @@
         document.documentElement.classList.add('shopify-design-mode');
       }
     </script>
-     {% render 'vite-tag' with 'base.css' %}
+    {% render 'vite-tag' with 'base.css' %}
     {% render 'vite-tag' with 'keen-slider.js' %}
     <style>
       html {
@@ -326,7 +322,7 @@
 
       {% endif %}
     </style>
-  </head> 
+  </head>
 
   <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
@@ -342,12 +338,12 @@
     {% section 'xs-header' %}
 
     <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
-         {% if settings['show-overlay'] %}
-            <div class="body-overlay xl:xcl-hidden">
-              {% render 'icons-v2', icon: 'icon-body-overlay' %}
-            </div>
-            <div class="body-overlay body-overlay-desktop xcl-hidden xl:xcl-block">&nbsp;</div>
-          {% endif %}
+      {% if settings['show-overlay'] %}
+        <div class="body-overlay xl:xcl-hidden">
+          {% render 'icons-v2', icon: 'icon-body-overlay' %}
+        </div>
+        <div class="body-overlay body-overlay-desktop xcl-hidden xl:xcl-block">&nbsp;</div>
+      {% endif %}
       {{ content_for_layout }}
     </main>
 
@@ -414,8 +410,7 @@
     {%- if settings.cart_type == 'drawer' -%}
       <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
-  </body>
-  <script>
+    <script>
       document.addEventListener('DOMContentLoaded', function () {
         const menuBtn = document.getElementById('menuToggle');
         const menu = document.getElementById('dropdownMenu');
@@ -473,4 +468,52 @@
         });
       });
     </script>
+
+    <script>
+      (function () {
+        // If user previously went to checkout from storefront, clear cart once when they return
+        var shouldClear = sessionStorage.getItem('xcl_clear_cart_on_return') === '1';
+        if (!shouldClear) return;
+
+        // run once
+        sessionStorage.removeItem('xcl_clear_cart_on_return');
+
+        fetch('/cart/clear.js', { method: 'POST' })
+          .then(function () {
+            /* optional: update UI */
+          })
+          .catch(function () {});
+      })();
+    </script>
+
+    <script>
+      (function () {
+        function resetCheckoutButtons() {
+          document.querySelectorAll('.js-checkout-form').forEach((form) => {
+            const btn = form.querySelector('.js-checkout-btn');
+            const text = form.querySelector('.js-btn-text');
+            const loader = form.querySelector('.js-btn-loader');
+
+            if (btn) {
+              btn.disabled = false;
+              btn.style.pointerEvents = 'auto';
+            }
+            if (text) text.classList.remove('xcl-hidden');
+            if (loader) loader.classList.add('xcl-hidden');
+          });
+        }
+
+        // Normal load
+        document.addEventListener('DOMContentLoaded', resetCheckoutButtons);
+
+        // ✅ When coming back from checkout using browser back (BFCache)
+        window.addEventListener('pageshow', function (e) {
+          // e.persisted = page restored from bfcache
+          if (e.persisted) resetCheckoutButtons();
+          // also safe to reset anyway:
+          resetCheckoutButtons();
+        });
+      })();
+    </script>
+  </body>
 </html>

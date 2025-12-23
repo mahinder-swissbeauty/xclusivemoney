@@ -107,7 +107,7 @@
                   >
                 </div>
               {% endif %}
-              <h3 class="xcl-text-[20px] xl:xcl-text-[24px] xcl-font-semibold">
+              <h3 class="xcl-text-[20px] xl:xcl-text-[24px] xcl-font-semibold xcl-text-white">
                 {{ section.settings.card1_title }}
               </h3>
             </div>
@@ -187,18 +187,45 @@
                 {% endif %}
               {% endcomment %}
               {% if v1 and v1.available %}
-                  <form method="post" action="/cart/add" class="xcl-pt-6">
+                  <form method="post" action="/cart/add" class="xcl-pt-6 js-checkout-form">
                     <input type="hidden" name="id" value="{{ v1.id }}">
                     <input type="hidden" name="quantity" value="1">
                     <input type="hidden" name="return_to" value="/checkout">
 
                     <button
                       type="submit"
-                      class="xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center xcl-cursor-pointer xcl-border-none xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-3 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
+                      class="js-checkout-btn xcl-h-[45px] xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center xcl-cursor-pointer xcl-border-none xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-3 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
                       style="background: {{ section.settings.card1_btn_bg }}"
                     >
+                      <span class="js-btn-text">
                       {{ section.settings.card1_btn_label }}
                       <span>➜</span>
+                      </span>
+                    <!-- Loader (hidden by default) -->
+                      <span class="js-btn-loader xcl-hidden">
+                        <svg
+                          class="xcl-animate-spin"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
+                          <circle
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="#031015"
+                            stroke-width="3"
+                            opacity="0.25"
+                          />
+                          <path
+                            d="M22 12a10 10 0 0 1-10 10"
+                            stroke="#031015"
+                            stroke-width="3"
+                          />
+                        </svg>
+                      </span>
+
                     </button>
                   </form>
               {% else %}
@@ -256,7 +283,7 @@
                   >
                 </div>
               {% endif %}
-              <h3 class="xcl-text-[20px] xl:xcl-text-[24px] xcl-font-semibold">
+              <h3 class="xcl-text-[20px] xl:xcl-text-[24px] xcl-font-semibold xcl-text-white">
                 {{ section.settings.card2_title }}
               </h3>
             </div>
@@ -322,18 +349,44 @@
               {% endfor %}
 
               {% if v2 and v2.available %}
-                  <form method="post" action="/cart/add" class="xcl-pt-6">
+                  <form method="post" action="/cart/add" class="xcl-pt-6 js-checkout-form">
                     <input type="hidden" name="id" value="{{ v2.id }}">
                     <input type="hidden" name="quantity" value="1">
                     <input type="hidden" name="return_to" value="/checkout">
 
                     <button
                       type="submit"
-                      class="xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center xcl-cursor-pointer xcl-border-none xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-3 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
+                      class="js-checkout-btn xcl-h-[45px] xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center xcl-cursor-pointer xcl-border-none xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-3 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
                       style="background: {{ section.settings.card2_btn_bg }}"
                     >
-                      {{ section.settings.card2_btn_label }}
-                      <span>➜</span>
+                      <span class="js-btn-text">
+                        {{ section.settings.card2_btn_label }}
+                        <span>➜</span>
+                      </span>
+                       <!-- Loader (hidden by default) -->
+                      <span class="js-btn-loader xcl-hidden">
+                        <svg
+                          class="xcl-animate-spin"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
+                          <circle
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="#031015"
+                            stroke-width="3"
+                            opacity="0.25"
+                          />
+                          <path
+                            d="M22 12a10 10 0 0 1-10 10"
+                            stroke="#031015"
+                            stroke-width="3"
+                          />
+                        </svg>
+                      </span>
                     </button>
                   </form>
               {% else %}
@@ -387,7 +440,7 @@
                 </div>
               {% endif %}
 
-              <h3 class="xcl-text-[20px] xl:xcl-text-[24px] xcl-font-semibold">
+              <h3 class="xcl-text-[20px] xl:xcl-text-[24px] xcl-font-semibold xcl-text-white">
                 {{ section.settings.card3_title }}
               </h3>
             </div>
@@ -453,18 +506,44 @@
               {% endfor %}
 
               {% if v3 and v3.available %}
-                <form method="post" action="/cart/add" class="xcl-pt-6">
+                <form method="post" action="/cart/add" class="xcl-pt-6 js-checkout-form">
                     <input type="hidden" name="id" value="{{ v3.id }}">
                     <input type="hidden" name="quantity" value="1">
                     <input type="hidden" name="return_to" value="/checkout">
 
                     <button
                       type="submit"
-                      class="xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center xcl-border-none xcl-cursor-pointer xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-3 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
+                      class="js-checkout-btn xcl-h-[45px] xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center xcl-border-none xcl-cursor-pointer xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-3 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
                       style="background: {{ section.settings.card3_btn_bg }};"
                     >
+                     <span class="js-btn-text">
                       {{ section.settings.card3_btn_label }}
                       <span>➜</span>
+                    </span>
+                     <!-- Loader (hidden by default) -->
+                      <span class="js-btn-loader xcl-hidden">
+                        <svg
+                          class="xcl-animate-spin"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
+                          <circle
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="#031015"
+                            stroke-width="3"
+                            opacity="0.25"
+                          />
+                          <path
+                            d="M22 12a10 10 0 0 1-10 10"
+                            stroke="#031015"
+                            stroke-width="3"
+                          />
+                        </svg>
+                      </span>
                     </button>
                   </form>
               {% else %}
@@ -760,3 +839,46 @@
   ]
 }
 {% endschema %}
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("form[action='/cart/add']").forEach(function (form) {
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      // mark to clear on return from checkout
+      sessionStorage.setItem("xcl_clear_cart_on_return", "1");
+
+      // loader/disable (agar aapke classes exist hain)
+      const btn = form.querySelector("button[type='submit']");
+      const text = btn?.querySelector(".js-btn-text");
+      const loader = btn?.querySelector(".js-btn-loader");
+      if (btn) { btn.disabled = true; btn.style.pointerEvents = "none"; }
+      if (text) text.classList.add("xcl-hidden");
+      if (loader) loader.classList.remove("xcl-hidden");
+
+      try {
+        // 1) clear cart first
+        await fetch("/cart/clear.js", { method: "POST" });
+
+        // 2) add current item (includes selling_plan / properties automatically)
+        const fd = new FormData(form);
+        await fetch("/cart/add.js", { method: "POST", body: fd });
+
+        // 3) go to checkout
+        window.location.href = "/checkout";
+      } catch (err) {
+        // fallback: re-enable
+        if (btn) { btn.disabled = false; btn.style.pointerEvents = "auto"; }
+        if (text) text.classList.remove("xcl-hidden");
+        if (loader) loader.classList.add("xcl-hidden");
+        console.error(err);
+      }
+    });
+
+  });
+});
+</script>
