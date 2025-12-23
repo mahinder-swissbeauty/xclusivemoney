@@ -515,5 +515,41 @@
         });
       })();
     </script>
+
+    <script>
+      (function () {
+        function resetLoadingState(root) {
+          (root || document).querySelectorAll('.js-checkout-form').forEach((form) => {
+            const btn = form.querySelector('.js-checkout-btn');
+            const text = form.querySelector('.js-btn-text');
+            const loader = form.querySelector('.js-btn-loader');
+
+            if (btn) {
+              btn.disabled = false;
+              btn.style.pointerEvents = 'auto';
+            }
+            if (text) text.classList.remove('xcl-hidden');
+            if (loader) loader.classList.add('xcl-hidden');
+          });
+        }
+
+        // ✅ reset immediately on normal load
+        document.addEventListener('DOMContentLoaded', () => resetLoadingState());
+
+        // ✅ when coming back (BFCache restore) - very common on mobile
+        window.addEventListener('pageshow', () => resetLoadingState());
+
+        // ✅ when tab becomes visible again
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'visible') resetLoadingState();
+        });
+
+        // ✅ when window regains focus (mobile back)
+        window.addEventListener('focus', () => resetLoadingState());
+
+        // ✅ IMPORTANT: before leaving page, clear loading (prevents cached loading UI)
+        window.addEventListener('pagehide', () => resetLoadingState());
+      })();
+    </script>
   </body>
 </html>
