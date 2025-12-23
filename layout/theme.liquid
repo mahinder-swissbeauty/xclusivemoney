@@ -414,8 +414,7 @@
     {%- if settings.cart_type == 'drawer' -%}
       <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
-  </body>
-  <script>
+    <script>
       document.addEventListener('DOMContentLoaded', function () {
         const menuBtn = document.getElementById('menuToggle');
         const menu = document.getElementById('dropdownMenu');
@@ -473,4 +472,31 @@
         });
       });
     </script>
+    
+    <script>
+  (function () {
+    // If user comes back from Shopify checkout, clear cart once
+    var ref = document.referrer || "";
+    var cameFromCheckout =
+      ref.includes("/checkouts/") ||
+      ref.includes("checkout.shopify.com") ||
+      ref.includes("myshopify.com/checkouts/");
+
+    if (!cameFromCheckout) return;
+
+    // prevent repeated clears on same session
+    if (sessionStorage.getItem("cleared_cart_after_checkout") === "1") return;
+    sessionStorage.setItem("cleared_cart_after_checkout", "1");
+
+    fetch("/cart/clear.js", { method: "POST", headers: { "Content-Type": "application/json" } })
+      .then(function () {
+        // optional: refresh cart badge/UI
+        // location.reload();
+      })
+      .catch(function(){});
+  })();
+</script>
+  </body>
+
+  
 </html>
