@@ -843,21 +843,42 @@
 
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll(".js-checkout-form").forEach((form) => {
-      form.addEventListener("submit", () => {
-        const btn = form.querySelector(".js-checkout-btn");
-        const text = btn.querySelector(".js-btn-text");
-        const loader = btn.querySelector(".js-btn-loader");
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("form[action='/cart/add']").forEach(function (form) {
 
-        // Disable button to prevent double click
-        btn.disabled = true;
-        btn.style.pointerEvents = "none";
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
 
-        // Swap text → loader
-        text.classList.add("xcl-hidden");
-        loader.classList.remove("xcl-hidden");
-      });
+      // mark to clear on return from checkout
+      sessionStorage.setItem("xcl_clear_cart_on_return", "1");
+
+      // loader/disable (agar aapke classes exist hain)
+      const btn = form.querySelector("button[type='submit']");
+      const text = btn?.querySelector(".js-btn-text");
+      const loader = btn?.querySelector(".js-btn-loader");
+      if (btn) { btn.disabled = true; btn.style.pointerEvents = "none"; }
+      if (text) text.classList.add("xcl-hidden");
+      if (loader) loader.classList.remove("xcl-hidden");
+
+      try {
+        // 1) clear cart first
+        await fetch("/cart/clear.js", { method: "POST" });
+
+        // 2) add current item (includes selling_plan / properties automatically)
+        const fd = new FormData(form);
+        await fetch("/cart/add.js", { method: "POST", body: fd });
+
+        // 3) go to checkout
+        window.location.href = "/checkout";
+      } catch (err) {
+        // fallback: re-enable
+        if (btn) { btn.disabled = false; btn.style.pointerEvents = "auto"; }
+        if (text) text.classList.remove("xcl-hidden");
+        if (loader) loader.classList.add("xcl-hidden");
+        console.error(err);
+      }
     });
+
   });
+});
 </script>
