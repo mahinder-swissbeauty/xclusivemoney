@@ -132,7 +132,9 @@
                   {% endif %}
                 >
                   {% if section.settings.show_card_heading and block.settings.title != blank %}
-                    <h3 class="xcl-text-center xcl-font-heading xcl-font-semibold xcl-text-[14px] xl:xcl-text-[24px] xcl-mb-6 xcl-mt-4 xl:xcl-mt-0">
+                    <h3 class="xcl-text-center xcl-font-heading xcl-font-semibold xcl-text-[14px] xl:xcl-text-[24px] xcl-mb-6 xcl-mt-4 xl:xcl-mt-0"
+                    style="color:{{section.settings.section_text_color}}"
+                    >
                       {{ block.settings.title }}
                     </h3>
                   {% endif %}
@@ -375,7 +377,7 @@
       "type": "color",
       "id": "heading_color",
       "label": "Heading Color",
-      "default": "#000000"
+      "default": "#ffffff"
     },
     {
       "type": "color",
