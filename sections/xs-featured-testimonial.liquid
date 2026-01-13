@@ -58,7 +58,7 @@ section#{{ section.id }}-featured-testimonials featured-slider{
 {% endstyle %}
 
 {% if section.settings.enable_slider %}
-  {% render 'vite-tag' with 'xs-testimonial.js' %}
+  {% render 'vite-tag' with 'xs-featured-testimonial.js' %}
 {% endif %}
 
 <section
@@ -166,7 +166,7 @@ section#{{ section.id }}-featured-testimonials featured-slider{
 
 {% schema %}
 {
-  "name": "testimonials",
+  "name": "featured testimonials",
   "settings": [
     {
       "type": "range",
@@ -282,7 +282,7 @@ section#{{ section.id }}-featured-testimonials featured-slider{
     }
   ],
   "presets": [
-    { "name": "testimonials" }
+    { "name": "featured testimonials" }
   ]
 }
 {% endschema %}
