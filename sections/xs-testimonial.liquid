@@ -5,16 +5,16 @@
     padding-bottom: {{ section.settings.mobile_padding }}px;
   }
 
-  section#{{ section.id }}-featured-testimonials{
+section#{{ section.id }}-featured-testimonials featured-slider-testimonial{
     position: relative;
   }
 
-  section#{{ section.id }}-featured-testimonials .featured-collection-wrapper{
+section#{{ section.id }}-featured-testimonials .featured-collection-wrapper{
     width: 100%;
   }
 
   /* slider container */
-  section#{{ section.id }}-featured-testimonials featured-slider{
+section#{{ section.id }}-featured-testimonials featured-slider{
     display: block;
     width: 100%;
   }
@@ -50,7 +50,7 @@
 
   @media (min-width: 1200px){
 
-    #{{ section.id }}-featured-testimonials .featured-collection-wrapper{
+    section#{{ section.id }}-featured-testimonials .featured-collection-wrapper{
       padding-top: {{ section.settings.desktop_padding }}px;
       padding-bottom: {{ section.settings.desktop_padding }}px;
     }
@@ -58,7 +58,7 @@
 {% endstyle %}
 
 {% if section.settings.enable_slider %}
-  {% render 'vite-tag' with 'featured-testmonial-slider.js' %}
+  {% render 'vite-tag' with 'xs-testimonial.js' %}
 {% endif %}
 
 <section
@@ -73,14 +73,14 @@
       <div class="featured-collection-content_wrapper">
         <div class="featured-collection-cards xcl-pl-3">
           {% if section.settings.enable_slider %}
-            <featured-slider
-              data-desktop-cards="2.2"
+            <featured-slider-testimonial
+              data-desktop-cards="2.5"
   data-mobile-perview="1.2"
 
               class="featured-slider-root xcl-relative"
-              data-desktop-cards="{{ section.settings.desktop_cards }}"
-              data-mobile-perview="{{ section.settings.mobile_perview }}"
-              data-show-arrows="{{ section.settings.show_arrows | json }}"
+  data-desktop-cards="{{ section.settings.desktop_cards }}"
+  data-mobile-perview="{{ section.settings.mobile_perview }}"
+  data-show-arrows="{{ section.settings.show_arrows | json }}"
             >
               <div
                 data-role="slider-wrapper"
@@ -88,16 +88,10 @@
               >
                 {% for block in section.blocks %}
                   <div
-                    class="
-                      fc-slide keen-slider__slide
-                      xcl-flex-[0_0_calc(100%/1.2_-_0px)]
-                      lg:xcl-flex-[0_0_calc(100%/3_-_0px)]
-                      xcl-rounded-2xl
-                    "
-                    data-block-index="{{ forloop.index0 }}"
-                    style="border-color: {{ section.settings.card_border_color }}; background: {{ section.settings.card_bg_color }};"
-                  >
-                    {% render 'testimonial-card', testimonial: block.settings %}
+                     class="fc-slide keen-slider__slide xcl-rounded-2xl"
+     data-block-index="{{ forloop.index0 }}"
+     style="border-color: {{ section.settings.card_border_color }}; background: {{ section.settings.card_bg_color }};">
+  {% render 'testimonial-card', testimonial: block.settings %}
                   </div>
                 {% endfor %}
               </div>
@@ -160,7 +154,7 @@
                   </div>
                 </div>
               {% endif %}
-            </featured-slider>
+            </featured-slider-testimonial>
           {% else %}
             hello
           {% endif %}
@@ -214,7 +208,7 @@
       "type": "text",
       "label": "Desktop cards to show (per view)",
       "id": "desktop_cards",
-      "default": "2.2"
+      "default": "2.5"
     },
     {
       "type": "color",
