@@ -9,13 +9,15 @@
   height: 8px;
 }
 
-
 @media(min-width:1200px){
   #{{ section.id }}-featured-collection .featured-collection-wrapper{
     padding-top: {{section.settings.desktop_padding}}px;
     padding-bottom: {{section.settings.desktop_padding}}px;
   }
 }
+
+/* Fancybox overlay link cursor */
+.fc-fancybox-link { cursor: pointer; }
 </style>
 
 {% if section.settings.enable_slider %}
@@ -92,9 +94,25 @@
               class="keen-slider__slide xcl-relative xcl-w-full fc-slide xcl-rounded-2xl xl:xcl-rounded-[32px]"
               style="border-color: {{ section.settings.card_border_color }}; background:{{ section.settings.card_bg_color }}"
             >
+
               {% if block.type == 'video' %}
                 <div class="fc-item fc-video xcl-rounded-md xcl-overflow-hidden">
                   <div class="fc-media xcl-relative" style="padding-top:56.25%; background:#000;">
+
+                    {%- comment -%}
+                      Fancybox trigger overlay:
+                      Click on poster / area -> popup open
+                      Video plays in popup
+                    {%- endcomment -%}
+                    <a
+                    class="fc-fancybox-link xcl-absolute xcl-inset-0 xcl-z-30"
+                    href="{{ block.settings.video_url }}"
+                    data-fancybox="{{ section.id }}-fc"
+                    data-caption="{{ block.settings.title | escape }}"
+                    data-type="html5video"
+                    data-html5video-format="video/mp4"
+                  ></a>
+
                     {% if block.settings.poster %}
                       <img
                         src="{{ block.settings.poster | img_url: 'master' }}"
@@ -139,25 +157,25 @@
                     </h3>
                   {% endif %}
 
-                  {% if block.settings.url != blank %}
-                    <a href="{{ block.settings.url }}" class="xcl-block xcl-rounded-2xl xcl-overflow-hidden">
-                      {% if block.settings.image %}
-                        <img
-                          src="{{ block.settings.image | img_url: 'master' }}"
-                          alt="{{ block.settings.title }}"
-                          class="xcl-w-full xcl-h-auto xcl-block xcl-rounded-2xl"
-                        >
-                      {% endif %}
-                    </a>
-                  {% else %}
+                  {%- comment -%}
+                    IMAGE with Fancybox overlay (popup)
+                    Existing layout stays same
+                  {%- endcomment -%}
+                  <div class="fc-lightbox-wrap xcl-relative xcl-w-full xcl-rounded-2xl xcl-overflow-hidden">
                     {% if block.settings.image %}
                       <img
                         src="{{ block.settings.image | img_url: 'master' }}"
                         alt="{{ block.settings.title }}"
                         class="xcl-w-full xcl-h-auto xcl-block xcl-rounded-2xl"
                       >
+                      <a
+                        class="fc-fancybox-link xcl-absolute xcl-inset-0 xcl-z-10"
+                        href="{{ block.settings.image | img_url: 'master' }}"
+                        data-fancybox="{{ section.id }}-fc"
+                        data-caption="{{ block.settings.title | escape }}"
+                      ></a>
                     {% endif %}
-                  {% endif %}
+                  </div>
 
                   {% if section.settings.show_card_paragraph and block.settings.description != blank %}
                     <div class="xcl-text-center xcl-text-xs xl:xcl-text-[18px] xcl-leading-relaxed xcl-mt-4 xcl-max-w-[480px] xl:xcl-mt-6">
@@ -242,15 +260,13 @@
 
           <button class="slider-play-pause xcl-w-10 xcl-h-10 xcl-rounded-full xcl-bg-[#303030] xcl-border-none xcl-outline-none xcl-flex xcl-items-center xcl-justify-center xcl-text-black xcl-font-bold">
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="14" viewBox="0 0 12 14" fill="none">
-              <path d="M10 14C8.89543 14 8 13.1046 8 12V2C8 0.89543 8.89543 0 10 0C11.1046 0 12 0.895431 12 2V12C12 13.1046 11.1046 14 10 14ZM2 14C0.895431 14 0 13.1046 0 12V2C0 0.89543 0.895431 0 2 0C3.10457 0 4 0.895431 4 2V12C4 13.1046 3.10457 14 2 14Z" fill="#D9D9D9"/>
+              <path d="M10 14C8.89543 14 8 13.1046 8 12V2C8 0.89543 8.895431 0 10 0C11.1046 0 12 0.895431 12 2V12C12 13.1046 11.1046 14 10 14ZM2 14C0.895431 14 0 13.1046 0 12V2C0 0.89543 0.895431 0 2 0C3.10457 0 4 0.895431 4 2V12C4 13.1046 3.10457 14 2 14Z" fill="#D9D9D9"/>
             </svg>
           </button>
         </div>
       </featured-slider-single>
     </div>
   </div>
-
-
 
   {% comment %} header-top-bg-image {% endcomment %}
   {% if section.settings.enable_header_right %}
@@ -260,27 +276,24 @@
           <g filter="url(#filter0_f_576_1117)"> <path d="M-67 70C164.28 95.5305 246.772 126.834 423 136.979V155C284.228 147.456 80 112.05 -67 144.088V70Z" fill="url(#paint0_linear_576_1117)" fill-opacity="0.4"/> </g> <path d="M375 153.5C223.888 149 202 95 -0.5 67" stroke="url(#paint1_linear_576_1117)"/> <path d="M375 145.5C223.888 141 202 87 -0.5 59" stroke="url(#paint2_linear_576_1117)"/> <path d="M0 80C150.911 84.5258 172.77 138.838 375 167" stroke="url(#paint3_linear_576_1117)"/> <defs> <filter id="filter0_f_576_1117" x="-137" y="0" width="630" height="225" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"> <feFlood flood-opacity="0" result="BackgroundImageFix"/> <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/> <feGaussianBlur stdDeviation="35" result="effect1_foregroundBlur_576_1117"/> </filter> <linearGradient id="paint0_linear_576_1117" x1="-67" y1="146.591" x2="423" y2="146.591" gradientUnits="userSpaceOnUse"> <stop offset="0.5" stop-color="#01C5E3"/> <stop offset="1" stop-color="#01E3BD"/> </linearGradient> <linearGradient id="paint1_linear_576_1117" x1="375" y1="110.25" x2="-0.5" y2="110.25" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> <linearGradient id="paint2_linear_576_1117" x1="375" y1="102.25" x2="-0.5" y2="102.25" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> <linearGradient id="paint3_linear_576_1117" x1="0" y1="123.5" x2="375" y2="123.5" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> </defs>
         </svg>
       </span>
-      <span class="xcl-hidden md:xcl-block xcl-w-full
-      
-      ">
+      <span class="xcl-hidden md:xcl-block xcl-w-full">
         <svg preserveAspectRatio="none" width="100%" height="420" viewBox="0 0 1440 420" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g filter="url(#filter0_f_251_1815)"> <path d="M-274 120C621.856 174.065 941.386 240.355 1624 261.837V300C1086.47 284.024 295.4 209.047 -274 276.893V120Z" fill="url(#paint0_linear_251_1815)" fill-opacity="0.4"/> </g> <path d="M1440 266.75C860.503 260.091 776.565 180.184 1.06096e-05 138.75" stroke="url(#paint1_linear_251_1815)"/> <path d="M1440 254.75C860.503 248.091 776.565 168.184 1.06096e-05 126.75" stroke="url(#paint2_linear_251_1815)"/> <path d="M0 155C579.497 162.491 663.435 252.387 1440 299" stroke="url(#paint3_linear_251_1815)"/> <defs> <filter id="filter0_f_251_1815" x="-394" y="0" width="2138" height="420" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"> <feFlood flood-opacity="0" result="BackgroundImageFix"/> <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/> <feGaussianBlur stdDeviation="60" result="effect1_foregroundBlur_251_1815"/> </filter> <linearGradient id="paint0_linear_251_1815" x1="-274" y1="282.193" x2="1624" y2="282.193" gradientUnits="userSpaceOnUse"> <stop offset="0.5" stop-color="#01C5E3"/> <stop offset="1" stop-color="#01E3BD"/> </linearGradient> <linearGradient id="paint1_linear_251_1815" x1="1440" y1="202.75" x2="0" y2="202.75" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> <linearGradient id="paint2_linear_251_1815" x1="1440" y1="190.75" x2="0" y2="190.75" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> <linearGradient id="paint3_linear_251_1815" x1="0" y1="227" x2="1440" y2="227" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> </defs>
         </svg>
       </span>
     </div>
   {% endif %}
+
   {% if section.settings.enable_header_left %}
-    <div  class="header-bg-svg xcl-absolute xcl-top-[-12px] xcl-right-0 md:xcl-top-[-100px] xcl-w-full">
+    <div class="header-bg-svg xcl-absolute xcl-top-[-12px] xcl-right-0 md:xcl-top-[-100px] xcl-w-full">
       <span class="md:xcl-hidden">
         <svg preserveAspectRatio="none" width="375" height="225" viewBox="0 0 375 225" fill="none" xmlns="http://www.w3.org/2000/svg"> <g filter="url(#filter0_f_576_1192)"> <path d="M442 70C210.72 95.5305 128.228 126.834 -48 136.979V155C90.7719 147.456 295 112.05 442 144.088V70Z" fill="url(#paint0_linear_576_1192)" fill-opacity="0.4"/> </g> <path d="M0 153.5C151.112 149 173 95 375.5 67" stroke="url(#paint1_linear_576_1192)"/> <path d="M0 145.5C151.112 141 173 87 375.5 59" stroke="url(#paint2_linear_576_1192)"/> <path d="M375 80C224.089 84.5258 202.23 138.838 3.69549e-06 167" stroke="url(#paint3_linear_576_1192)"/> <defs> <filter id="filter0_f_576_1192" x="-118" y="0" width="630" height="225" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"> <feFlood flood-opacity="0" result="BackgroundImageFix"/> <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/> <feGaussianBlur stdDeviation="35" result="effect1_foregroundBlur_576_1192"/> </filter> <linearGradient id="paint0_linear_576_1192" x1="442" y1="146.591" x2="-48" y2="146.591" gradientUnits="userSpaceOnUse"> <stop offset="0.5" stop-color="#01C5E3"/> <stop offset="1" stop-color="#01E3BD"/> </linearGradient> <linearGradient id="paint1_linear_576_1192" x1="0" y1="110.25" x2="375.5" y2="110.25" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> <linearGradient id="paint2_linear_576_1192" x1="0" y1="102.25" x2="375.5" y2="102.25" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> <linearGradient id="paint3_linear_576_1192" x1="375" y1="123.5" x2="0" y2="123.5" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> </defs> </svg>
       </span>
-      <span  class="xcl-hidden md:xcl-block xcl-w-full">
-       <svg  preserveAspectRatio="none" width="100%" height="420" viewBox="0 0 1440 420" fill="none" xmlns="http://www.w3.org/2000/svg"> <g filter="url(#filter0_f_251_1826)"> <path d="M1714 120C818.144 174.065 498.614 240.355 -184 261.837V300C353.529 284.024 1144.6 209.047 1714 276.893V120Z" fill="url(#paint0_linear_251_1826)" fill-opacity="0.4"/> </g> <path d="M0 266.75C579.497 260.091 663.435 180.184 1440 138.75" stroke="url(#paint1_linear_251_1826)"/> <path d="M0 254.75C579.497 248.091 663.435 168.184 1440 126.75" stroke="url(#paint2_linear_251_1826)"/> <path d="M1440 155C860.503 162.491 776.565 252.387 1.06096e-05 299" stroke="url(#paint3_linear_251_1826)"/> <defs> <filter id="filter0_f_251_1826" x="-304" y="0" width="2138" height="420" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"> <feFlood flood-opacity="0" result="BackgroundImageFix"/> <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/> <feGaussianBlur stdDeviation="60" result="effect1_foregroundBlur_251_1826"/> </filter> <linearGradient id="paint0_linear_251_1826" x1="1714" y1="282.193" x2="-184" y2="282.193" gradientUnits="userSpaceOnUse"> <stop offset="0.5" stop-color="#01C5E3"/> <stop offset="1" stop-color="#01E3BD"/> </linearGradient> <linearGradient id="paint1_linear_251_1826" x1="0" y1="202.75" x2="1440" y2="202.75" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> <linearGradient id="paint2_linear_251_1826" x1="0" y1="190.75" x2="1440" y2="190.75" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> <linearGradient id="paint3_linear_251_1826" x1="1440" y1="227" x2="0" y2="227" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> </defs> </svg>
+      <span class="xcl-hidden md:xcl-block xcl-w-full">
+        <svg preserveAspectRatio="none" width="100%" height="420" viewBox="0 0 1440 420" fill="none" xmlns="http://www.w3.org/2000/svg"> <g filter="url(#filter0_f_251_1826)"> <path d="M1714 120C818.144 174.065 498.614 240.355 -184 261.837V300C353.529 284.024 1144.6 209.047 1714 276.893V120Z" fill="url(#paint0_linear_251_1826)" fill-opacity="0.4"/> </g> <path d="M0 266.75C579.497 260.091 663.435 180.184 1440 138.75" stroke="url(#paint1_linear_251_1826)"/> <path d="M0 254.75C579.497 248.091 663.435 168.184 1440 126.75" stroke="url(#paint2_linear_251_1826)"/> <path d="M1440 155C860.503 162.491 776.565 252.387 1.06096e-05 299" stroke="url(#paint3_linear_251_1826)"/> <defs> <filter id="filter0_f_251_1826" x="-304" y="0" width="2138" height="420" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"> <feFlood flood-opacity="0" result="BackgroundImageFix"/> <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/> <feGaussianBlur stdDeviation="60" result="effect1_foregroundBlur_251_1826"/> </filter> <linearGradient id="paint0_linear_251_1826" x1="1714" y1="282.193" x2="-184" y2="282.193" gradientUnits="userSpaceOnUse"> <stop offset="0.5" stop-color="#01C5E3"/> <stop offset="1" stop-color="#01E3BD"/> </linearGradient> <linearGradient id="paint1_linear_251_1826" x1="0" y1="202.75" x2="1440" y2="202.75" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> <linearGradient id="paint2_linear_251_1826" x1="0" y1="190.75" x2="1440" y2="190.75" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> <linearGradient id="paint3_linear_251_1826" x1="1440" y1="227" x2="0" y2="227" gradientUnits="userSpaceOnUse"> <stop stop-color="#01C5E3" stop-opacity="0.6"/> <stop offset="0.6" stop-color="#01C5E3" stop-opacity="0"/> </linearGradient> </defs> </svg>
       </span>
     </div>
   {% endif %}
-
-
 
   {% if section.settings.show_body_shade %}
       <span class="xcl-absolute xcl-top-[-100px] xcl-left-0 xcl-z-50 xl:xcl-hidden">
@@ -297,174 +310,39 @@
       </span>
   {% endif %}
 </section>
-  
+
 {% schema %}
 {
   "name": "Featured slider",
   "settings": [
-    {
-      "type": "checkbox",
-      "id": "enable_header_left",
-      "label": "Enable Header Left Image",
-      "default": false
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_header_right",
-      "label": "Enable Header Right Image",
-      "default": false
-    },
-    {
-      "type": "range",
-      "id": "mobile_padding",
-      "label": "Mobile Padding Y axis",
-      "min": 10,
-      "max": 60,
-      "step": 2,
-      "default": 56
-    },
-    {
-      "type": "range",
-      "id": "desktop_padding",
-      "label": "Desktop Padding Y axis",
-      "min": 0,
-      "max": 90,
-      "step": 1,
-      "default": 88
-    },
-    {
-      "type": "color",
-      "label": "section background color",
-      "id": "section_bg",
-      "default": "#1E1E1E"
-    },
-    {
-      "type": "color",
-      "label": "section text color",
-      "id": "section_text_color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "checkbox",
-      "label": "Enable slider",
-      "id": "enable_slider",
-      "default": true
-    },
-    {
-      "type": "color",
-      "label": "Card Border color",
-      "id": "card_border_color",
-      "default": "#01C5E3"
-    },
-    {
-      "type": "color",
-      "label": "Card Bg color",
-      "id": "card_bg_color",
-      "default": "#000000"
-    },
+    { "type": "checkbox", "id": "enable_header_left", "label": "Enable Header Left Image", "default": false },
+    { "type": "checkbox", "id": "enable_header_right", "label": "Enable Header Right Image", "default": false },
+    { "type": "range", "id": "mobile_padding", "label": "Mobile Padding Y axis", "min": 10, "max": 60, "step": 2, "default": 56 },
+    { "type": "range", "id": "desktop_padding", "label": "Desktop Padding Y axis", "min": 0, "max": 90, "step": 1, "default": 88 },
+    { "type": "color", "label": "section background color", "id": "section_bg", "default": "#1E1E1E" },
+    { "type": "color", "label": "section text color", "id": "section_text_color", "default": "#ffffff" },
+    { "type": "checkbox", "label": "Enable slider", "id": "enable_slider", "default": true },
+    { "type": "color", "label": "Card Border color", "id": "card_border_color", "default": "#01C5E3" },
+    { "type": "color", "label": "Card Bg color", "id": "card_bg_color", "default": "#000000" },
 
-    {
-      "type": "header",
-      "content": "Text Content Settings"
-    },
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "Works on every chart used in trading"
-    },
-    {
-      "type": "color",
-      "id": "heading_color",
-      "label": "Heading Color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "heading_bg_color",
-      "label": "Heading Bg Color",
-      "default": "#01E3BD"
-    },
-    {
-      "type": "text",
-      "id": "subheading",
-      "label": "Subheading",
-      "default": "The Only TradingView Strategy That Actually Works"
-    },
-    {
-      "type": "color",
-      "id": "subheading_color",
-      "label": "Subheading Color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "text",
-      "id": "bottom_subheading",
-      "label": "Bottom Subheading",
-      "default": "Real Backtested Results"
-    },
-    {
-      "type": "color",
-      "id": "bottom_subheading_color",
-      "label": "Bottom Subheading Color",
-      "default": "#01C5E3"
-    },
-    {
-      "type": "html",
-      "label": "Section title",
-      "id": "section_title",
-      "default": "TradeEdge <span> Pro</span> Features"
-    },
-    {
-      "type": "color",
-      "label": "Section Title Color",
-      "id": "section_title_color",
-      "default": "#000000"
-    },
+    { "type": "header", "content": "Text Content Settings" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Works on every chart used in trading" },
+    { "type": "color", "id": "heading_color", "label": "Heading Color", "default": "#ffffff" },
+    { "type": "color", "id": "heading_bg_color", "label": "Heading Bg Color", "default": "#01E3BD" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "The Only TradingView Strategy That Actually Works" },
+    { "type": "color", "id": "subheading_color", "label": "Subheading Color", "default": "#ffffff" },
+    { "type": "text", "id": "bottom_subheading", "label": "Bottom Subheading", "default": "Real Backtested Results" },
+    { "type": "color", "id": "bottom_subheading_color", "label": "Bottom Subheading Color", "default": "#01C5E3" },
+    { "type": "html", "label": "Section title", "id": "section_title", "default": "TradeEdge <span> Pro</span> Features" },
+    { "type": "color", "label": "Section Title Color", "id": "section_title_color", "default": "#000000" },
 
-    {
-      "type": "header",
-      "content": "Slider controls"
-    },
-    {
-      "type": "checkbox",
-      "label": "Show arrows",
-      "id": "show_arrows",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "label": "Show pagination dots",
-      "id": "show_dots",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "label": "Show play/pause button",
-      "id": "show_play_pause",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "label": "Enable autoplay",
-      "id": "autoplay",
-      "default": true
-    },
-    {
-      "type": "range",
-      "id": "slide_interval",
-      "min": 500,
-      "max": 5000,
-      "step": 500,
-      "default": 2000,
-      "label": "Autoplay interval (ms)"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_mobile_multi",
-      "label": "Enable multiple slides on mobile",
-      "default": false
-    },
+    { "type": "header", "content": "Slider controls" },
+    { "type": "checkbox", "label": "Show arrows", "id": "show_arrows", "default": true },
+    { "type": "checkbox", "label": "Show pagination dots", "id": "show_dots", "default": true },
+    { "type": "checkbox", "label": "Show play/pause button", "id": "show_play_pause", "default": true },
+    { "type": "checkbox", "label": "Enable autoplay", "id": "autoplay", "default": true },
+    { "type": "range", "id": "slide_interval", "min": 500, "max": 5000, "step": 500, "default": 2000, "label": "Autoplay interval (ms)" },
+    { "type": "checkbox", "id": "enable_mobile_multi", "label": "Enable multiple slides on mobile", "default": false },
     {
       "type": "select",
       "id": "mobile_slides_per_view",
@@ -477,63 +355,16 @@
       "default": "1.2"
     },
 
-    {
-      "type": "header",
-      "content": "Card text toggles"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_card_heading",
-      "label": "Show heading above image",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_card_paragraph",
-      "label": "Show paragraph below image",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_card_padding",
-      "label": "Show card padding",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_card_bg",
-      "label": "Show card bg",
-      "default": false
-    },
-    {
-      "type": "checkbox",
-      "id": "show_body_shade",
-      "label": "Show Body Bg Shade",
-      "default": false
-    },
-    {
-      "type": "color",
-      "label": "card bg",
-      "id": "card_bg",
-      "default": "#000000"
-    },
+    { "type": "header", "content": "Card text toggles" },
+    { "type": "checkbox", "id": "show_card_heading", "label": "Show heading above image", "default": true },
+    { "type": "checkbox", "id": "show_card_paragraph", "label": "Show paragraph below image", "default": true },
+    { "type": "checkbox", "id": "show_card_padding", "label": "Show card padding", "default": true },
+    { "type": "checkbox", "id": "show_card_bg", "label": "Show card bg", "default": false },
+    { "type": "checkbox", "id": "show_body_shade", "label": "Show Body Bg Shade", "default": false },
+    { "type": "color", "label": "card bg", "id": "card_bg", "default": "#000000" },
 
-     {
-      "type": "checkbox",
-        "id": "enable_mt_minus",
-        "label": "Enable Margin Top Minus",
-        "default": false
-      },
-       {
-      "type": "range",
-        "id": "mt_minus",
-        "label": "Margin Top Minus",
-        "min": 0,
-        "max": 250,
-        "step": 10,
-        "default": 250,
-        "unit": "px"
-      }
+    { "type": "checkbox", "id": "enable_mt_minus", "label": "Enable Margin Top Minus", "default": false },
+    { "type": "range", "id": "mt_minus", "label": "Margin Top Minus", "min": 0, "max": 250, "step": 10, "default": 250, "unit": "px" }
   ],
 
   "blocks": [
@@ -541,67 +372,27 @@
       "type": "image_text",
       "name": "Image",
       "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
-        },
-        {
-          "type": "url",
-          "id": "url",
-          "label": "Link URL"
-        },
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Step heading (above image)",
-          "default": "Step 1: Add to your TradingView"
-        },
-        {
-          "type": "richtext",
-          "id": "description",
-          "label": "Paragraph (below image)",
-          "default": "<p>Run comprehensive backtests with real-world slippage and commission modelling to verify performance.</p>"
-        },
-        {
-          "type": "text",
-          "id": "button_label",
-          "label": "Button label"
-        },
-        {
-          "type": "url",
-          "id": "button_url",
-          "label": "Button URL"
-        }
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "url", "id": "url", "label": "Link URL" },
+        { "type": "text", "id": "title", "label": "Step heading (above image)", "default": "Step 1: Add to your TradingView" },
+        { "type": "richtext", "id": "description", "label": "Paragraph (below image)", "default": "<p>Run comprehensive backtests with real-world slippage and commission modelling to verify performance.</p>" },
+        { "type": "text", "id": "button_label", "label": "Button label" },
+        { "type": "url", "id": "button_url", "label": "Button URL" }
       ]
     },
     {
       "type": "video",
       "name": "Video (mp4)",
       "settings": [
-        {
-          "type": "text",
-          "id": "video_url",
-          "label": "MP4 URL"
-        },
-        {
-          "type": "image_picker",
-          "id": "poster",
-          "label": "Poster / fallback image (optional)"
-        },
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Video title"
-        }
+        { "type": "text", "id": "video_url", "label": "MP4 URL" },
+        { "type": "image_picker", "id": "poster", "label": "Poster / fallback image (optional)" },
+        { "type": "text", "id": "title", "label": "Video title" }
       ]
     }
   ],
 
   "presets": [
-    {
-      "name": "Featured slider (blocks)"
-    }
+    { "name": "Featured slider (blocks)" }
   ]
 }
 {% endschema %}

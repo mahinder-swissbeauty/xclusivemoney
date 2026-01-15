@@ -284,47 +284,81 @@
     {% render 'vite-tag' with 'base.css' %}
     {% render 'vite-tag' with 'keen-slider.js' %}
     <style>
-      html {
-      scroll-behavior: smooth;
-      }
-      h1,h2,h3,h4,h5,h6{
-      	  font-family: "Inter", sans-serif !important;
-          margin: 0;
-      }
-      body{
-      	  font-family: "Open Sans", sans-serif  !important;
-      	  margin: 0;
-      	  padding: 0;
-      }
-      .shopify-policy__container,
-      .page-width
-      {
-          position: relative;
-          z-index: 9999;
-      }
-      ul{
-        margin:0;
-        padding: 0;
-      }
-      p{
-      	margin: 0;
-      }
-
-      {% if settings.show-overlay  %}
-      	.body-overlay {
-      	position: fixed;
-      	top: 0;
-      	width: 100%;
-      	height: 100%;
-      	z-index: 1;
-      }
-      .body-overlay-desktop{
-      	  background-image: url('{{ "bg-arrow.svg" | asset_url }}');
-      		background-repeat: repeat;
-      }
+            html {
+            scroll-behavior: smooth;
+            }
+            h1,h2,h3,h4,h5,h6{
+            	  font-family: "Inter", sans-serif !important;
+                margin: 0;
+            }
+            body{
+            	  font-family: "Open Sans", sans-serif  !important;
+            	  margin: 0;
+            	  padding: 0;
+            }
+            .shopify-policy__container,
+            .page-width
+            {
+                position: relative;
+                z-index: 9999;
+            }
+            ul{
+              margin:0;
+              padding: 0;
+            }
+            p{
+            	margin: 0;
+            }
+            .fancybox__backdrop {
+              background: rgba(0,0,0,.85) !important;
+            }
 
 
-      {% endif %}
+      .f-button.is-close-button {
+        background: #01c5e3;
+        width: 20px;
+        height: 20px;
+        border-radius: 100px;
+        padding: 2px;
+        font-size: 1;
+        right: 10px !important;
+      }
+      .f-button.is-close-button:hover{
+        background: rgb(1, 227, 189) !important;
+      }
+      .f-button.is-close-button svg {
+        width: 18px;
+        fill: #000;
+
+      }
+
+      .f-button.is-close-button svg path{
+        fill: #000;
+      }
+      .f-button.is-arrow {
+        width: 30px;
+        height: 30px;
+      }
+      .f-button.is-arrow svg {
+        width: 18px;
+      }
+
+
+            {% if settings.show-overlay  %}
+            	.body-overlay {
+            	position: fixed;
+            	top: 0;
+            	width: 100%;
+            	height: 100%;
+            	z-index: 1;
+            }
+            .body-overlay-desktop{
+            	  background-image: url('{{ "bg-arrow.svg" | asset_url }}');
+            		background-repeat: repeat;
+            }
+
+
+            {% endif %}
     </style>
   </head>
 

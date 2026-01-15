@@ -62,6 +62,7 @@
     "vite-plugin-shopify": "^4.0.0"
   },
   "dependencies": {
+    "@fancyapps/ui": "^6.1.7",
     "@tailwindcss/vite": "^4.1.18",
     "canvas-confetti": "^1.9.3",
     "chokidar": "^3.6.0",
