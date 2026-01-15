@@ -1,4 +1,9 @@
 {% style %}
+
+/* better touch gestures; keep vertical page scroll smooth */
+section#{{ section.id }}-featured-testimonials .keen-slider{
+  touch-action: pan-y;
+}
   /* padding (mobile) */
   #{{ section.id }}-featured-testimonials .featured-collection-wrapper{
     padding-top: {{ section.settings.mobile_padding }}px;
@@ -8,7 +13,7 @@
 section#{{ section.id }}-featured-testimonials featured-slider-testimonial{
     position: relative;
   }
-
+ 
 section#{{ section.id }}-featured-testimonials .featured-collection-wrapper{
     width: 100%;
   }
@@ -85,6 +90,7 @@ section#{{ section.id }}-featured-testimonials featured-slider{
               <div
                 data-role="slider-wrapper"
                 class="keen-slider xcl-flex-nowrap xcl-overflow-hidden xcl-flex xcl-w-full"
+                data-keen-el
               >
                 {% for block in section.blocks %}
                   <div

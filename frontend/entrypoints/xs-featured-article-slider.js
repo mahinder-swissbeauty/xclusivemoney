@@ -14,7 +14,7 @@ class FeaturedArticle extends HTMLElement {
     this.enableMobileMulti = this.dataset.enableMobileMulti === "true";
     this.mobileSlidesPerView = parseFloat(this.dataset.mobileSlidesPerView) || 1;
 
-    // NEW: Desktop slides per view (1 / 2 / 3 from schema)
+    // Desktop slides per view (1 / 2 / 3 from schema)
     this.desktopPerView = parseFloat(this.dataset.desktopPerView) || 3;
 
     // Elements
@@ -27,11 +27,17 @@ class FeaturedArticle extends HTMLElement {
     this.playing = this.autoplay;
     this.autoplayTimer = null;
 
+    // wheel state
+    this._wheelAccum = 0;
+    this._wheelTimer = null;
+    this._wheelHandler = null;
+
     this.initVideoPlayers();
     this.waitForKeen();
-
     this.applySchemaVisibility();
   }
+
+  /* ---------------- Schema visibility ---------------- */
 
   applySchemaVisibility() {
     if (!this.showArrows) {
@@ -46,8 +52,9 @@ class FeaturedArticle extends HTMLElement {
     }
   }
 
+  /* ---------------- Keen loader ---------------- */
+
   waitForKeen() {
-    // Defensive: agar KeenSlider async load ho raha hai
     if (window.KeenSlider) {
       this.initSlider();
     } else {
@@ -64,19 +71,17 @@ class FeaturedArticle extends HTMLElement {
       // MOBILE default (schema-controlled)
       slides: {
         perView: this.enableMobileMulti ? this.mobileSlidesPerView : 1,
-        spacing: 10
+        spacing: 10,
       },
 
       // Tablet / Desktop breakpoints
       breakpoints: {
         "(min-width: 768px)": {
-          // tablet fixed 2 cards
-          slides: { perView: 2, spacing: 24 }
+          slides: { perView: 2, spacing: 24 },
         },
         "(min-width: 1200px)": {
-          // DESKTOP: schema se 1 / 2 / 3
-          slides: { perView: this.desktopPerView, spacing: 32 }
-        }
+          slides: { perView: this.desktopPerView, spacing: 32 },
+        },
       },
 
       slideChanged: (s) => {
@@ -116,7 +121,72 @@ class FeaturedArticle extends HTMLElement {
         if (this.showPlayPause && totalSlides > 1) {
           this.initPlayPauseControls();
         }
+
+        // ✅ Trackpad horizontal scroll support (deltaX ONLY, no vertical trigger)
+        this.enableTrackpadScroll(s);
+      },
+    });
+  }
+
+  /* =========================================================
+     ✅ TRACKPAD LEFT/RIGHT ONLY (NO vertical scroll triggering)
+     - Only runs when |deltaX| is meaningful AND dominates |deltaY|
+     - preventDefault only for real horizontal gestures
+  ========================================================= */
+  enableTrackpadScroll(slider) {
+    const target = this.sliderWrapper || this;
+
+    // avoid duplicate binding (if section re-inits)
+    if (this._wheelHandler) {
+      try {
+        target.removeEventListener("wheel", this._wheelHandler, {
+          capture: true,
+        });
+      } catch (_) {}
+      this._wheelHandler = null;
+    }
+
+    this._wheelHandler = (e) => {
+      const absX = Math.abs(e.deltaX);
+      const absY = Math.abs(e.deltaY);
+
+      // ✅ ignore noise + ignore mostly-vertical scroll
+      if (absX < 2 || absX <= absY) return;
+
+      const details = slider.track?.details;
+      if (!details) return;
+
+      const atStart = details.progress <= 0.001;
+      const atEnd = details.progress >= 0.999;
+
+      // allow natural page behavior when slider can't move further
+      if (e.deltaX < 0 && atStart) return;
+      if (e.deltaX > 0 && atEnd) return;
+
+      e.preventDefault();
+
+      // accumulate for smooth feel
+      this._wheelAccum += e.deltaX;
+
+      clearTimeout(this._wheelTimer);
+      this._wheelTimer = setTimeout(() => {
+        this._wheelAccum = 0;
+      }, 80);
+
+      const TH = 25; // tweak if needed
+
+      if (this._wheelAccum > TH) {
+        this._wheelAccum = 0;
+        slider.next();
+      } else if (this._wheelAccum < -TH) {
+        this._wheelAccum = 0;
+        slider.prev();
       }
+    };
+
+    target.addEventListener("wheel", this._wheelHandler, {
+      passive: false,
+      capture: true,
     });
   }
 
@@ -177,7 +247,7 @@ class FeaturedArticle extends HTMLElement {
     this.dotsContainer.innerHTML = "";
 
     for (let i = 0; i < count; i++) {
-      let dot = document.createElement("button");
+      const dot = document.createElement("button");
       dot.className = "dot xcl-w-3 xcl-h-3 xcl-rounded-full xcl-bg-white/40";
       dot.dataset.index = i;
 
@@ -195,11 +265,8 @@ class FeaturedArticle extends HTMLElement {
     const dots = this.dotsContainer.querySelectorAll(".dot");
     dots.forEach((dot, i) => {
       dot.style.background = i === activeIndex ? "#fff" : "rgba(255,255,255,0.4)";
-      if (i === activeIndex) {
-        dot.classList.add("is-active");
-      } else {
-        dot.classList.remove("is-active");
-      }
+      if (i === activeIndex) dot.classList.add("is-active");
+      else dot.classList.remove("is-active");
     });
   }
 
@@ -207,7 +274,9 @@ class FeaturedArticle extends HTMLElement {
 
   pauseAllVideos() {
     this.videos.forEach((video) => {
-      video.pause();
+      try {
+        video.pause();
+      } catch (_) {}
 
       const wrapper = video.closest(".fc-video");
       if (!wrapper) return;
@@ -218,7 +287,6 @@ class FeaturedArticle extends HTMLElement {
       const poster = wrapper.querySelector(".video-poster");
       if (poster) poster.style.display = "block";
 
-      // optional reset:
       video.removeAttribute("src");
       video.load();
     });
@@ -239,10 +307,9 @@ class FeaturedArticle extends HTMLElement {
 
         this.pauseAllVideos();
 
-        if (video.dataset.videoSrc) {
-          video.src = video.dataset.videoSrc;
-        }
-        video.play();
+        if (video.dataset.videoSrc) video.src = video.dataset.videoSrc;
+
+        video.play().catch(() => {});
 
         if (poster) poster.style.display = "none";
         playBtn.style.display = "none";
@@ -274,6 +341,32 @@ class FeaturedArticle extends HTMLElement {
       });
     });
   }
+
+  disconnectedCallback() {
+    // stop autoplay
+    this.pauseAutoplay();
+
+    // destroy slider
+    try {
+      this.slider?.destroy();
+    } catch (_) {}
+
+    // cleanup wheel listener
+    const target = this.sliderWrapper || this;
+    if (this._wheelHandler) {
+      try {
+        target.removeEventListener("wheel", this._wheelHandler, { capture: true });
+      } catch (_) {}
+      this._wheelHandler = null;
+    }
+  }
 }
 
 customElements.define("featured-article", FeaturedArticle);
+
+
+
+
+
+
+ 

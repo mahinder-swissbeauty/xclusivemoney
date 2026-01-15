@@ -43,6 +43,12 @@
   /* Fancybox overlay link cursor */
   .fc-fancybox-link { cursor: pointer; }
 
+    /* ✅ allow smooth swipes inside slider area */
+  section#{{ section.id }}-featured-collection .keen-slider {
+    touch-action: pan-y; /* vertical page scroll allowed, horizontal swipe slider handle karega */
+  }
+
+
   @media(min-width:1200px){
     #{{ section.id }}-featured-collection .featured-collection-wrapper{
       padding-top: {{section.settings.desktop_padding}}px;
@@ -81,6 +87,7 @@
               <div
                 data-role="slider-wrapper"
                 class="keen-slider xcl-flex-nowrap xcl-overflow-hidden xcl-flex xcl-w-full"
+                data-keen-el
               >
                 {% for block in section.blocks %}
                   <div

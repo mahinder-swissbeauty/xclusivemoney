@@ -22,10 +22,12 @@ class FeaturedSlider extends HTMLElement {
 
     // binders
     this._onResizeUpdateThumb = () => this.updateThumb();
+    this._onFancyboxClosed = () => this.refreshAfterFancybox();
   }
 
   connectedCallback() {
     this.initFancyboxOnce();
+    window.addEventListener("fc:fancyboxClosed", this._onFancyboxClosed);
 
     if (window.KeenSlider) {
       this.initializeSlider(window.KeenSlider);
@@ -48,10 +50,13 @@ class FeaturedSlider extends HTMLElement {
       dragToClose: true,
       closeButton: "top",
 
-      // Ensure html5 video autoplay inside popup
-      Html5video: {
-        autoplay: true,
+      // ✅ free scroll feel in popup
+      Carousel: {
+        friction: 0.92,
+        wheel: "slide",
       },
+
+      Html5video: { autoplay: true },
 
       on: {
         // Stop videos on close
@@ -67,6 +72,7 @@ class FeaturedSlider extends HTMLElement {
             } catch (_) {}
           });
         },
+
         // Stop videos when popup slider changes
         "Carousel.change": (fb) => {
           const root = fb?.container;
@@ -80,6 +86,11 @@ class FeaturedSlider extends HTMLElement {
             } catch (_) {}
           });
         },
+
+        // ✅ after close, tell page sliders to refresh
+        destroy: () => {
+          window.dispatchEvent(new Event("fc:fancyboxClosed"));
+        },
       },
     });
   }
@@ -88,7 +99,9 @@ class FeaturedSlider extends HTMLElement {
     if (!this.sliderWrapper) return;
 
     // collect slides
-    this.slides = Array.from(this.sliderWrapper.querySelectorAll(".keen-slider__slide"));
+    this.slides = Array.from(
+      this.sliderWrapper.querySelectorAll(".keen-slider__slide")
+    );
 
     // compute perView
     const perViewMobile = this.mobilePerView;
@@ -116,9 +129,6 @@ class FeaturedSlider extends HTMLElement {
               perView: perViewDesktop,
               spacing: spacingDesktop,
               origin: "auto",
-              rubberband: false,
-              mode: "free",
-              drag: true,
             },
           },
         },
@@ -127,9 +137,12 @@ class FeaturedSlider extends HTMLElement {
         (slider) => {
           slider.on("created", () => {
             this.slider = slider;
+
             this.setupArrows();
-            this.wheelControls(slider);
             this.setupThumbSync(slider);
+
+            // ✅ IMPORTANT: overlay links drag-safe (so swipe doesn't open fancybox)
+            this.makeFancyboxLinksDragSafe();
 
             // Keep original video behavior safe (pause on slide change)
             slider.on("slideChanged", () => this.pauseAllVideos());
@@ -140,8 +153,82 @@ class FeaturedSlider extends HTMLElement {
             this.updateThumb();
           });
         },
+
+        // ✅ THIS IS THE KEY FIX (copied from your working project)
+        FeaturedSlider.wheelControls,
       ]
     );
+  }
+
+  /* -------------------------------
+     ✅ EXACT wheelControls from your working code
+     - converts trackpad deltaX into Keen "drag" events
+     - makes laptop left-right swipe work naturally
+  ---------------------------------*/
+  static wheelControls(slider) {
+    var touchTimeout;
+    var position;
+    var wheelActive;
+
+    function dispatch(e, name) {
+      position.x -= e.deltaX;
+      position.y -= e.deltaY;
+      slider.container.dispatchEvent(
+        new CustomEvent(name, {
+          detail: {
+            x: position.x,
+            y: position.y,
+          },
+        })
+      );
+    }
+
+    function wheelStart(e) {
+      position = {
+        x: e.pageX,
+        y: e.pageY,
+      };
+      dispatch(e, "ksDragStart");
+    }
+
+    function wheel(e) {
+      dispatch(e, "ksDrag");
+    }
+
+    function wheelEnd(e) {
+      dispatch(e, "ksDragEnd");
+    }
+
+    function eventWheel(e) {
+      // ✅ same filter as your code:
+      // if user is scrolling vertically, allow page scroll
+      if (Math.abs(e.deltaY) > 5 && Math.abs(e.deltaX) < Math.abs(e.deltaY)) return;
+
+
+      e.preventDefault();
+      if (!wheelActive) {
+        wheelStart(e);
+        wheelActive = true;
+      }
+      wheel(e);
+
+      clearTimeout(touchTimeout);
+      touchTimeout = setTimeout(() => {
+        wheelActive = false;
+        wheelEnd(e);
+      }, 50);
+    }
+
+    slider.on("created", () => {
+      slider.container.addEventListener("wheel", eventWheel, {
+        passive: false,
+      });
+    });
+
+    // ✅ cleanup (safe)
+    slider.on("destroyed", () => {
+      slider.container.removeEventListener("wheel", eventWheel);
+    });
   }
 
   /* -------------------------------
@@ -153,7 +240,9 @@ class FeaturedSlider extends HTMLElement {
 
     const total = this.slides.length;
     const currentPerView =
-      window.innerWidth >= 768 ? Math.max(1, this.desktopCards) : this.mobilePerView;
+      window.innerWidth >= 768
+        ? Math.max(1, this.desktopCards)
+        : this.mobilePerView;
 
     // hide/show arrows
     const shouldShow = total > currentPerView;
@@ -165,35 +254,6 @@ class FeaturedSlider extends HTMLElement {
 
     if (prev) prev.addEventListener("click", () => this.slider.prev());
     if (next) next.addEventListener("click", () => this.slider.next());
-  }
-
-  wheelControls(slider) {
-    let timeout;
-    let wheelActive = false;
-
-    function onWheel(e) {
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) return;
-
-      e.preventDefault();
-      const movement = e.deltaY || e.deltaX;
-
-      if (!wheelActive) {
-        slider.track.stopped = false;
-        slider.track.animating = false;
-        wheelActive = true;
-      }
-
-      slider.track.addMovement(-movement);
-
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        wheelActive = false;
-      }, 80);
-    }
-
-    slider.on("created", () => {
-      slider.container.addEventListener("wheel", onWheel, { passive: false });
-    });
   }
 
   setupThumbSync(slider) {
@@ -214,7 +274,9 @@ class FeaturedSlider extends HTMLElement {
   updateThumb() {
     if (!this.slider || !this.sliderThumb || !this.thumbWrapper) return;
 
-    const totalSlides = this.slider.track.details.slides.length || this.slides.length || 1;
+    const totalSlides =
+      this.slider.track.details.slides.length || this.slides.length || 1;
+
     const currentPerView =
       window.innerWidth >= 768 ? Math.max(1, this.desktopCards) : this.mobilePerView;
 
@@ -240,21 +302,68 @@ class FeaturedSlider extends HTMLElement {
   }
 
   /* -------------------------------
-     VIDEO CONTROLS (updated: popup open)
-     - existing inline video load remains safe
-     - play button opens Fancybox popup (mp4)
+     ✅ overlay <a> should not block swipe
+     - swipe = slider move
+     - click = fancybox open
+  ---------------------------------*/
+  makeFancyboxLinksDragSafe() {
+    const links = Array.from(this.querySelectorAll(".fc-fancybox-link"));
+    links.forEach((link) => {
+      let startX = 0;
+      let startY = 0;
+      let moved = false;
+      const THRESHOLD = 8;
+
+      link.addEventListener(
+        "pointerdown",
+        (e) => {
+          moved = false;
+          startX = e.clientX;
+          startY = e.clientY;
+        },
+        { passive: true }
+      );
+
+      link.addEventListener(
+        "pointermove",
+        (e) => {
+          const dx = Math.abs(e.clientX - startX);
+          const dy = Math.abs(e.clientY - startY);
+          if (dx > THRESHOLD || dy > THRESHOLD) moved = true;
+        },
+        { passive: true }
+      );
+
+      // capture click to cancel if it was a swipe
+      link.addEventListener(
+        "click",
+        (e) => {
+          if (moved) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        },
+        true
+      );
+    });
+  }
+
+  /* -------------------------------
+     VIDEO CONTROLS (popup open)
   ---------------------------------*/
   attachVideoControls() {
     const videos = Array.from(this.querySelectorAll("video"));
 
-    // Keep current behavior: attach src for inline poster preview readiness
+    // Keep inline preview readiness
     videos.forEach((v) => {
       const src = v.dataset.videoSrc;
       if (src && !v.querySelector("source")) {
         v.src = src;
         v.preload = "metadata";
         v.controls = false;
-        try { v.pause(); } catch (_) {}
+        try {
+          v.pause();
+        } catch (_) {}
       }
     });
 
@@ -268,42 +377,14 @@ class FeaturedSlider extends HTMLElement {
         const slideEl = btn.closest(".keen-slider__slide");
         if (!slideEl) return;
 
-        // Pause any inline videos (existing behavior safety)
         this.pauseAllVideos();
 
-        // Open Fancybox for this slide video
         const link = slideEl.querySelector('.fc-fancybox-link[data-fancybox]');
-        if (link) {
-          link.click();
-          return;
-        }
-
-        // fallback: old inline play (shouldn't happen)
-        const video = slideEl.querySelector("video");
-        if (!video) return;
-
-        if (video.paused) {
-          video.play().catch(() => {});
-          video.controls = true;
-          btn.style.display = "none";
-
-          video.addEventListener(
-            "ended",
-            () => {
-              btn.style.display = "";
-              video.controls = false;
-            },
-            { once: true }
-          );
-        } else {
-          video.pause();
-          video.controls = false;
-          btn.style.display = "";
-        }
+        if (link) link.click();
       });
     });
 
-    // Keep original safety: only one inline video at a time
+    // only one inline video at a time
     videos.forEach((v) => {
       v.addEventListener("play", () => this.pauseAllVideos(v));
       v.addEventListener("pause", () => {
@@ -333,6 +414,26 @@ class FeaturedSlider extends HTMLElement {
     });
   }
 
+  /* -------------------------------
+     ✅ Fix: Fancybox close -> sometimes layout overflow
+  ---------------------------------*/
+  refreshAfterFancybox() {
+    try {
+      // force reflow
+      // eslint-disable-next-line no-unused-expressions
+      this.sliderWrapper?.offsetWidth;
+
+      if (this.keenInstance?.update) this.keenInstance.update();
+      if (this.slider?.update) this.slider.update();
+
+      this.updateThumb();
+
+      // hard prevent page horizontal scrollbar
+      document.documentElement.style.overflowX = "hidden";
+      document.body.style.overflowX = "hidden";
+    } catch (_) {}
+  }
+
   disconnectedCallback() {
     try {
       if (this.keenInstance?.destroy) this.keenInstance.destroy();
@@ -340,7 +441,9 @@ class FeaturedSlider extends HTMLElement {
     } catch (_) {}
 
     window.removeEventListener("resize", this._onResizeUpdateThumb);
+    window.removeEventListener("fc:fancyboxClosed", this._onFancyboxClosed);
   }
 }
 
 customElements.define("featured-slider", FeaturedSlider);
+    
