@@ -1,6 +1,38 @@
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
+/* -------------------------------
+  ✅ Global helpers
+---------------------------------*/
+function fcStopAndResetVideos(root) {
+  if (!root) return;
+  root.querySelectorAll("video").forEach((v) => {
+    try {
+      v.pause();
+      v.currentTime = 0;
+      v.removeAttribute("src");
+      v.load();
+    } catch (_) {}
+  });
+}
+
+function fcUnlockScroll() {
+  // Fancybox sometimes leaves these behind
+  document.documentElement.style.overflow = "";
+  document.body.style.overflow = "";
+  document.documentElement.style.paddingRight = "";
+  document.body.style.paddingRight = "";
+  document.body.classList.remove("compensate-for-scrollbar");
+
+  // avoid accidental horizontal scrollbars
+  document.documentElement.style.overflowX = "hidden";
+  document.body.style.overflowX = "hidden";
+}
+
+function fcDispatchClosed() {
+  window.dispatchEvent(new Event("fc:fancyboxClosed"));
+}
+
 class FeaturedSlider extends HTMLElement {
   constructor() {
     super();
@@ -23,6 +55,10 @@ class FeaturedSlider extends HTMLElement {
     // binders
     this._onResizeUpdateThumb = () => this.updateThumb();
     this._onFancyboxClosed = () => this.refreshAfterFancybox();
+
+    // wheel accumulators
+    this._wheelAccum = 0;
+    this._wheelTimer = null;
   }
 
   connectedCallback() {
@@ -32,9 +68,13 @@ class FeaturedSlider extends HTMLElement {
     if (window.KeenSlider) {
       this.initializeSlider(window.KeenSlider);
     } else {
-      document.addEventListener("custom:KeenLoaded", () => {
-        if (window.KeenSlider) this.initializeSlider(window.KeenSlider);
-      });
+      document.addEventListener(
+        "custom:KeenLoaded",
+        () => {
+          if (window.KeenSlider) this.initializeSlider(window.KeenSlider);
+        },
+        { once: true }
+      );
     }
   }
 
@@ -50,7 +90,7 @@ class FeaturedSlider extends HTMLElement {
       dragToClose: true,
       closeButton: "top",
 
-      // ✅ free scroll feel in popup
+      // keep popup slider smooth
       Carousel: {
         friction: 0.92,
         wheel: "slide",
@@ -59,39 +99,42 @@ class FeaturedSlider extends HTMLElement {
       Html5video: { autoplay: true },
 
       on: {
-        // Stop videos on close
+        // Stop videos on close start
         closing: (fb) => {
-          const root = fb?.container;
-          if (!root) return;
-          root.querySelectorAll("video").forEach((v) => {
-            try {
-              v.pause();
-              v.currentTime = 0;
-              v.removeAttribute("src");
-              v.load();
-            } catch (_) {}
-          });
+          fcStopAndResetVideos(fb?.container);
         },
 
         // Stop videos when popup slider changes
         "Carousel.change": (fb) => {
-          const root = fb?.container;
-          if (!root) return;
-          root.querySelectorAll("video").forEach((v) => {
-            try {
-              v.pause();
-              v.currentTime = 0;
-              v.removeAttribute("src");
-              v.load();
-            } catch (_) {}
-          });
+          fcStopAndResetVideos(fb?.container);
         },
 
-        // ✅ after close, tell page sliders to refresh
+        // ✅ safest: when Fancybox is DONE closing
+        done: () => {
+          // in some versions done fires on open too; harmless
+        },
+
+        // ✅ close event (best moment to cleanup + refresh)
+        close: () => {
+          fcUnlockScroll();
+          fcDispatchClosed();
+        },
+
+        // ✅ destroy as extra safety
         destroy: () => {
-          window.dispatchEvent(new Event("fc:fancyboxClosed"));
+          fcUnlockScroll();
+          fcDispatchClosed();
         },
       },
+    });
+
+    // ✅ ESC should always close
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        try {
+          Fancybox.close();
+        } catch (_) {}
+      }
     });
   }
 
@@ -141,10 +184,10 @@ class FeaturedSlider extends HTMLElement {
             this.setupArrows();
             this.setupThumbSync(slider);
 
-            // ✅ IMPORTANT: overlay links drag-safe (so swipe doesn't open fancybox)
+            // ✅ IMPORTANT: overlay links drag-safe
             this.makeFancyboxLinksDragSafe();
 
-            // Keep original video behavior safe (pause on slide change)
+            // pause on slide change
             slider.on("slideChanged", () => this.pauseAllVideos());
 
             // Attach video & popup behavior
@@ -154,44 +197,39 @@ class FeaturedSlider extends HTMLElement {
           });
         },
 
-        // ✅ THIS IS THE KEY FIX (copied from your working project)
-        FeaturedSlider.wheelControls,
+        // ✅ UPDATED wheelControls: ONLY horizontal deltaX (no vertical)
+        FeaturedSlider.wheelControlsOnlyHorizontal,
       ]
     );
+ڍ;
   }
 
   /* -------------------------------
-     ✅ EXACT wheelControls from your working code
-     - converts trackpad deltaX into Keen "drag" events
-     - makes laptop left-right swipe work naturally
+     ✅ Wheel Controls (ONLY deltaX)
+     - Vertical scroll should NEVER move slider
+     - Trackpad left-right works
   ---------------------------------*/
-  static wheelControls(slider) {
-    var touchTimeout;
-    var position;
-    var wheelActive;
+  static wheelControlsOnlyHorizontal(slider) {
+    let touchTimeout;
+    let position;
+    let wheelActive = false;
 
     function dispatch(e, name) {
       position.x -= e.deltaX;
-      position.y -= e.deltaY;
+      // IMPORTANT: do NOT use deltaY at all
       slider.container.dispatchEvent(
         new CustomEvent(name, {
-          detail: {
-            x: position.x,
-            y: position.y,
-          },
+          detail: { x: position.x, y: position.y },
         })
       );
     }
 
     function wheelStart(e) {
-      position = {
-        x: e.pageX,
-        y: e.pageY,
-      };
+      position = { x: e.pageX, y: e.pageY };
       dispatch(e, "ksDragStart");
     }
 
-    function wheel(e) {
+    function wheelMove(e) {
       dispatch(e, "ksDrag");
     }
 
@@ -200,17 +238,21 @@ class FeaturedSlider extends HTMLElement {
     }
 
     function eventWheel(e) {
-      // ✅ same filter as your code:
-      // if user is scrolling vertically, allow page scroll
-      if (Math.abs(e.deltaY) > 5 && Math.abs(e.deltaX) < Math.abs(e.deltaY)) return;
+      const absX = Math.abs(e.deltaX);
+      const absY = Math.abs(e.deltaY);
 
+      // ✅ allow normal page vertical scroll always
+      // only trigger when it is truly horizontal gesture
+      if (absX < 2 || absX <= absY) return;
 
       e.preventDefault();
+
       if (!wheelActive) {
         wheelStart(e);
         wheelActive = true;
       }
-      wheel(e);
+
+      wheelMove(e);
 
       clearTimeout(touchTimeout);
       touchTimeout = setTimeout(() => {
@@ -220,19 +262,16 @@ class FeaturedSlider extends HTMLElement {
     }
 
     slider.on("created", () => {
-      slider.container.addEventListener("wheel", eventWheel, {
-        passive: false,
-      });
+      slider.container.addEventListener("wheel", eventWheel, { passive: false });
     });
 
-    // ✅ cleanup (safe)
     slider.on("destroyed", () => {
       slider.container.removeEventListener("wheel", eventWheel);
     });
   }
 
   /* -------------------------------
-     AUTO HIDE ARROWS BASED ON SLIDES
+     ARROWS
   ---------------------------------*/
   setupArrows() {
     const prev = this.querySelector('[data-role="arrow-prev"]');
@@ -244,16 +283,14 @@ class FeaturedSlider extends HTMLElement {
         ? Math.max(1, this.desktopCards)
         : this.mobilePerView;
 
-    // hide/show arrows
     const shouldShow = total > currentPerView;
 
     if (prev) prev.style.display = shouldShow ? "" : "none";
     if (next) next.style.display = shouldShow ? "" : "none";
-
     if (!shouldShow) return;
 
-    if (prev) prev.addEventListener("click", () => this.slider.prev());
-    if (next) next.addEventListener("click", () => this.slider.next());
+    if (prev) prev.addEventListener("click", () => this.slider?.prev());
+    if (next) next.addEventListener("click", () => this.slider?.next());
   }
 
   setupThumbSync(slider) {
@@ -269,7 +306,7 @@ class FeaturedSlider extends HTMLElement {
   }
 
   /* -------------------------------
-     AUTO HIDE BOTTOM SCROLL BAR
+     THUMB
   ---------------------------------*/
   updateThumb() {
     if (!this.slider || !this.sliderThumb || !this.thumbWrapper) return;
@@ -278,33 +315,31 @@ class FeaturedSlider extends HTMLElement {
       this.slider.track.details.slides.length || this.slides.length || 1;
 
     const currentPerView =
-      window.innerWidth >= 768 ? Math.max(1, this.desktopCards) : this.mobilePerView;
+      window.innerWidth >= 768
+        ? Math.max(1, this.desktopCards)
+        : this.mobilePerView;
 
-    // Hide if not enough slides
     if (totalSlides <= currentPerView) {
       this.thumbWrapper.style.display = "none";
       return;
-    } else {
-      this.thumbWrapper.style.display = "";
     }
+    this.thumbWrapper.style.display = "";
 
     const wrapperWidth = this.thumbWrapper.offsetWidth || 1;
-    const thumbPercent = Math.min(100, (currentPerView / totalSlides) * 100);
-    const thumbWidthPx = (thumbPercent / 100) * wrapperWidth;
+    const thumbWidthPx = (currentPerView / totalSlides) * wrapperWidth;
 
-    const progress = Math.max(0, Math.min(1, this.slider.track.details.progress || 0));
+    const progress = Math.max(
+      0,
+      Math.min(1, this.slider.track.details.progress || 0)
+    );
     const maxLeftPx = Math.max(0, wrapperWidth - thumbWidthPx);
 
-    const leftPx = progress * maxLeftPx;
-
     this.sliderThumb.style.width = `${Math.round(thumbWidthPx)}px`;
-    this.sliderThumb.style.left = `${Math.round(leftPx)}px`;
+    this.sliderThumb.style.left = `${Math.round(progress * maxLeftPx)}px`;
   }
 
   /* -------------------------------
      ✅ overlay <a> should not block swipe
-     - swipe = slider move
-     - click = fancybox open
   ---------------------------------*/
   makeFancyboxLinksDragSafe() {
     const links = Array.from(this.querySelectorAll(".fc-fancybox-link"));
@@ -334,7 +369,6 @@ class FeaturedSlider extends HTMLElement {
         { passive: true }
       );
 
-      // capture click to cancel if it was a swipe
       link.addEventListener(
         "click",
         (e) => {
@@ -354,7 +388,6 @@ class FeaturedSlider extends HTMLElement {
   attachVideoControls() {
     const videos = Array.from(this.querySelectorAll("video"));
 
-    // Keep inline preview readiness
     videos.forEach((v) => {
       const src = v.dataset.videoSrc;
       if (src && !v.querySelector("source")) {
@@ -368,7 +401,6 @@ class FeaturedSlider extends HTMLElement {
     });
 
     const playButtons = Array.from(this.querySelectorAll(".fc-video-play"));
-
     playButtons.forEach((btn) => {
       btn.addEventListener("click", (e) => {
         e.preventDefault();
@@ -384,13 +416,11 @@ class FeaturedSlider extends HTMLElement {
       });
     });
 
-    // only one inline video at a time
     videos.forEach((v) => {
       v.addEventListener("play", () => this.pauseAllVideos(v));
       v.addEventListener("pause", () => {
         const slideEl = v.closest(".keen-slider__slide");
         if (!slideEl) return;
-
         const btn = slideEl.querySelector(".fc-video-play");
         if (btn) btn.style.display = "";
       });
@@ -415,20 +445,32 @@ class FeaturedSlider extends HTMLElement {
   }
 
   /* -------------------------------
-     ✅ Fix: Fancybox close -> sometimes layout overflow
+     ✅ Fix: Fancybox close -> right gap
+     - unlock scroll
+     - update slider in multiple frames (after layout settles)
   ---------------------------------*/
   refreshAfterFancybox() {
     try {
+      fcUnlockScroll();
+
       // force reflow
       // eslint-disable-next-line no-unused-expressions
       this.sliderWrapper?.offsetWidth;
 
-      if (this.keenInstance?.update) this.keenInstance.update();
-      if (this.slider?.update) this.slider.update();
+      // 🔥 Do update multiple times to catch scrollbar/padding changes
+      const run = () => {
+        try {
+          this.keenInstance?.update?.();
+          this.slider?.update?.();
+          this.updateThumb();
+        } catch (_) {}
+      };
 
-      this.updateThumb();
+      run();
+      requestAnimationFrame(run);
+      setTimeout(run, 60);
 
-      // hard prevent page horizontal scrollbar
+      // hard prevent horizontal overflow
       document.documentElement.style.overflowX = "hidden";
       document.body.style.overflowX = "hidden";
     } catch (_) {}
@@ -436,8 +478,8 @@ class FeaturedSlider extends HTMLElement {
 
   disconnectedCallback() {
     try {
-      if (this.keenInstance?.destroy) this.keenInstance.destroy();
-      else if (this.slider?.destroy) this.slider.destroy();
+      this.keenInstance?.destroy?.();
+      this.slider?.destroy?.();
     } catch (_) {}
 
     window.removeEventListener("resize", this._onResizeUpdateThumb);
@@ -446,4 +488,4 @@ class FeaturedSlider extends HTMLElement {
 }
 
 customElements.define("featured-slider", FeaturedSlider);
-    
+  

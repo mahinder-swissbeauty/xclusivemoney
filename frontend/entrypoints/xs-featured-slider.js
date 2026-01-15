@@ -1,6 +1,38 @@
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
+/* -------------------------------
+  ✅ Global helpers (safe)
+---------------------------------*/
+function fcStopAndResetVideos(root) {
+  if (!root) return;
+  root.querySelectorAll("video").forEach((v) => {
+    try {
+      v.pause();
+      v.currentTime = 0;
+      v.removeAttribute("src");
+      v.load();
+    } catch (_) {}
+  });
+}
+
+function fcUnlockScroll() {
+  // Fancybox sometimes leaves scroll lock + padding behind
+  document.documentElement.style.overflow = "";
+  document.body.style.overflow = "";
+  document.documentElement.style.paddingRight = "";
+  document.body.style.paddingRight = "";
+  document.body.classList.remove("compensate-for-scrollbar");
+
+  // prevent accidental horizontal scroll
+  document.documentElement.style.overflowX = "hidden";
+  document.body.style.overflowX = "hidden";
+}
+
+function fcDispatchClosed() {
+  window.dispatchEvent(new Event("fc:fancyboxClosed"));
+}
+
 class FeaturedSliderSingle extends HTMLElement {
   connectedCallback() {
     this.sliderWrapper = this.querySelector('[data-role="slider-wrapper"]');
@@ -30,10 +62,12 @@ class FeaturedSliderSingle extends HTMLElement {
     // binders
     this._onResizeFix = () => this.safeUpdateAfterPopup();
     this._onVisibility = () => {
-      // if tab hidden, stop autoplay; resume if enabled + playing
       if (document.hidden) this.pauseAutoplay();
       else if (this.playing && this.autoplay) this.initAutoplay();
     };
+
+    // ✅ listen Fancybox close globally (safer)
+    this._onFancyboxClosed = () => this.safeUpdateAfterPopup();
 
     // Fancybox (bind once globally)
     this.initFancyboxOnce();
@@ -45,12 +79,14 @@ class FeaturedSliderSingle extends HTMLElement {
 
     document.addEventListener("visibilitychange", this._onVisibility);
     window.addEventListener("resize", this._onResizeFix);
+    window.addEventListener("fc:fancyboxClosed", this._onFancyboxClosed);
   }
 
   disconnectedCallback() {
     this.pauseAutoplay();
     document.removeEventListener("visibilitychange", this._onVisibility);
     window.removeEventListener("resize", this._onResizeFix);
+    window.removeEventListener("fc:fancyboxClosed", this._onFancyboxClosed);
 
     try {
       this.slider?.destroy?.();
@@ -68,52 +104,68 @@ class FeaturedSliderSingle extends HTMLElement {
       dragToClose: true,
       closeButton: "top",
 
+      // ✅ (optional) popup free scroll feel
+      Carousel: {
+        friction: 0.92,
+        wheel: "slide",
+      },
+
       Html5video: {
         autoplay: true,
       },
 
       on: {
         closing: (fb) => {
-          const root = fb?.container;
-          if (root) {
-            root.querySelectorAll("video").forEach((v) => {
-              try {
-                v.pause();
-                v.currentTime = 0;
-                v.removeAttribute("src");
-                v.load();
-              } catch (_) {}
-            });
-          }
-
-          // 🔥 Important: after popup close, force layout update
-          requestAnimationFrame(() => {
-            document
-              .querySelectorAll("featured-slider-single")
-              .forEach((el) => el?.safeUpdateAfterPopup?.());
-          });
+          // stop videos inside popup
+          fcStopAndResetVideos(fb?.container);
         },
 
         "Carousel.change": (fb) => {
-          const root = fb?.container;
-          if (!root) return;
-          root.querySelectorAll("video").forEach((v) => {
-            try {
-              v.pause();
-              v.currentTime = 0;
-              v.removeAttribute("src");
-              v.load();
-            } catch (_) {}
-          });
+          fcStopAndResetVideos(fb?.container);
+        },
+
+        // ✅ best: after popup close, unlock scroll + refresh sliders
+        close: () => {
+          fcUnlockScroll();
+          fcDispatchClosed();
+        },
+
+        // extra safety
+        destroy: () => {
+          fcUnlockScroll();
+          fcDispatchClosed();
         },
       },
+    });
+
+    // ✅ ESC always closes
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        try {
+          Fancybox.close();
+        } catch (_) {}
+      }
     });
   }
 
   safeUpdateAfterPopup() {
-    // Fix: sometimes Keen gets width wrong -> horizontal scroll appears
+    // ✅ Fix: sometimes Keen gets width wrong -> right gap / horizontal scroll
     try {
-      if (this.slider?.update) this.slider.update();
+      fcUnlockScroll();
+
+      // force reflow
+      // eslint-disable-next-line no-unused-expressions
+      this.sliderWrapper?.offsetWidth;
+
+      const run = () => {
+        try {
+          this.slider?.update?.();
+        } catch (_) {}
+      };
+
+      run();
+      requestAnimationFrame(run);
+      setTimeout(run, 60);
     } catch (_) {}
   }
 
@@ -147,92 +199,77 @@ class FeaturedSliderSingle extends HTMLElement {
   initSlider() {
     if (!this.sliderWrapper) return;
 
-    this.slider = new KeenSlider(
-      this.sliderWrapper,
-      {
-        loop: true,
+    this.slider = new KeenSlider(this.sliderWrapper, {
+      loop: true,
 
-        // MOBILE default (schema-controlled)
-        slides: {
-          perView: this.enableMobileMulti ? this.mobileSlidesPerView : 1,
-          spacing: 10,
+      slides: {
+        perView: this.enableMobileMulti ? this.mobileSlidesPerView : 1,
+        spacing: 10,
+      },
+
+      breakpoints: {
+        "(min-width: 768px)": {
+          slides: { perView: 1, spacing: 10 },
         },
-
-        // Desktop / tablet breakpoints
-        breakpoints: {
-          "(min-width: 768px)": {
-            slides: { perView: 1, spacing: 10 },
-          },
-          "(min-width: 1200px)": {
-            slides: { perView: 1, spacing: 10 },
-          },
+        "(min-width: 1200px)": {
+          slides: { perView: 1, spacing: 10 },
         },
+      },
 
-        slideChanged: (s) => {
-          this.pauseAllVideos();
-          if (this.showDots) this.updateDots(s.track.details.rel);
-        },
+      slideChanged: (s) => {
+        this.pauseAllVideos();
+        if (this.showDots) this.updateDots(s.track.details.rel);
+      },
 
-        created: (s) => {
-          const totalSlides = s.track.details.slides.length;
+      created: (s) => {
+        const totalSlides = s.track.details.slides.length;
 
-          // If single slide, hide controls
-          if (totalSlides <= 1) {
-            this.prevBtn?.remove();
-            this.nextBtn?.remove();
-            this.dotsContainer?.remove();
-            this.playPauseBtn?.remove();
-          }
+        if (totalSlides <= 1) {
+          this.prevBtn?.remove();
+          this.nextBtn?.remove();
+          this.dotsContainer?.remove();
+          this.playPauseBtn?.remove();
+        }
 
-          // Dots
-          if (this.showDots && totalSlides > 1) {
-            this.createDots(totalSlides);
-            this.updateDots(0);
-          }
+        if (this.showDots && totalSlides > 1) {
+          this.createDots(totalSlides);
+          this.updateDots(0);
+        }
 
-          // Arrows
-          if (this.showArrows && totalSlides > 1) {
-            this.prevBtn?.addEventListener("click", () => s.prev());
-            this.nextBtn?.addEventListener("click", () => s.next());
-          }
+        if (this.showArrows && totalSlides > 1) {
+          this.prevBtn?.addEventListener("click", () => s.prev());
+          this.nextBtn?.addEventListener("click", () => s.next());
+        }
 
-          // Autoplay
-          if (this.autoplay && totalSlides > 1) {
-            this.initAutoplay();
-          }
+        if (this.autoplay && totalSlides > 1) {
+          this.initAutoplay();
+        }
 
-          // Play / Pause button
-          if (this.showPlayPause && totalSlides > 1) {
-            this.initPlayPauseControls();
-          }
+        if (this.showPlayPause && totalSlides > 1) {
+          this.initPlayPauseControls();
+        }
 
-          // ✅ add wheel based “free hand” horizontal scroll (trackpad)
-          this.wheelControls(s);
-        },
-      }
-    );
+        // ✅ add wheel based “free hand” horizontal scroll (trackpad) - only horizontal
+        this.wheelControlsOnlyHorizontal(s);
+      },
+    });
   }
 
-  /* ---------------- WHEEL CONTROLS (TRACKPAD LEFT-RIGHT) ----------------
-     Same pattern as your working project:
+  /* ---------------- WHEEL CONTROLS (ONLY HORIZONTAL) ----------------
      - Trackpad left/right swipe triggers ksDrag events
-     - Doesn’t break vertical scrolling
-  --------------------------------------------------------------------- */
-  wheelControls(slider) {
+     - Vertical scroll will NOT move slider
+  ------------------------------------------------------------------- */
+  wheelControlsOnlyHorizontal(slider) {
     let touchTimeout;
     let position;
-    let wheelActive;
+    let wheelActive = false;
 
     const dispatch = (e, name) => {
       position.x -= e.deltaX;
-      position.y -= e.deltaY;
-
+      // IMPORTANT: do not apply deltaY
       slider.container.dispatchEvent(
         new CustomEvent(name, {
-          detail: {
-            x: position.x,
-            y: position.y,
-          },
+          detail: { x: position.x, y: position.y },
         })
       );
     };
@@ -242,17 +279,15 @@ class FeaturedSliderSingle extends HTMLElement {
       dispatch(e, "ksDragStart");
     };
 
-    const wheel = (e) => dispatch(e, "ksDrag");
-
+    const wheelMove = (e) => dispatch(e, "ksDrag");
     const wheelEnd = (e) => dispatch(e, "ksDragEnd");
 
     const eventWheel = (e) => {
-      // ✅ Only react to horizontal trackpad gestures
-      // If user is scrolling vertically (page scroll), ignore
-      if (Math.abs(e.deltaY) > 5 && Math.abs(e.deltaX) < 5) return;
+      const absX = Math.abs(e.deltaX);
+      const absY = Math.abs(e.deltaY);
 
-      // If mostly vertical, allow page scroll
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) return;
+      // ✅ allow normal page vertical scroll
+      if (absX < 2 || absX <= absY) return;
 
       e.preventDefault();
 
@@ -261,7 +296,7 @@ class FeaturedSliderSingle extends HTMLElement {
         wheelActive = true;
       }
 
-      wheel(e);
+      wheelMove(e);
 
       clearTimeout(touchTimeout);
       touchTimeout = setTimeout(() => {
@@ -272,7 +307,6 @@ class FeaturedSliderSingle extends HTMLElement {
 
     slider.container.addEventListener("wheel", eventWheel, { passive: false });
 
-    // cleanup if slider destroyed
     slider.on("destroyed", () => {
       slider.container.removeEventListener("wheel", eventWheel);
     });
@@ -281,9 +315,9 @@ class FeaturedSliderSingle extends HTMLElement {
   /* ---------------- AUTOPLAY ---------------- */
 
   initAutoplay() {
-    this.pauseAutoplay(); // safety
+    this.pauseAutoplay();
     this.autoplayTimer = setInterval(() => {
-      if (this.slider) this.slider.next();
+      this.slider?.next?.();
     }, this.interval);
   }
 
@@ -298,7 +332,6 @@ class FeaturedSliderSingle extends HTMLElement {
     this.playing = !this.playing;
 
     if (this.playing) {
-      // PAUSE ICON
       if (this.playPauseBtn) {
         this.playPauseBtn.innerHTML = `
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -308,7 +341,6 @@ class FeaturedSliderSingle extends HTMLElement {
       }
       this.initAutoplay();
     } else {
-      // PLAY ICON
       if (this.playPauseBtn) {
         this.playPauseBtn.innerHTML = `
           <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
@@ -322,9 +354,7 @@ class FeaturedSliderSingle extends HTMLElement {
 
   initPlayPauseControls() {
     if (!this.playPauseBtn) return;
-    this.playPauseBtn.addEventListener("click", () => {
-      this.toggleAutoplay();
-    });
+    this.playPauseBtn.addEventListener("click", () => this.toggleAutoplay());
   }
 
   /* ---------------- DOTS ---------------- */
@@ -350,7 +380,6 @@ class FeaturedSliderSingle extends HTMLElement {
 
   updateDots(activeIndex) {
     if (!this.dotsContainer) return;
-
     const dots = this.dotsContainer.querySelectorAll(".dot");
     dots.forEach((dot, i) => {
       dot.style.background =
@@ -394,16 +423,13 @@ class FeaturedSliderSingle extends HTMLElement {
 
       if (!video || !playBtn) return;
 
-      // Play button opens Fancybox popup
       playBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
 
-        // Pause autoplay on main slider (existing behavior)
         this.pauseAutoplay();
         this.playing = false;
 
-        // Update play/pause icon to PLAY
         if (this.showPlayPause && this.playPauseBtn) {
           this.playPauseBtn.innerHTML = `
             <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
@@ -412,7 +438,6 @@ class FeaturedSliderSingle extends HTMLElement {
           `;
         }
 
-        // Open Fancybox by clicking overlay link
         const slide = e.target.closest(".keen-slider__slide");
         const link = slide?.querySelector(".fc-fancybox-link[data-fancybox]");
         if (link) {
@@ -420,7 +445,6 @@ class FeaturedSliderSingle extends HTMLElement {
           return;
         }
 
-        // fallback: inline play (rare)
         this.pauseAllVideos();
         video.src = video.dataset.videoSrc;
         video.play().catch(() => {});
@@ -428,7 +452,6 @@ class FeaturedSliderSingle extends HTMLElement {
         playBtn.style.display = "none";
       });
 
-      // Inline video click pause (fallback / safety)
       video.addEventListener("click", (e) => {
         e.stopPropagation();
         if (!video.paused) {
@@ -444,7 +467,7 @@ class FeaturedSliderSingle extends HTMLElement {
       });
     });
   }
-} 
+}
 
 customElements.define("featured-slider-single", FeaturedSliderSingle);
  
