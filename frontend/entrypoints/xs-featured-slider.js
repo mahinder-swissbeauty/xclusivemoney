@@ -1,3 +1,6 @@
+import { Fancybox } from "@fancyapps/ui";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
+
 class FeaturedSliderSingle extends HTMLElement {
   connectedCallback() {
     this.sliderWrapper = this.querySelector('[data-role="slider-wrapper"]');
@@ -10,7 +13,7 @@ class FeaturedSliderSingle extends HTMLElement {
     this.showDots = this.dataset.showDots === "true";
     this.showPlayPause = this.dataset.showPlayPause === "true";
 
-    // NEW: mobile multi-slide settings
+    // Mobile multi-slide settings
     this.enableMobileMulti = this.dataset.enableMobileMulti === "true";
     this.mobileSlidesPerView = parseFloat(this.dataset.mobileSlidesPerView) || 1;
 
@@ -24,11 +27,57 @@ class FeaturedSliderSingle extends HTMLElement {
     this.playing = this.autoplay;
     this.autoplayTimer = null;
 
+    // Fancybox (bind once globally)
+    this.initFancyboxOnce();
+
+    // Existing behavior
     this.initVideoPlayers();
     this.waitForKeen();
-
     this.applySchemaVisibility();
   }
+
+  /* ---------------- FANCYBOX (NEW) ---------------- */
+
+  initFancyboxOnce() {
+    if (window.__fcFancyboxBound) return;
+    window.__fcFancyboxBound = true;
+
+    Fancybox.bind("[data-fancybox]", {
+    animated: true,
+    dragToClose: true,
+    closeButton: "top",
+
+    Html5video: {
+      autoplay: true,
+    },
+
+    on: {
+      closing: (fb) => {
+        const root = fb?.container;
+        if (!root) return;
+        root.querySelectorAll("video").forEach((v) => {
+          v.pause();
+          v.currentTime = 0;
+          v.removeAttribute("src");
+          v.load();
+        });
+      },
+      "Carousel.change": (fb) => {
+        const root = fb?.container;
+        if (!root) return;
+        root.querySelectorAll("video").forEach((v) => {
+          v.pause();
+          v.currentTime = 0;
+          v.removeAttribute("src");
+          v.load();
+        });
+      },
+    },
+  });
+
+  }
+
+  /* ---------------- Schema visibility ---------------- */
 
   applySchemaVisibility() {
     if (!this.showArrows) {
@@ -44,6 +93,8 @@ class FeaturedSliderSingle extends HTMLElement {
       this.playPauseBtn?.remove();
     }
   }
+
+  /* ---------------- Keen loader ---------------- */
 
   waitForKeen() {
     if (window.KeenSlider) {
@@ -117,14 +168,17 @@ class FeaturedSliderSingle extends HTMLElement {
   /* ---------------- AUTOPLAY ---------------- */
 
   initAutoplay() {
+    this.pauseAutoplay(); // safety
     this.autoplayTimer = setInterval(() => {
       if (this.slider) this.slider.next();
     }, this.interval);
   }
 
   pauseAutoplay() {
-    clearInterval(this.autoplayTimer);
-    this.autoplayTimer = null;
+    if (this.autoplayTimer) {
+      clearInterval(this.autoplayTimer);
+      this.autoplayTimer = null;
+    }
   }
 
   toggleAutoplay() {
@@ -164,7 +218,7 @@ class FeaturedSliderSingle extends HTMLElement {
 
     for (let i = 0; i < count; i++) {
       let dot = document.createElement("button");
-      dot.className = "dot xcl-w-3 xcl-h-3 xcl-rounded-full   xcl-border-none xcl-outline-none xcl-bg-white/40";
+      dot.className = "dot xcl-w-3 xcl-h-3 xcl-rounded-full xcl-border-none xcl-outline-none xcl-bg-white/40";
       dot.dataset.index = i;
 
       dot.addEventListener("click", () => {
@@ -219,20 +273,16 @@ class FeaturedSliderSingle extends HTMLElement {
 
       if (!video || !playBtn) return;
 
+      // IMPORTANT: Now play button opens Fancybox popup (video starts there)
       playBtn.addEventListener("click", (e) => {
+        e.preventDefault();
         e.stopPropagation();
 
-        this.pauseAllVideos();
-
-        video.src = video.dataset.videoSrc;
-        video.play();
-
-        if (poster) poster.style.display = "none";
-        playBtn.style.display = "none";
-
+        // Pause autoplay on main slider (existing behavior)
         this.pauseAutoplay();
         this.playing = false;
 
+        // Update play/pause icon to PLAY (same as your logic when paused)
         if (this.showPlayPause && this.playPauseBtn) {
           this.playPauseBtn.innerHTML = `
             <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
@@ -240,8 +290,24 @@ class FeaturedSliderSingle extends HTMLElement {
             </svg>
           `;
         }
+
+        // Open Fancybox by clicking the overlay link in same slide
+        const slide = e.target.closest(".keen-slider__slide");
+        const link = slide?.querySelector(".fc-fancybox-link[data-fancybox]");
+        if (link) {
+          link.click();
+          return;
+        }
+
+        // fallback (should not happen): old inline play
+        this.pauseAllVideos();
+        video.src = video.dataset.videoSrc;
+        video.play();
+        if (poster) poster.style.display = "none";
+        playBtn.style.display = "none";
       });
 
+      // Inline video click pause (kept for fallback / safety)
       video.addEventListener("click", (e) => {
         e.stopPropagation();
         if (!video.paused) {

@@ -659,87 +659,7 @@
         "card3_inner_bg_img": "shopify://shop_images/Frame_27_5.png"
       }
     },
-    "testimonials_nVndqB": {
-      "type": "xs-testimonials",
-      "blocks": {
-        "testimonial_GMGLCH": {
-          "type": "testimonial",
-          "settings": {
-            "avatar": "shopify://shop_images/Subtract_2.png",
-            "name": "Rajesh Kumar",
-            "subtitle": "Algorithmic Trader, Mumbai",
-            "time_meta": "5d ·",
-            "body": "<p>Finally found a strategy that works exactly the same in live trading as in backtests. No more repainting nightmares!</p>",
-            "reaction_icons": "👍 ❤️ 👏",
-            "reaction_count": "12",
-            "comments_text": "1 comments"
-          }
-        },
-        "testimonial_G9WNRE": {
-          "type": "testimonial",
-          "settings": {
-            "avatar": "shopify://shop_images/Frame_163.png",
-            "name": "Rajesh Kumar",
-            "subtitle": "Algorithmic Trader, Mumbai",
-            "time_meta": "5d · 🌐",
-            "body": "<p>Finally found a strategy that works exactly the same in live trading as in backtests. No more repainting nightmares!</p>",
-            "reaction_icons": "👍 ❤️ 👏",
-            "reaction_count": "358",
-            "comments_text": "5 comments"
-          }
-        },
-        "testimonial_gz4cHW": {
-          "type": "testimonial",
-          "settings": {
-            "avatar": "shopify://shop_images/Frame_163.png",
-            "name": "Rajesh Kumar",
-            "subtitle": "Algorithmic Trader, Mumbai",
-            "time_meta": "5d · 🌐",
-            "body": "<p>Finally found a strategy that works exactly the same in live trading as in backtests. No more repainting nightmares!</p>",
-            "reaction_icons": "👍 ❤️ 👏",
-            "reaction_count": "358",
-            "comments_text": "5 comments"
-          }
-        },
-        "testimonial_XihVTq": {
-          "type": "testimonial",
-          "settings": {
-            "avatar": "shopify://shop_images/Frame_163.png",
-            "name": "Rajesh Kumar",
-            "subtitle": "Algorithmic Trader, Mumbai",
-            "time_meta": "5d · 🌐",
-            "body": "<p>Finally found a strategy that works exactly the same in live trading as in backtests. No more repainting nightmares!</p>",
-            "reaction_icons": "👍 ❤️ 👏",
-            "reaction_count": "358",
-            "comments_text": "5 comments"
-          }
-        }
-      },
-      "block_order": [
-        "testimonial_GMGLCH",
-        "testimonial_G9WNRE",
-        "testimonial_gz4cHW",
-        "testimonial_XihVTq"
-      ],
-      "name": "testimonials",
-      "settings": {
-        "mobile_padding": 28,
-        "desktop_padding": 44,
-        "section_bg": "#1e1e1e",
-        "section_text_color": "#ffffff",
-        "enable_slider": true,
-        "desktop_cards": "2.2",
-        "card_border_color": "#01c5e3",
-        "card_bg_color": "#1e1e1e",
-        "mobile_perview": "1.2",
-        "show_arrows": true,
-        "slider_bar": true,
-        "thumb_bg": "#155059",
-        "thumb_color": "#01c5e3",
-        "section_title": "Trusted by <span> Thousands</span> of Traders",
-        "section_title_color": "#ffffff"
-      }
-    },
+   
     "faq_QKmpCG": {
       "type": "xs-faq",
       "blocks": {
@@ -852,7 +772,6 @@
     "featured_slider_WEXeFt",
     "tradeedge_comparision_cqF7n9",
     "pricing_plans_JU7zVT",
-    "testimonials_nVndqB",
     "faq_QKmpCG",
     "featured_article_XFqJte"
   ]

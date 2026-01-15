@@ -7,30 +7,30 @@
     position:relative;
   }
 
-  /* basic layout & utility classes prefix xcl- kept consistent with your project */
   section#{{ section.id }}-featured-collection .featured-collection-wrapper{
     width:100%;
   }
-  /* slider container */
+
   section#{{ section.id }}-featured-collection featured-slider{
     display:block;
     width:100%;
   }
 
-  /* slide base */
   .fc-slide {
     box-sizing:border-box;
   }
-  /* thumb bar */
+
   .featured-collection-slider-bar{
     position:relative;
   }
+
   [data-role="thumb-wrapper"]{
     height:4px;
     border-radius:4px;
     position:relative;
     overflow:hidden;
   }
+
   [data-role="thumb"]{
     position:absolute;
     top:0;
@@ -39,6 +39,9 @@
     border-radius:4px;
     transition:left .2s linear, width .2s linear, transform .2s linear;
   }
+
+  /* Fancybox overlay link cursor */
+  .fc-fancybox-link { cursor: pointer; }
 
   @media(min-width:1200px){
     #{{ section.id }}-featured-collection .featured-collection-wrapper{
@@ -73,6 +76,7 @@
               data-desktop-cards="{{ section.settings.desktop_cards }}"
               data-mobile-perview="{{ section.settings.mobile_perview }}"
               data-show-arrows="{{ section.settings.show_arrows | json }}"
+              data-fancybox-group="{{ section.id }}-fc"
             >
               <div
                 data-role="slider-wrapper"
@@ -92,7 +96,8 @@
                   >
                     {% if block.type == 'image_text' %}
                       <div class="fc-item xcl-block xcl-rounded-md xcl-overflow-hidden">
-                        <div class="fc-media">
+                        <div class="fc-media xcl-relative xcl-rounded-2xl xcl-overflow-hidden">
+
                           {% if block.settings.image %}
                             <img
                               src="{{ block.settings.image | img_url: 'master' }}"
@@ -101,8 +106,20 @@
                               loading="lazy"
                               class="xcl-rounded-2xl"
                             >
+
+                            {%- comment -%}
+                              Fancybox trigger overlay for IMAGE
+                            {%- endcomment -%}
+                            <a
+                              class="fc-fancybox-link xcl-absolute xcl-inset-0 xcl-z-10"
+                              href="{{ block.settings.image | img_url: 'master' }}"
+                              data-fancybox="{{ section.id }}-fc"
+                              data-caption="{{ block.settings.title | escape }}"
+                            ></a>
                           {% endif %}
+
                         </div>
+
                         <div class="fc-content xcl-pt-2">
                           {% if block.settings.title %}
                             <h3
@@ -119,11 +136,6 @@
                             </div>
                           {% endif %}
 
-                          {%- comment -%}
-                            Button: sirf tab dikhana hai jab
-                            1) button_label filled ho
-                            2) button_url filled ho
-                          {%- endcomment -%}
                           {% if block.settings.button_label != blank and block.settings.button_url != blank %}
                             <a
                               href="{{ block.settings.button_url }}"
@@ -137,14 +149,30 @@
 
                     {% elsif block.type == 'video' %}
                       <div class="fc-item fc-video xcl-block xcl-rounded-md xcl-overflow-hidden">
-                        <div class="fc-media xcl-relative" style="padding-top:56.25%; background:#000;">
+                        <div class="fc-media xcl-relative xcl-rounded-2xl xcl-overflow-hidden" style="padding-top:56.25%; background:#000;">
+
+                          {%- comment -%}
+                            Fancybox trigger overlay for VIDEO
+                            data-type="html5video" is REQUIRED for mp4
+                          {%- endcomment -%}
+                          <a
+                            class="fc-fancybox-link xcl-absolute xcl-inset-0 xcl-z-20"
+                            href="{{ block.settings.video_url }}"
+                            data-fancybox="{{ section.id }}-fc"
+                            data-caption="{{ block.settings.title | escape }}"
+                            data-type="html5video"
+                            data-html5video-format="video/mp4"
+                          ></a>
+
                           {% if block.settings.poster %}
                             <img
                               src="{{ block.settings.poster | img_url: 'master' }}"
                               alt="{{ block.settings.title }}"
                               style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"
+                              class="video-poster"
                             >
                           {% endif %}
+
                           <video
                             data-video-src="{{ block.settings.video_url }}"
                             preload="metadata"
@@ -152,9 +180,10 @@
                             style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;"
                             playsinline
                           ></video>
+
                           <button
                             type="button"
-                            class="fc-video-play xcl-absolute xcl-left-1/2 xcl-bg-transparent xcl-border-none xcl-outline-none xcl-top-1/2 xcl-transform -xcl-translate-x-1/2 -xcl-translate-y-1/2"
+                            class="fc-video-play xcl-absolute xcl-left-1/2 xcl-bg-transparent xcl-border-none xcl-outline-none xcl-top-1/2 xcl-transform -xcl-translate-x-1/2 -xcl-translate-y-1/2 xcl-z-30"
                             aria-label="Play video"
                           >
                             <svg
@@ -168,21 +197,22 @@
                             </svg>
                           </button>
                         </div>
-                         {% if block.settings.title != blank   or block.settings.button_label != blank   %}
-                        <div class="fc-content xcl-p-3">
-                          {% if block.settings.title != blank  %}
-                            <h3 class="xcl-text-lg xcl-font-medium">{{ block.settings.title }}</h3>
-                          {% endif %}
 
-                          {% if block.settings.button_label != blank and block.settings.button_url != blank %}
-                            <a
-                              href="{{ block.settings.button_url }}"
-                              class="xcl-inline-flex xcl-items-center xcl-justify-center xcl-mt-3 xcl-px-4 xcl-py-2 xcl-rounded-full xcl-text-[12px] xl:xcl-text-[14px] xcl-font-semibold xcl-bg-[#01C5E3] xcl-text-[#233052]"
-                            >
-                              {{ block.settings.button_label }}
-                            </a>
-                          {% endif %}
-                        </div>
+                        {% if block.settings.title != blank or block.settings.button_label != blank %}
+                          <div class="fc-content xcl-p-3">
+                            {% if block.settings.title != blank %}
+                              <h3 class="xcl-text-lg xcl-font-medium">{{ block.settings.title }}</h3>
+                            {% endif %}
+
+                            {% if block.settings.button_label != blank and block.settings.button_url != blank %}
+                              <a
+                                href="{{ block.settings.button_url }}"
+                                class="xcl-inline-flex xcl-items-center xcl-justify-center xcl-mt-3 xcl-px-4 xcl-py-2 xcl-rounded-full xcl-text-[12px] xl:xcl-text-[14px] xcl-font-semibold xcl-bg-[#01C5E3] xcl-text-[#233052]"
+                              >
+                                {{ block.settings.button_label }}
+                              </a>
+                            {% endif %}
+                          </div>
                         {% endif %}
                       </div>
                     {% endif %}
@@ -206,12 +236,12 @@
                 xcl-w-[40px]
                 xcl-h-[40px]
                 xl:xcl-left-[-55px]
-                
                 " data-role="arrow-prev" aria-label="Previous slide">
                   <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
                     <path d="M13.6667 20L23.6667 30L26 27.6667L18.3333 20L26 12.3333L23.6667 10L13.6667 20Z" fill="white"/>
                   </svg>
                 </button>
+
                 <button class="fc-arrow fc-arrow-right
                 xcl-hidden
                   xcl-absolute
@@ -247,7 +277,6 @@
               {% endif %}
             </featured-slider>
           {% else %}
-            <!-- If slider disabled: show stacked blocks responsively (2 columns mobile, 4 desktop) -->
             <div class="xcl-grid xcl-grid-cols-2 lg:xcl-grid-cols-4 xcl-gap-3">
               {% for block in section.blocks %}
                 <div class="xcl-p-2">
@@ -312,127 +341,24 @@
 {
   "name": "Featured collection",
   "settings": [
-    {
-      "type": "range",
-      "id": "mobile_padding",
-      "label": "Mobile Padding Y axis",
-      "min": 10,
-      "max": 60,
-      "step": 2,
-      "default": 56
-    },
-    {
-      "type": "range",
-      "id": "desktop_padding",
-      "label": "Desktop Padding Y axis",
-      "min": 0,
-      "max": 90,
-      "step": 1,
-      "default": 88
-    },
-    {
-      "type": "color",
-      "label": "section background color",
-      "id": "section_bg",
-      "default": "#1E1E1E"
-    },
-    {
-      "type": "color",
-      "label": "section text color",
-      "id": "section_text_color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "checkbox",
-      "label": "Enable slider",
-      "id": "enable_slider",
-      "default": true
-    },
-    {
-      "type": "range",
-      "label": "Desktop cards to show (per view)",
-      "id": "desktop_cards",
-      "min": 1,
-      "max": 4,
-      "step": 1,
-      "default": 3
-    },
-    {
-      "type": "color",
-      "label": "Card Border color",
-      "id": "card_border_color",
-      "default": "#01C5E3"
-    },
-    {
-      "type": "color",
-      "label": "Card Bg color",
-      "id": "card_bg_color",
-      "default": "#000000"
-    },
-    {
-      "type": "text",
-      "label": "Mobile perView (decimal allowed, e.g. 1.2)",
-      "id": "mobile_perview",
-      "default": "1.2"
-    },
-    {
-      "type": "checkbox",
-      "label": "Show arrows",
-      "id": "show_arrows",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "label": "Display slider thumb bar",
-      "id": "slider_bar",
-      "default": true
-    },
-    {
-      "type": "color",
-      "label": "Thumb slider background color",
-      "id": "thumb_bg",
-      "default": "#155059"
-    },
-    {
-      "type": "color",
-      "label": "Thumb color",
-      "id": "thumb_color",
-      "default": "#01C5E3"
-    },
-    {
-      "type": "html",
-      "label": "Section title",
-      "id": "section_title",
-      "default": "TradeEdge <span> Pro</span> Features"
-    },
-    {
-      "type": "color",
-      "label": "Heading color",
-      "id": "heading_color",
-      "default": "#000000"
-    },
-    {
-      "type": "color",
-      "label": "section title color",
-      "id": "section_title_color",
-      "default": "#000000"
-    },
-     {
-      "type": "checkbox",
-        "id": "enable_mt_minus",
-        "label": "Enable Margin Top Minus",
-        "default": false
-      },
-       {
-      "type": "range",
-        "id": "mt_minus",
-        "label": "Margin Top Minus",
-        "min": 0,
-        "max": 250,
-        "step": 10,
-        "default": 250,
-        "unit": "px"
-      }
+    { "type": "range", "id": "mobile_padding", "label": "Mobile Padding Y axis", "min": 10, "max": 60, "step": 2, "default": 56 },
+    { "type": "range", "id": "desktop_padding", "label": "Desktop Padding Y axis", "min": 0, "max": 90, "step": 1, "default": 88 },
+    { "type": "color", "label": "section background color", "id": "section_bg", "default": "#1E1E1E" },
+    { "type": "color", "label": "section text color", "id": "section_text_color", "default": "#ffffff" },
+    { "type": "checkbox", "label": "Enable slider", "id": "enable_slider", "default": true },
+    { "type": "range", "label": "Desktop cards to show (per view)", "id": "desktop_cards", "min": 1, "max": 4, "step": 1, "default": 3 },
+    { "type": "color", "label": "Card Border color", "id": "card_border_color", "default": "#01C5E3" },
+    { "type": "color", "label": "Card Bg color", "id": "card_bg_color", "default": "#000000" },
+    { "type": "text", "label": "Mobile perView (decimal allowed, e.g. 1.2)", "id": "mobile_perview", "default": "1.2" },
+    { "type": "checkbox", "label": "Show arrows", "id": "show_arrows", "default": true },
+    { "type": "checkbox", "label": "Display slider thumb bar", "id": "slider_bar", "default": true },
+    { "type": "color", "label": "Thumb slider background color", "id": "thumb_bg", "default": "#155059" },
+    { "type": "color", "label": "Thumb color", "id": "thumb_color", "default": "#01C5E3" },
+    { "type": "html", "label": "Section title", "id": "section_title", "default": "TradeEdge <span> Pro</span> Features" },
+    { "type": "color", "label": "Heading color", "id": "heading_color", "default": "#000000" },
+    { "type": "color", "label": "section title color", "id": "section_title_color", "default": "#000000" },
+    { "type": "checkbox", "id": "enable_mt_minus", "label": "Enable Margin Top Minus", "default": false },
+    { "type": "range", "id": "mt_minus", "label": "Margin Top Minus", "min": 0, "max": 250, "step": 10, "default": 250, "unit": "px" }
   ],
   "blocks": [
     {
