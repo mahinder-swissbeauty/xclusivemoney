@@ -310,13 +310,13 @@
             	margin: 0;
             }
             .fancybox__backdrop {
-              background: rgba(1, 197, 227, 0.6) !important;
-              
+              background: linear-gradient(0deg, #01C5E3 0%, #01E3BD 100%) !important;
+              opacity: .97 !important;
             }
 
 
       .f-button.is-close-button {
-        background: #01c5e3;
+        background: #000;
         width: 20px;
         height: 20px;
         border-radius: 100px;
@@ -324,11 +324,9 @@
         font-size: 1;
         right: 10px !important;
       }
-      .f-button.is-close-button:hover{
-        background: rgb(1, 227, 189) !important;
-      }
+
       .f-button.is-close-button svg {
-        width: 18px;
+        width: 16px;
         fill: #000;
 
       }
@@ -343,6 +341,15 @@
       .f-button.is-arrow svg {
         width: 18px;
       }
+
+
+
+      @media(min-width:1200px){
+       .f-button.is-close-button {
+        right: 0px !important;
+      }
+      }
+
 
 
             {% if settings.show-overlay  %}
@@ -590,5 +597,13 @@
         window.addEventListener('pagehide', () => resetLoadingState());
       })();
     </script>
+
+
+    <!-- Begin Shopify–payment-cart JavaScript -->
+    <script type="text/javascript">
+      var mid = '7537';
+    </script>
+    <script src="https://checkout-merchant.snapmint.com/js/v1/7537" defer></script>
+    <!-- End Shopify-payment JavaScript -->
   </body>
 </html>
