@@ -27,6 +27,14 @@ class FeaturedSliderSingle extends HTMLElement {
     this.playing = this.autoplay;
     this.autoplayTimer = null;
 
+    // binders
+    this._onResizeFix = () => this.safeUpdateAfterPopup();
+    this._onVisibility = () => {
+      // if tab hidden, stop autoplay; resume if enabled + playing
+      if (document.hidden) this.pauseAutoplay();
+      else if (this.playing && this.autoplay) this.initAutoplay();
+    };
+
     // Fancybox (bind once globally)
     this.initFancyboxOnce();
 
@@ -34,47 +42,79 @@ class FeaturedSliderSingle extends HTMLElement {
     this.initVideoPlayers();
     this.waitForKeen();
     this.applySchemaVisibility();
+
+    document.addEventListener("visibilitychange", this._onVisibility);
+    window.addEventListener("resize", this._onResizeFix);
   }
 
-  /* ---------------- FANCYBOX (NEW) ---------------- */
+  disconnectedCallback() {
+    this.pauseAutoplay();
+    document.removeEventListener("visibilitychange", this._onVisibility);
+    window.removeEventListener("resize", this._onResizeFix);
+
+    try {
+      this.slider?.destroy?.();
+    } catch (_) {}
+  }
+
+  /* ---------------- FANCYBOX ---------------- */
 
   initFancyboxOnce() {
     if (window.__fcFancyboxBound) return;
     window.__fcFancyboxBound = true;
 
     Fancybox.bind("[data-fancybox]", {
-    animated: true,
-    dragToClose: true,
-    closeButton: "top",
+      animated: true,
+      dragToClose: true,
+      closeButton: "top",
 
-    Html5video: {
-      autoplay: true,
-    },
-
-    on: {
-      closing: (fb) => {
-        const root = fb?.container;
-        if (!root) return;
-        root.querySelectorAll("video").forEach((v) => {
-          v.pause();
-          v.currentTime = 0;
-          v.removeAttribute("src");
-          v.load();
-        });
+      Html5video: {
+        autoplay: true,
       },
-      "Carousel.change": (fb) => {
-        const root = fb?.container;
-        if (!root) return;
-        root.querySelectorAll("video").forEach((v) => {
-          v.pause();
-          v.currentTime = 0;
-          v.removeAttribute("src");
-          v.load();
-        });
-      },
-    },
-  });
 
+      on: {
+        closing: (fb) => {
+          const root = fb?.container;
+          if (root) {
+            root.querySelectorAll("video").forEach((v) => {
+              try {
+                v.pause();
+                v.currentTime = 0;
+                v.removeAttribute("src");
+                v.load();
+              } catch (_) {}
+            });
+          }
+
+          // 🔥 Important: after popup close, force layout update
+          requestAnimationFrame(() => {
+            document
+              .querySelectorAll("featured-slider-single")
+              .forEach((el) => el?.safeUpdateAfterPopup?.());
+          });
+        },
+
+        "Carousel.change": (fb) => {
+          const root = fb?.container;
+          if (!root) return;
+          root.querySelectorAll("video").forEach((v) => {
+            try {
+              v.pause();
+              v.currentTime = 0;
+              v.removeAttribute("src");
+              v.load();
+            } catch (_) {}
+          });
+        },
+      },
+    });
+  }
+
+  safeUpdateAfterPopup() {
+    // Fix: sometimes Keen gets width wrong -> horizontal scroll appears
+    try {
+      if (this.slider?.update) this.slider.update();
+    } catch (_) {}
   }
 
   /* ---------------- Schema visibility ---------------- */
@@ -105,63 +145,136 @@ class FeaturedSliderSingle extends HTMLElement {
   }
 
   initSlider() {
-    this.slider = new KeenSlider(this.sliderWrapper, {
-      loop: true,
+    if (!this.sliderWrapper) return;
 
-      // MOBILE default (schema-controlled)
-      slides: {
-        perView: this.enableMobileMulti ? this.mobileSlidesPerView : 1,
-        spacing: 10
-      },
+    this.slider = new KeenSlider(
+      this.sliderWrapper,
+      {
+        loop: true,
 
-      // Desktop / tablet breakpoints
-      breakpoints: {
-        "(min-width: 768px)": {
-          slides: { perView: 1, spacing: 10 }
+        // MOBILE default (schema-controlled)
+        slides: {
+          perView: this.enableMobileMulti ? this.mobileSlidesPerView : 1,
+          spacing: 10,
         },
-        "(min-width: 1200px)": {
-          slides: { perView: 1, spacing: 10 }
-        }
-      },
 
-      slideChanged: (s) => {
-        this.pauseAllVideos();
-        if (this.showDots) this.updateDots(s.track.details.rel);
-      },
+        // Desktop / tablet breakpoints
+        breakpoints: {
+          "(min-width: 768px)": {
+            slides: { perView: 1, spacing: 10 },
+          },
+          "(min-width: 1200px)": {
+            slides: { perView: 1, spacing: 10 },
+          },
+        },
 
-      created: (s) => {
-        const totalSlides = s.track.details.slides.length;
+        slideChanged: (s) => {
+          this.pauseAllVideos();
+          if (this.showDots) this.updateDots(s.track.details.rel);
+        },
 
-        // If single slide, hide controls
-        if (totalSlides <= 1) {
-          this.prevBtn?.remove();
-          this.nextBtn?.remove();
-          this.dotsContainer?.remove();
-          this.playPauseBtn?.remove();
-        }
+        created: (s) => {
+          const totalSlides = s.track.details.slides.length;
 
-        // Dots
-        if (this.showDots && totalSlides > 1) {
-          this.createDots(totalSlides);
-          this.updateDots(0);
-        }
+          // If single slide, hide controls
+          if (totalSlides <= 1) {
+            this.prevBtn?.remove();
+            this.nextBtn?.remove();
+            this.dotsContainer?.remove();
+            this.playPauseBtn?.remove();
+          }
 
-        // Arrows
-        if (this.showArrows && totalSlides > 1) {
-          this.prevBtn?.addEventListener("click", () => s.prev());
-          this.nextBtn?.addEventListener("click", () => s.next());
-        }
+          // Dots
+          if (this.showDots && totalSlides > 1) {
+            this.createDots(totalSlides);
+            this.updateDots(0);
+          }
 
-        // Autoplay
-        if (this.autoplay && totalSlides > 1) {
-          this.initAutoplay();
-        }
+          // Arrows
+          if (this.showArrows && totalSlides > 1) {
+            this.prevBtn?.addEventListener("click", () => s.prev());
+            this.nextBtn?.addEventListener("click", () => s.next());
+          }
 
-        // Play / Pause button
-        if (this.showPlayPause && totalSlides > 1) {
-          this.initPlayPauseControls();
-        }
+          // Autoplay
+          if (this.autoplay && totalSlides > 1) {
+            this.initAutoplay();
+          }
+
+          // Play / Pause button
+          if (this.showPlayPause && totalSlides > 1) {
+            this.initPlayPauseControls();
+          }
+
+          // ✅ add wheel based “free hand” horizontal scroll (trackpad)
+          this.wheelControls(s);
+        },
       }
+    );
+  }
+
+  /* ---------------- WHEEL CONTROLS (TRACKPAD LEFT-RIGHT) ----------------
+     Same pattern as your working project:
+     - Trackpad left/right swipe triggers ksDrag events
+     - Doesn’t break vertical scrolling
+  --------------------------------------------------------------------- */
+  wheelControls(slider) {
+    let touchTimeout;
+    let position;
+    let wheelActive;
+
+    const dispatch = (e, name) => {
+      position.x -= e.deltaX;
+      position.y -= e.deltaY;
+
+      slider.container.dispatchEvent(
+        new CustomEvent(name, {
+          detail: {
+            x: position.x,
+            y: position.y,
+          },
+        })
+      );
+    };
+
+    const wheelStart = (e) => {
+      position = { x: e.pageX, y: e.pageY };
+      dispatch(e, "ksDragStart");
+    };
+
+    const wheel = (e) => dispatch(e, "ksDrag");
+
+    const wheelEnd = (e) => dispatch(e, "ksDragEnd");
+
+    const eventWheel = (e) => {
+      // ✅ Only react to horizontal trackpad gestures
+      // If user is scrolling vertically (page scroll), ignore
+      if (Math.abs(e.deltaY) > 5 && Math.abs(e.deltaX) < 5) return;
+
+      // If mostly vertical, allow page scroll
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) return;
+
+      e.preventDefault();
+
+      if (!wheelActive) {
+        wheelStart(e);
+        wheelActive = true;
+      }
+
+      wheel(e);
+
+      clearTimeout(touchTimeout);
+      touchTimeout = setTimeout(() => {
+        wheelActive = false;
+        wheelEnd(e);
+      }, 50);
+    };
+
+    slider.container.addEventListener("wheel", eventWheel, { passive: false });
+
+    // cleanup if slider destroyed
+    slider.on("destroyed", () => {
+      slider.container.removeEventListener("wheel", eventWheel);
     });
   }
 
@@ -186,24 +299,29 @@ class FeaturedSliderSingle extends HTMLElement {
 
     if (this.playing) {
       // PAUSE ICON
-      this.playPauseBtn.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M16 19C14.8954 19 14 18.1046 14 17V7C14 5.89543 14.8954 5 16 5C17.1046 5 18 5.89543 18 7V17C18 18.1046 17.1046 19 16 19ZM8 19C6.89543 19 6 18.1046 6 17V7C6 5.89543 6.89543 5 8 5C9.10457 5 10 5.89543 10 7V17C10 18.1046 9.10457 19 8 19Z" fill="#D9D9D9"/>
-        </svg>
-      `;
+      if (this.playPauseBtn) {
+        this.playPauseBtn.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M16 19C14.8954 19 14 18.1046 14 17V7C14 5.89543 14.8954 5 16 5C17.1046 5 18 5.89543 18 7V17C18 18.1046 17.1046 19 16 19ZM8 19C6.89543 19 6 18.1046 6 17V7C6 5.89543 6.89543 5 8 5C9.10457 5 10 5.89543 10 7V17C10 18.1046 9.10457 19 8 19Z" fill="#D9D9D9"/>
+          </svg>
+        `;
+      }
       this.initAutoplay();
     } else {
       // PLAY ICON
-      this.playPauseBtn.innerHTML = `
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-          <path d="M8 5v14l11-7z"></path>
-        </svg>
-      `;
+      if (this.playPauseBtn) {
+        this.playPauseBtn.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+            <path d="M8 5v14l11-7z"></path>
+          </svg>
+        `;
+      }
       this.pauseAutoplay();
     }
   }
 
   initPlayPauseControls() {
+    if (!this.playPauseBtn) return;
     this.playPauseBtn.addEventListener("click", () => {
       this.toggleAutoplay();
     });
@@ -217,12 +335,13 @@ class FeaturedSliderSingle extends HTMLElement {
     this.dotsContainer.innerHTML = "";
 
     for (let i = 0; i < count; i++) {
-      let dot = document.createElement("button");
-      dot.className = "dot xcl-w-3 xcl-h-3 xcl-rounded-full xcl-border-none xcl-outline-none xcl-bg-white/40";
+      const dot = document.createElement("button");
+      dot.className =
+        "dot xcl-w-3 xcl-h-3 xcl-rounded-full xcl-border-none xcl-outline-none xcl-bg-white/40";
       dot.dataset.index = i;
 
       dot.addEventListener("click", () => {
-        this.slider.moveToIdx(i);
+        this.slider?.moveToIdx?.(i);
       });
 
       this.dotsContainer.appendChild(dot);
@@ -234,20 +353,20 @@ class FeaturedSliderSingle extends HTMLElement {
 
     const dots = this.dotsContainer.querySelectorAll(".dot");
     dots.forEach((dot, i) => {
-      dot.style.background = i === activeIndex ? "#fff" : "rgba(255,255,255,0.4)";
-      if (i === activeIndex) {
-        dot.classList.add("is-active");
-      } else {
-        dot.classList.remove("is-active");
-      }
+      dot.style.background =
+        i === activeIndex ? "#fff" : "rgba(255,255,255,0.4)";
+      if (i === activeIndex) dot.classList.add("is-active");
+      else dot.classList.remove("is-active");
     });
   }
 
   /* ---------------- VIDEO LOGIC ---------------- */
 
   pauseAllVideos() {
-    this.videos.forEach(video => {
-      video.pause();
+    this.videos.forEach((video) => {
+      try {
+        video.pause();
+      } catch (_) {}
 
       const wrapper = video.closest(".fc-video");
       if (!wrapper) return;
@@ -258,22 +377,24 @@ class FeaturedSliderSingle extends HTMLElement {
       const poster = wrapper.querySelector(".video-poster");
       if (poster) poster.style.display = "block";
 
-      video.removeAttribute("src");
-      video.load();
+      try {
+        video.removeAttribute("src");
+        video.load();
+      } catch (_) {}
     });
   }
 
   initVideoPlayers() {
     const players = this.querySelectorAll(".fc-video");
 
-    players.forEach(player => {
+    players.forEach((player) => {
       const poster = player.querySelector(".video-poster");
       const video = player.querySelector("video");
       const playBtn = player.querySelector(".fc-video-play");
 
       if (!video || !playBtn) return;
 
-      // IMPORTANT: Now play button opens Fancybox popup (video starts there)
+      // Play button opens Fancybox popup
       playBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -282,7 +403,7 @@ class FeaturedSliderSingle extends HTMLElement {
         this.pauseAutoplay();
         this.playing = false;
 
-        // Update play/pause icon to PLAY (same as your logic when paused)
+        // Update play/pause icon to PLAY
         if (this.showPlayPause && this.playPauseBtn) {
           this.playPauseBtn.innerHTML = `
             <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
@@ -291,7 +412,7 @@ class FeaturedSliderSingle extends HTMLElement {
           `;
         }
 
-        // Open Fancybox by clicking the overlay link in same slide
+        // Open Fancybox by clicking overlay link
         const slide = e.target.closest(".keen-slider__slide");
         const link = slide?.querySelector(".fc-fancybox-link[data-fancybox]");
         if (link) {
@@ -299,15 +420,15 @@ class FeaturedSliderSingle extends HTMLElement {
           return;
         }
 
-        // fallback (should not happen): old inline play
+        // fallback: inline play (rare)
         this.pauseAllVideos();
         video.src = video.dataset.videoSrc;
-        video.play();
+        video.play().catch(() => {});
         if (poster) poster.style.display = "none";
         playBtn.style.display = "none";
       });
 
-      // Inline video click pause (kept for fallback / safety)
+      // Inline video click pause (fallback / safety)
       video.addEventListener("click", (e) => {
         e.stopPropagation();
         if (!video.paused) {
@@ -323,6 +444,7 @@ class FeaturedSliderSingle extends HTMLElement {
       });
     });
   }
-}
+} 
 
 customElements.define("featured-slider-single", FeaturedSliderSingle);
+ 
