@@ -1,4 +1,9 @@
 <style>
+  /* Better horizontal gestures, keep vertical page scroll */
+#{{ section.id }}-featured-collection .keen-slider{
+  touch-action: pan-y;
+}
+
 #{{ section.id }}-featured-collection .featured-collection-wrapper{
   padding-top: {{section.settings.mobile_padding}}px;
   padding-bottom: {{section.settings.mobile_padding}}px;
