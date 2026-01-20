@@ -39,16 +39,16 @@
 
 <section
   id="pricing"
-  class="xcl-bg-[#1e1e1e] xcl-text-white xcl-py-10 xl:xcl-py-16"
+  class="xcl-bg-[#1e1e1e] xcl-text-white lg:xcl-px-4 xl:xcl-px-0 xcl-py-10 xl:xcl-py-16"
   style="background-color: {{ section.settings.section_bg }}; color: {{ section.settings.section_text_color }};"
 >
   <div class="xcl-max-w-[1110px] xcl-mx-auto xcl-px-4 lg:xcl-px-0 xcl-relative xcl-z-10">
     {%- comment -%} SECTION HEADING {%- endcomment -%}
     {%- comment -%} SECTION HEADING {%- endcomment -%}
-    <div class="xcl-text-center xcl-mb-7 xl:xcl-mb-[76px]">
+    <div class="xcl-text-center xcl-mb-8 xl:xcl-mb-[76px]"> 
       {% if section.settings.section_title != blank %}
         <h3
-          class="section_heading xcl-text-center xcl-pb-2 xcl-text-[22px] xcl-text-[#01C5E3] xcl-font-semibold xl:xcl-text-[48px]"
+          class="section_heading xcl-text-center xcl-pb-2 xcl-text-[24px] xcl-text-[#01C5E3] xcl-font-semibold xl:xcl-text-[48px]"
           style="color: {{ section.settings.section_title_color }};"
         >
           {{ section.settings.section_title }}
@@ -59,7 +59,7 @@
     {%- comment -%} PRICING CARDS GRID {%- endcomment -%}
     <div
       class="
-        xcl-grid xcl-grid-cols-1 xl:xcl-grid-cols-3 xcl-gap-11 xl:xcl-gap-10 xcl-mb-[18px] xl:xcl-mb-10
+        xcl-grid xcl-grid-cols-1 md:xcl-grid-cols-2  lg:xcl-grid-cols-3 xcl-gap-11 xl:xcl-gap-10 xcl-mb-[18px] xl:xcl-mb-10
 
         xl:xcl-flex xl:xcl-flex-nowrap xl:xcl-justify-center
       "
@@ -96,8 +96,8 @@
             </div>
           {% endif %}
 
-          <div class="xcl-px-4 xcl-pb-9 xl:xcl-pb-6">
-            <div class="xcl-flex xcl-gap-2 xcl-items-center xcl-mb-2">
+          <div class="xcl-px-4 xcl-pb-2 xl:xcl-pb-6">
+            <div class="xcl-flex xcl-gap-[10px] xcl-items-center xcl-mb-[10px]">
               {% if section.settings.card1_icon != blank %}
                 <div class="xcl-w-10 xcl-h-10 xcl-mb-3">
                   <img
@@ -107,22 +107,48 @@
                   >
                 </div>
               {% endif %}
-              <h3 class="xcl-text-[20px] xl:xcl-text-[24px] xcl-font-semibold xcl-text-white">
+              <h3 class="xcl-text-[24px] xl:xcl-text-[24px] xcl-font-semibold xcl-text-white">
                 {{ section.settings.card1_title }}
               </h3>
-            </div>
+            </div> 
 
             <div>
-              <div class="xcl-flex xcl-items-baseline xcl-gap-1">
-                <span class="xcl-text-[24px] xl:xcl-text-[32px] xcl-font-bold xcl-font-heading">
-                  {{ section.settings.card1_price }}
+              {%- assign current_price = v1.price -%}
+              {%- assign compare_price = v1.compare_at_price -%}
+
+              <div class="xcl-flex xcl-items-center xcl-gap-3 xcl-flex-wrap">
+                {%- if compare_price and compare_price > current_price -%}
+                  {%- assign diff = compare_price | minus: current_price -%}
+                  {%- assign off = diff | times: 100.0 | divided_by: compare_price | round -%}
+
+                  <!-- Original price (strike) -->
+                  <span class="xcl-text-[18px] xcl-font-heading xl:xcl-text-[26px] xcl-text-[#F2FAFD] xcl-font-semibold  xcl-line-through">
+                    {{ compare_price | money }}
+                  </span>
+
+                  <!-- % OFF badge -->
+                  <span class="xcl-inline-flex xcl-items-center xcl-font-heading xcl-justify-center xcl-rounded-[10px] xcl-px-2 xcl-py-1 xcl-text-[18px] xcl-font-bold xcl-text-[#031015]
+                  xcl-bg-[#8CC63F]
+                  "
+                        >
+                    {{ off }}% OFF
+                  </span>
+                {%- endif -%}
+              </div>
+
+              <!-- Final price -->
+              <div class="xcl-flex xcl-items-baseline xcl-gap-1 xcl-mt-2">
+                <span class="xcl-text-[32px] xl:xcl-text-[44px] xcl-font-bold xcl-font-heading xcl-text-white">
+                  {{ current_price | money }}
                 </span>
+
                 {% if section.settings.card1_suffix != blank %}
                   <span class="xcl-text-[16px] xcl-text-[#ffffff]">
                     {{ section.settings.card1_suffix }}
                   </span>
                 {% endif %}
               </div>
+
               {% if section.settings.card1_trial != blank %}
                 <p
                   class="xcl-text-[14px] xcl-font-bold xcl-mt-2 xcl-min-h-[40px]"
@@ -132,6 +158,7 @@
                 </p>
               {% endif %}
             </div>
+
           </div>
 
           <div class="xcl-relative">
@@ -272,8 +299,8 @@
             </div>
           {% endif %}
 
-          <div class="xcl-px-4 xcl-pb-9 xl:xcl-pb-6">
-            <div class="xcl-flex xcl-gap-2 xcl-items-center xcl-mb-2">
+          <div class="xcl-px-4 xcl-pb-2 xl:xcl-pb-6">
+            <div class="xcl-flex xcl-gap-[10px] xcl-items-center xcl-mb-[10px]">
               {% if section.settings.card2_icon != blank %}
                 <div class="xcl-w-10 xcl-h-10 xcl-mb-3">
                   <img
@@ -283,22 +310,50 @@
                   >
                 </div>
               {% endif %}
-              <h3 class="xcl-text-[20px] xl:xcl-text-[24px] xcl-font-semibold xcl-text-white">
+              <h3 class="xcl-text-[24px] xl:xcl-text-[24px] xcl-font-semibold xcl-text-white">
                 {{ section.settings.card2_title }}
               </h3>
             </div>
 
             <div>
-              <div class="xcl-flex xcl-items-baseline xcl-gap-1">
-                <span class="xcl-text-[24px] xl:xcl-text-[32px] xcl-font-bold xcl-font-heading">
-                  {{ section.settings.card2_price }}
+              {%- assign current_price = v2.price -%}
+              {%- assign compare_price = v2.compare_at_price -%}
+
+              <div class="xcl-flex xcl-items-center xcl-gap-3 xcl-flex-wrap">
+                {%- if compare_price and compare_price > current_price -%}
+                  {%- assign diff = compare_price | minus: current_price -%}
+                  {%- assign off = diff | times: 100.0 | divided_by: compare_price | round -%}
+
+                  <!-- Original price (strike) -->
+                  <span class="xcl-text-[18px] xcl-font-heading xl:xcl-text-[26px] xcl-text-[#F2FAFD] xcl-font-semibold  xcl-line-through">
+                    {{ compare_price | money }}
+                  </span>
+
+                  <!-- % OFF badge -->
+                  <span
+                    class="xcl-inline-flex xcl-items-center xcl-justify-center xcl-rounded-[10px] xcl-px-2 xcl-py-1 xcl-text-[18px] xcl-font-bold xcl-text-[#031015]
+                  xcl-bg-[#8CC63F]
+               "
+                   
+                  >
+                    {{ off }}% OFF
+                  </span>
+                {%- endif -%}
+              </div>
+
+              <!-- Final price -->
+              <div class="xcl-flex xcl-items-baseline xcl-gap-1 xcl-mt-2">
+                <span class="xcl-text-[32px] xl:xcl-text-[44px] xcl-font-bold xcl-font-heading xcl-text-white">
+                  {{ current_price | money }}
                 </span>
+
                 {% if section.settings.card2_suffix != blank %}
                   <span class="xcl-text-[16px] xcl-text-[#ffffff]">
                     {{ section.settings.card2_suffix }}
                   </span>
                 {% endif %}
               </div>
+
               {% if section.settings.card2_trial != blank %}
                 <p
                   class="xcl-text-[14px] xcl-font-bold xcl-mt-2 xcl-min-h-[40px]"
@@ -308,6 +363,8 @@
                 </p>
               {% endif %}
             </div>
+
+
           </div>
 
           <div class="xcl-relative">
@@ -428,43 +485,73 @@
             </div>
           {% endif %}
 
-          <div class="xcl-px-4 xcl-pb-9 xl:xcl-pb-6">
-            <div class="xcl-flex xcl-gap-2 xcl-items-center xcl-mb-2">
-              {% if section.settings.card3_icon != blank %}
+          <div class="xcl-px-4 xcl-pb-2 xl:xcl-pb-6">
+            <div class="xcl-flex xcl-gap-[10px] xcl-items-center xcl-mb-[10px]">
+              {% if section.settings.card3_icon != blank %} 
                 <div class="xcl-w-10 xcl-h-10 xcl-mb-3">
                   <img
                     src="{{ section.settings.card3_icon | img_url: '120x' }}"
                     alt="Plan icon 3"
-                    class="xcl-w-10 xcl-h-10 xcl-object-contain"
+                    class="xcl-w-10 xcl-h-10 xcl-object-contain" 
                   >
                 </div>
               {% endif %}
 
-              <h3 class="xcl-text-[20px] xl:xcl-text-[24px] xcl-font-semibold xcl-text-white">
+              <h3 class="xcl-text-[24px] xl:xcl-text-[24px] xcl-font-semibold xcl-text-white">
                 {{ section.settings.card3_title }}
               </h3>
             </div>
 
             <div>
-              <div class="xcl-flex xcl-items-baseline xcl-gap-1">
-                <span class="xcl-text-[24px] xl:xcl-text-[32px] xcl-font-bold xcl-font-heading">
-                  {{ section.settings.card3_price }}
-                </span>
-                {% if section.settings.card3_suffix != blank %}
-                  <span class="xcl-text-[16px] xcl-text-[#ffffff]">
-                    {{ section.settings.card3_suffix }}
+                {%- assign current_price = v3.price -%}
+                {%- assign compare_price = v3.compare_at_price -%}
+
+                <div class="xcl-flex xcl-items-center xcl-gap-3 xcl-flex-wrap">
+                  {%- if compare_price and compare_price > current_price -%}
+                    {%- assign diff = compare_price | minus: current_price -%}
+                    {%- assign off = diff | times: 100.0 | divided_by: compare_price | round -%}
+
+                    <!-- Original price (strike) -->
+                    <span class="xcl-text-[18px] xcl-font-heading xl:xcl-text-[26px] xcl-text-[#F2FAFD] xcl-font-semibold  xcl-line-through">
+                      {{ compare_price | money }}
+                    </span>
+
+                    <!-- % OFF badge -->
+                    <span
+                      class="xcl-inline-flex xcl-items-center xcl-justify-center xcl-rounded-[10px] xcl-px-2 xcl-py-1 xcl-text-[18px] xcl-font-bold xcl-text-[#031015]
+                  xcl-bg-[#8CC63F]
+               "
+                      
+                    >
+                      {{ off }}% OFF
+                    </span>
+                  {%- endif -%}
+                </div>
+
+                <!-- Final price -->
+                <div class="xcl-flex xcl-items-baseline xcl-gap-1 xcl-mt-2">
+                  <span class="xcl-text-[32px] xl:xcl-text-[44px] xcl-font-bold xcl-font-heading xcl-text-white">
+                    {{ current_price | money }}
                   </span>
+
+                  {% if section.settings.card3_suffix != blank %}
+                    <span class="xcl-text-[16px] xcl-text-[#ffffff]">
+                      {{ section.settings.card3_suffix }}
+                    </span>
+                  {% endif %}
+                </div>
+
+                {% if section.settings.card3_trial != blank %}
+                  <p
+                    class="xcl-text-[14px] xcl-font-bold xcl-mt-2 xcl-min-h-[40px]"
+                    style="color: {{ section.settings.card3_accent }};"
+                  >
+                    {{ section.settings.card3_trial }}
+                  </p>
                 {% endif %}
               </div>
-              {% if section.settings.card3_trial != blank %}
-                <p
-                  class="xcl-text-[14px] xcl-font-bold xcl-mt-2 xcl-min-h-[40px]"
-                  style="color: {{ section.settings.card3_accent }};"
-                >
-                  {{ section.settings.card3_trial }}
-                </p>
-              {% endif %}
-            </div>
+
+
           </div>
 
           <div class="xcl-relative">
