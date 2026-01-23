@@ -491,27 +491,56 @@
         }
 
         // Scroll links with offset + close menu on click
-        document.querySelectorAll('a.scroll-link').forEach((link) => {
-          link.addEventListener('click', function (e) {
-            e.preventDefault();
 
-            const href = this.getAttribute('href');
-            const target = href ? document.querySelector(href) : null;
-            if (!target) return;
 
-            const topPos = target.getBoundingClientRect().top + window.scrollY;
-            const offset = 120;
 
-            window.scrollTo({
-              top: topPos - offset,
-              behavior: 'smooth',
-            });
+     document.querySelectorAll('a.scroll-link').forEach((link) => {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
 
-            if (menu && !menu.classList.contains('xcl-hidden')) {
-              menu.classList.add('xcl-hidden');
-            }
+        const href = this.getAttribute('href');
+        const target = href ? document.querySelector(href) : null;
+        if (!target) return;
+
+        // ✅ close menu (same behavior)
+        if (typeof menu !== "undefined" && menu && !menu.classList.contains('xcl-hidden')) {
+          menu.classList.add('xcl-hidden');
+        }
+
+        const headerEl = document.querySelector('#siteHeader');
+
+        // ✅ IMPORTANT FIX:
+        // If we are near top (0-15px), header is not "scrolled" yet,
+        // but during scroll it becomes "is-scrolled" (shrinks).
+        // So we force it BEFORE measuring offset to avoid extra gap.
+        if (headerEl && window.scrollY > 0 && window.scrollY <= 15) {
+          headerEl.classList.add('is-scrolled');
+        }
+
+        const getOffset = () => {
+          if (!headerEl) return 120;
+
+          // Use visible bottom (covers sticky header + any top bar inside it)
+          const r = headerEl.getBoundingClientRect();
+          const cover = Math.max(0, r.bottom);
+
+          return Math.ceil(cover + 24); // small safe gap
+        };
+
+        // ✅ Measure after DOM applies header class (no blink, single scroll)
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const offset = getOffset();
+            const topPos = target.getBoundingClientRect().top + window.pageYOffset;
+            const finalTop = Math.max(0, topPos - offset);
+
+            window.scrollTo({ top: finalTop, behavior: 'smooth' });
           });
         });
+      });
+    });
+
+        
       });
     </script>
 
