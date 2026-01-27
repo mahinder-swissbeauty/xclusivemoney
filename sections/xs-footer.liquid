@@ -62,6 +62,14 @@
     border-top: 1px solid #51535a;
     padding-top: 30px;
 }
+
+.footer-disclaimer-content.is-collapsed {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* 2 lines */
+  overflow: hidden;
+}
+
 {% endstyle %}
 
 <section
@@ -154,62 +162,56 @@
     </div>
   </div>
 
-   <div class="footer-disclaimer" data-footer-disclaimer>
-      {%- for block in section.blocks -%}
-        {%- if block.type == 'footer-content' -%}
-          {%- assign is_hidden = false -%}
-          {%- if forloop.index > 1 -%}
-            {%- assign is_hidden = true -%}
-          {%- endif -%}
-
-          <div
-            class="footer-content-wrap xcl-relative xcl-max-w-7xl xcl-mx-auto xcl-px-4 xcl-pt-6
-              xl:xcl-w-[1152px] xl:xcl-mx-auto xl:xcl-px-10
-            "
-            data-footer-item
-            {% if is_hidden %}data-collapsed="true"{% endif %}
-            {% if is_hidden %}style="display:none"{% endif %}
+<div class="footer-disclaimer" data-footer-disclaimer>
+  <div class="footer-disclaimer-content" data-footer-content>
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'footer-content' -%}
+        <div class="footer-content-wrap xcl-relative xcl-max-w-7xl xcl-mx-auto xcl-px-4 xcl-pt-6 xl:xcl-w-[1152px] xl:xcl-mx-auto xl:xcl-px-10">
+          <h4 class="footer-content-heading xcl-text-xs xcl-tracking-normal xcl-mb-3 xcl-flex xcl-items-center xcl-gap-2"
+            style="color: {{ section.settings.footer-content-color }};"
           >
-            <h4 class="footer-content-heading  xcl-text-xs xcl-tracking-normal xcl-mb-3 xcl-flex xcl-items-center xcl-gap-2"
-            style="color: {{section.settings.footer-content-color}};"
-            >
-              <span class="counter-badge"
-               style="color: {{section.settings.footer-content-color}};"
-              >{{ forloop.index }}</span>
-              <span style="color: {{section.settings.footer-content-color}};">{{ block.settings.footer-content-heading }}</span>
-            </h4>
+            <span class="counter-badge" style="color: {{ section.settings.footer-content-color }};">
+              {{ forloop.index }}
+            </span>
+            <span style="color: {{ section.settings.footer-content-color }};">
+              {{ block.settings.footer-content-heading }}
+            </span>
+          </h4>
 
-            <div class="footer-content-paragraph  xcl-text-xs xcl-tracking-normal"
-             style="color: {{section.settings.footer-content-color}};"
-            >
-              {{ block.settings.footer-content-pargraph }}
-            </div>
+          <div class="footer-content-paragraph xcl-text-xs xcl-tracking-normal"
+            style="color: {{ section.settings.footer-content-color }};"
+          >
+            {{ block.settings.footer-content-pargraph }}
           </div>
-        {%- endif -%}
-      {%- endfor -%}
-
-      {%- if section.blocks.size > 1 -%}
-        <div class="xcl-max-w-7xl xcl-mx-auto xcl-px-4 xcl-pt-1 
-          xl:xcl-w-[1152px] xl:xcl-mx-auto xl:xcl-px-10
-        ">
-          <button
-            type="button"
-            class="footer-readmore xcl-text-white xcl-text-xs xcl-underline"
-            data-footer-toggle
-            aria-expanded="false"
-          >
-            Read more
-          </button>
-            {% if section.settings.footer-copyright !=blank %}
-            <div class="copyright xcl-text-center xcl-border-t xcl-mt-10">
-              <span class=" xcl-text-xs  xcl-text-center xcl-flex xcl-justify-center xcl-tracking-wide"
-               style="color: {{section.settings.footer-copyright-color}};"
-              >{{section.settings.footer-copyright}}</span>
-            </div>
-            {% endif %}
         </div>
       {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  {%- if section.blocks.size > 1 -%}
+    <div class="xcl-max-w-7xl xcl-mx-auto xcl-px-4 xcl-pt-1 xl:xcl-w-[1152px] xl:xcl-mx-auto xl:xcl-px-10">
+      <button
+        type="button"
+        class="footer-readmore xcl-text-white xcl-text-xs xcl-underline"
+        data-footer-toggle
+        aria-expanded="false"
+      >
+        Read more
+      </button>
+
+      {% if section.settings.footer-copyright != blank %}
+        <div class="copyright xcl-text-center xcl-border-t xcl-mt-10">
+          <span class="xcl-text-xs xcl-text-center xcl-flex xcl-justify-center xcl-tracking-wide"
+            style="color: {{ section.settings.footer-copyright-color }};"
+          >
+            {{ section.settings.footer-copyright }}
+          </span>
+        </div>
+      {% endif %}
     </div>
+  {%- endif -%}
+</div>
+
 
 
 </section>
@@ -394,63 +396,23 @@
     if (!root) return;
 
     const toggleBtn = root.querySelector('[data-footer-toggle]');
-    const items = Array.from(root.querySelectorAll('[data-footer-item][data-collapsed="true"]'));
-    if (!toggleBtn || items.length === 0) return;
+    const content = root.querySelector('[data-footer-content]');
+    if (!toggleBtn || !content) return;
 
     let expanded = false;
 
-    function slideDown(el, duration = 280) {
-      el.style.removeProperty('display');
-      let display = window.getComputedStyle(el).display;
-      if (display === 'none') display = 'block';
-      el.style.display = display;
-
-      const height = el.scrollHeight;
-      el.style.height = '0px';
-      el.style.opacity = '0';
-      el.style.transition = `height ${duration}ms ease, opacity ${duration}ms ease`;
-
-      requestAnimationFrame(() => {
-        el.style.height = height + 'px';
-        el.style.opacity = '1';
-      });
-
-      window.setTimeout(() => {
-        el.style.removeProperty('height');
-        el.style.removeProperty('opacity');
-        el.style.removeProperty('transition');
-      }, duration);
-    }
-
-    function slideUp(el, duration = 240) {
-      const height = el.scrollHeight;
-      el.style.height = height + 'px';
-      el.style.opacity = '1';
-      el.style.transition = `height ${duration}ms ease, opacity ${duration}ms ease`;
-
-      requestAnimationFrame(() => {
-        el.style.height = '0px';
-        el.style.opacity = '0';
-      });
-
-      window.setTimeout(() => {
-        el.style.display = 'none';
-        el.style.removeProperty('height');
-        el.style.removeProperty('opacity');
-        el.style.removeProperty('transition');
-      }, duration);
-    }
+    // default collapsed
+    content.classList.add('is-collapsed');
+    toggleBtn.textContent = 'Read more';
+    toggleBtn.setAttribute('aria-expanded', 'false');
 
     toggleBtn.addEventListener('click', () => {
       expanded = !expanded;
 
-      items.forEach(el => {
-        if (expanded) slideDown(el);
-        else slideUp(el);
-      });
-
+      content.classList.toggle('is-collapsed', !expanded);
       toggleBtn.textContent = expanded ? 'Read less' : 'Read more';
       toggleBtn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
     });
   })();
 </script>
+ 
