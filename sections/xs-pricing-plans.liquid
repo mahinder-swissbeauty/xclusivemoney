@@ -214,13 +214,8 @@
                 {% endif %}
               {% endcomment %}
               {% if v1 and v1.available %}
-                  <form method="post" action="/cart/add" class="xcl-pt-6 js-checkout-form">
-                    <input type="hidden" name="id" value="{{ v1.id }}">
-                    <input type="hidden" name="quantity" value="1">
-                    <input type="hidden" name="return_to" value="/checkout">
-
-                    <button
-                      type="submit"
+                  <div  class="xcl-pt-6 js-checkout-form">
+                    <subscription-button data-checkout="cart/{{ v1.id }}:{{1}}?checkout" data-variant-id="{{ v1.id }}"
                       class="js-checkout-btn xcl-h-[40px] xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center xcl-cursor-pointer xcl-border-none xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-3 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
                       style="background: {{ section.settings.card1_btn_bg }}"
                     >
@@ -229,32 +224,12 @@
                       <span>➜</span>
                       </span>
                     <!-- Loader (hidden by default) -->
-                      <span class="js-btn-loader xcl-hidden">
-                        <svg
-                          class="xcl-animate-spin"
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                        >
-                          <circle
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="#031015"
-                            stroke-width="3"
-                            opacity="0.25"
-                          />
-                          <path
-                            d="M22 12a10 10 0 0 1-10 10"
-                            stroke="#031015"
-                            stroke-width="3"
-                          />
-                        </svg>
+                      <span class="btn_loader">
+                        {% render 'loader' %}
                       </span>
 
-                    </button>
-                  </form>
+                    </subscription-button>
+                    </div>
               {% else %}
                 <button
                   type="button"
@@ -406,13 +381,9 @@
               {% endfor %}
 
               {% if v2 and v2.available %}
-                  <form method="post" action="/cart/add" class="xcl-pt-6 js-checkout-form">
-                    <input type="hidden" name="id" value="{{ v2.id }}">
-                    <input type="hidden" name="quantity" value="1">
-                    <input type="hidden" name="return_to" value="/checkout">
-
-                    <button
-                      type="submit"
+                  <div class="xcl-pt-6 js-checkout-form">
+                  
+                    <subscription-button data-checkout="cart/{{ v2.id }}:{{1}}?checkout" data-variant-id="{{ v2.id }}"
                       class="js-checkout-btn xcl-h-[40px] xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center xcl-cursor-pointer xcl-border-none xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-3 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
                       style="background: {{ section.settings.card2_btn_bg }}"
                     >
@@ -421,31 +392,11 @@
                         <span>➜</span>
                       </span>
                        <!-- Loader (hidden by default) -->
-                      <span class="js-btn-loader xcl-hidden">
-                        <svg
-                          class="xcl-animate-spin"
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                        >
-                          <circle
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="#031015"
-                            stroke-width="3"
-                            opacity="0.25"
-                          />
-                          <path
-                            d="M22 12a10 10 0 0 1-10 10"
-                            stroke="#031015"
-                            stroke-width="3"
-                          />
-                        </svg>
+                      <span class="btn_loader">
+                        {% render 'loader' %}
                       </span>
-                    </button>
-                  </form>
+                    </subscription-button>
+                  </div>
               {% else %}
                 <button
                   type="button"
@@ -593,13 +544,9 @@
               {% endfor %}
 
               {% if v3 and v3.available %}
-                <form method="post" action="/cart/add" class="xcl-pt-6 js-checkout-form">
-                    <input type="hidden" name="id" value="{{ v3.id }}">
-                    <input type="hidden" name="quantity" value="1">
-                    <input type="hidden" name="return_to" value="/checkout">
+                <div class="xcl-pt-6 js-checkout-form">
 
-                    <button
-                      type="submit"
+                   <subscription-button data-checkout="cart/{{ v3.id }}:{{1}}?checkout" data-variant-id="{{ v3.id }}"
                       class="js-checkout-btn xcl-h-[40px] xcl-inline-flex xcl-w-full xcl-items-center xcl-justify-center xcl-border-none xcl-cursor-pointer xcl-rounded-[16px] xcl-text-[#031015] xcl-text-[16px] xcl-font-bold xcl-py-3 xcl-px-3 xcl-gap-2 hover:xcl-brightness-110 xcl-transition xcl-duration-150"
                       style="background: {{ section.settings.card3_btn_bg }};"
                     >
@@ -608,31 +555,11 @@
                       <span>➜</span>
                     </span>
                      <!-- Loader (hidden by default) -->
-                      <span class="js-btn-loader xcl-hidden">
-                        <svg
-                          class="xcl-animate-spin"
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                        >
-                          <circle
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="#031015"
-                            stroke-width="3"
-                            opacity="0.25"
-                          />
-                          <path
-                            d="M22 12a10 10 0 0 1-10 10"
-                            stroke="#031015"
-                            stroke-width="3"
-                          />
-                        </svg>
+                     <span class="btn_loader">
+                        {% render 'loader' %}
                       </span>
-                    </button>
-                  </form>
+                    </subscription-button>
+                  </div>
               {% else %}
                 <button type="button" 
                 

@@ -626,5 +626,8 @@
         window.addEventListener('pagehide', () => resetLoadingState());
       })();
     </script>
+      <script src = "https://checkout.razorpay.com/v1/checkout.js"></script>
+      {% render 'vite-tag' with 'subscription.js' %}
+
   </body>
 </html>
