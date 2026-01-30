@@ -15,6 +15,17 @@
   animation: l3 1s infinite linear;
 }
 @keyframes l3 {to{transform: rotate(1turn)}}
+
+subscription-button .btn_loader{
+  display: none;
+}
+subscription-button.loading .btn_loader{
+  display: block;
+}
+subscription-button.loading .js-btn-text{
+  display: none;
+}
+
 {% endstyle %}
 
 <div class="loader {{ additional_class }}"></div>
