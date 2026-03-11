@@ -55,12 +55,47 @@ xl:xcl-p-6
     </div>
   </div>
 
-  {%- comment -%} Testimonial text {%- endcomment -%}
-  {% if t.body != blank %}
+{%- comment -%} Body: content OR image based on display_type {%- endcomment -%}
+
+{%- assign review_image = t["review-image"] -%} 
+
+{% if t.display_type == 'image' %}
+  {% if review_image != blank %}
+    <div class="xcl-w-full xcl-rounded-2xl xcl-overflow-hidden">
+      {{
+        review_image
+        | image_url: width: 1200
+        | image_tag:
+          alt: t.name,
+          loading: 'lazy',
+          class: 'xcl-w-full xcl-h-auto xcl-object-cover'
+      }}
+    </div>
+  {% elsif t.body != blank %}
     <div class="xcl-text-[14px] xl:xcl-text-[16px] xcl-leading-[1.5] xcl-text-[#F9FAFB]">
       {{ t.body }}
     </div>
   {% endif %}
+
+{% else %}
+  {% if t.body != blank %}
+    <div class="xcl-text-[14px] xl:xcl-text-[16px] xcl-leading-[1.5] xcl-text-[#F9FAFB]">
+      {{ t.body }}
+    </div>
+  {% elsif review_image != blank %}
+    <div class="xcl-w-full xcl-rounded-2xl xcl-overflow-hidden">
+      {{
+        review_image
+        | image_url: width: 1200
+        | image_tag:
+          alt: t.name,
+          loading: 'lazy',
+          class: 'xcl-w-full xcl-h-auto xcl-object-cover'
+      }}
+    </div>
+  {% endif %}
+{% endif %}
+  
 
   {%- comment -%} Bottom row: reactions & comments {%- endcomment -%}
   <div class="xcl-mt-auto xcl-flex xcl-items-center xcl-justify-between xcl-pt-2">

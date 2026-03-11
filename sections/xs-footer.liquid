@@ -45,18 +45,43 @@
     transform: scaleY(0);
     opacity: 0;
   }
+  /* Wrapper that we animate */
+  .footer-disclaimer [data-footer-item]{
+    overflow: hidden;
+  }
+  .footer-readmore {
+      background: transparent;
+      box-shadow: none;
+      border: none;
+      padding: 0;
+      color: #00d5f6;
+      cursor:pointer;
+  }
+
+.copyright {
+    border-top: 1px solid #51535a;
+    padding-top: 30px;
+}
+
+.footer-disclaimer-content.is-collapsed {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; /* 2 lines */
+  overflow: hidden;
+}
+
 {% endstyle %}
 
 <section
   id="{{ section.id }}-footer"
-  class="xcl-w-full xcl-text-white xcl-pt-8 xcl-pb-10"
+  class="xcl-w-full xcl-text-white xcl-pt-8 xcl-pb-0" 
   style="background: linear-gradient(180deg, #233052 0%, #1E1E1E 100%);
   padding-top: {{section.settings.desktop_padding}}px;
     padding-bottom: {{section.settings.desktop_padding}}px;
   "
   
 >
-  <div class="xcl-max-w-[563px] xcl-mx-auto xcl-px-4">
+  <div class="xcl-max-w-[563px] xcl-mx-auto xcl-px-4 xcl-mb-12">
 
     {%- comment -%} JOIN US ON CARD {%- endcomment -%}
     <div
@@ -135,8 +160,60 @@
         {%- endif -%}
       {%- endfor -%}
     </div>
-
   </div>
+
+<div class="footer-disclaimer" data-footer-disclaimer>
+  <div class="footer-disclaimer-content" data-footer-content>
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'footer-content' -%}
+        <div class="footer-content-wrap xcl-relative xcl-max-w-7xl xcl-mx-auto xcl-px-4 xcl-pt-6 xl:xcl-w-[1152px] xl:xcl-mx-auto xl:xcl-px-10">
+          <h4 class="footer-content-heading xcl-text-xs xcl-tracking-normal xcl-mb-3 xcl-flex xcl-items-center xcl-gap-2"
+            style="color: {{ section.settings.footer-content-color }};"
+          >
+            <span class="counter-badge" style="color: {{ section.settings.footer-content-color }};">
+              {{ forloop.index }}
+            </span>
+            <span style="color: {{ section.settings.footer-content-color }};">
+              {{ block.settings.footer-content-heading }}
+            </span>
+          </h4>
+
+          <div class="footer-content-paragraph xcl-text-xs xcl-tracking-normal"
+            style="color: {{ section.settings.footer-content-color }};"
+          >
+            {{ block.settings.footer-content-pargraph }}
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  {%- if section.blocks.size > 1 -%}
+    <div class="xcl-max-w-7xl xcl-mx-auto xcl-px-4 xcl-pt-1 xl:xcl-w-[1152px] xl:xcl-mx-auto xl:xcl-px-10">
+      <button
+        type="button"
+        class="footer-readmore xcl-text-white xcl-text-xs xcl-underline"
+        data-footer-toggle
+        aria-expanded="false"
+      >
+        Read more
+      </button>
+
+      {% if section.settings.footer-copyright != blank %}
+        <div class="copyright xcl-text-center xcl-border-t xcl-mt-10">
+          <span class="xcl-text-xs xcl-text-center xcl-flex xcl-justify-center xcl-tracking-wide"
+            style="color: {{ section.settings.footer-copyright-color }};"
+          >
+            {{ section.settings.footer-copyright }}
+          </span>
+        </div>
+      {% endif %}
+    </div>
+  {%- endif -%}
+</div>
+
+
+
 </section>
 
 {% schema %}
@@ -172,6 +249,24 @@
       "id": "social_heading",
       "label": "Social card heading",
       "default": "Join Us On"
+    },
+    {
+      "type": "text",
+      "id": "footer-copyright",
+      "label": "Copyright",
+      "default": "Copyright © 2026 xclusivemoney. All Rights Reserved"
+    },
+     {
+      "type": "color",
+      "id": "footer-copyright-color",
+      "label": "Copyright Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "footer-content-color",
+      "label": "Copyright Content Color",
+      "default": "#ffffff"
     }
   ],
   "blocks": [
@@ -218,6 +313,24 @@
           "id": "open_by_default",
           "label": "Open by default",
           "default": true
+        }
+      ]
+    },
+    {
+      "type": "footer-content",
+      "name": "Footer Content",
+      "settings": [
+        {
+          "type": "text",
+          "id": "footer-content-heading",
+          "label": "Content Heading",
+          "default": "1️⃣ No Investment Advice Disclaimer (CRITICAL)"
+        },
+        {
+          "type": "richtext",
+          "id": "footer-content-pargraph",
+          "label": "Content pargraph",
+          "default": "<p>Xclusive Money and its products, including but not limited to XM Trade Edge Pro, TradingView indicators, strategies, scripts, automation tools, educational content, videos, webinars, live sessions, social media content, and communications (collectively referred to as “Content”), are provided strictly for educational and informational purposes only.</p>"
         }
       ]
     }
@@ -277,3 +390,29 @@
 {% endschema %}
 
 
+<script>
+  (function () {
+    const root = document.querySelector('[data-footer-disclaimer]');
+    if (!root) return;
+
+    const toggleBtn = root.querySelector('[data-footer-toggle]');
+    const content = root.querySelector('[data-footer-content]');
+    if (!toggleBtn || !content) return;
+
+    let expanded = false;
+
+    // default collapsed
+    content.classList.add('is-collapsed');
+    toggleBtn.textContent = 'Read more';
+    toggleBtn.setAttribute('aria-expanded', 'false');
+
+    toggleBtn.addEventListener('click', () => {
+      expanded = !expanded;
+
+      content.classList.toggle('is-collapsed', !expanded);
+      toggleBtn.textContent = expanded ? 'Read less' : 'Read more';
+      toggleBtn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    });
+  })();
+</script>
+ 

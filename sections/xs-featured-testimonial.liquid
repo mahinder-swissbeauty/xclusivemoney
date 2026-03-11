@@ -1,65 +1,64 @@
 {% style %}
-
-/* better touch gestures; keep vertical page scroll smooth */
-section#{{ section.id }}-featured-testimonials .keen-slider{
-  touch-action: pan-y;
-}
-  /* padding (mobile) */
-  #{{ section.id }}-featured-testimonials .featured-collection-wrapper{
-    padding-top: {{ section.settings.mobile_padding }}px;
-    padding-bottom: {{ section.settings.mobile_padding }}px;
+  /* better touch gestures; keep vertical page scroll smooth */
+  section#{{ section.id }}-featured-testimonials .keen-slider{
+    touch-action: pan-y;
   }
-
-section#{{ section.id }}-featured-testimonials featured-slider-testimonial{
-    position: relative;
-  }
- 
-section#{{ section.id }}-featured-testimonials .featured-collection-wrapper{
-    width: 100%;
-  }
-
-  /* slider container */
-section#{{ section.id }}-featured-testimonials featured-slider{
-    display: block;
-    width: 100%;
-  }
-
-  /* slide base */
-  .fc-slide {
-    box-sizing: border-box;
-  }
-
-  
-
-  /* thumb bar */
-  .featured-collection-slider-bar{
-    position: relative;
-  }
-  [data-role="thumb-wrapper"]{
-    height: 4px;
-    border-radius: 4px;
-    position: relative;
-    overflow: hidden;
-  }
-  [data-role="thumb"]{
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    border-radius: 4px;
-    transition:
-      left .2s linear,
-      width .2s linear,
-      transform .2s linear;
-  }
-
-  @media (min-width: 1200px){
-
-    section#{{ section.id }}-featured-testimonials .featured-collection-wrapper{
-      padding-top: {{ section.settings.desktop_padding }}px;
-      padding-bottom: {{ section.settings.desktop_padding }}px;
+    /* padding (mobile) */
+    #{{ section.id }}-featured-testimonials .featured-collection-wrapper{
+      padding-top: {{ section.settings.mobile_padding }}px;
+      padding-bottom: {{ section.settings.mobile_padding }}px;
     }
-  }
+
+  section#{{ section.id }}-featured-testimonials featured-slider-testimonial{
+      position: relative;
+    }
+
+  section#{{ section.id }}-featured-testimonials .featured-collection-wrapper{
+      width: 100%;
+    }
+
+    /* slider container */
+  section#{{ section.id }}-featured-testimonials featured-slider{
+      display: block;
+      width: 100%;
+    }
+
+    /* slide base */
+    .fc-slide {
+      box-sizing: border-box;
+    }
+
+
+
+    /* thumb bar */
+    .featured-collection-slider-bar{
+      position: relative;
+    }
+    [data-role="thumb-wrapper"]{
+      height: 4px;
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+    [data-role="thumb"]{
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      border-radius: 4px;
+      transition:
+        left .2s linear,
+        width .2s linear,
+        transform .2s linear;
+    }
+
+    @media (min-width: 1200px){
+
+      section#{{ section.id }}-featured-testimonials .featured-collection-wrapper{
+        padding-top: {{ section.settings.desktop_padding }}px;
+        padding-bottom: {{ section.settings.desktop_padding }}px;
+      }
+    }
 {% endstyle %}
 
 {% if section.settings.enable_slider %}
@@ -80,12 +79,12 @@ section#{{ section.id }}-featured-testimonials featured-slider{
           {% if section.settings.enable_slider %}
             <featured-slider-testimonial
               data-desktop-cards="2.5"
-  data-mobile-perview="1.2"
+              data-mobile-perview="1.2"
 
               class="featured-slider-root xcl-relative"
-  data-desktop-cards="{{ section.settings.desktop_cards }}"
-  data-mobile-perview="{{ section.settings.mobile_perview }}"
-  data-show-arrows="{{ section.settings.show_arrows | json }}"
+              data-desktop-cards="{{ section.settings.desktop_cards }}"
+              data-mobile-perview="{{ section.settings.mobile_perview }}"
+              data-show-arrows="{{ section.settings.show_arrows | json }}"
             >
               <div
                 data-role="slider-wrapper"
@@ -94,51 +93,62 @@ section#{{ section.id }}-featured-testimonials featured-slider{
               >
                 {% for block in section.blocks %}
                   <div
-                     class="fc-slide keen-slider__slide xcl-rounded-2xl"
-     data-block-index="{{ forloop.index0 }}"
-     style="border-color: {{ section.settings.card_border_color }}; background: {{ section.settings.card_bg_color }};">
-  {% render 'testimonial-card', testimonial: block.settings %}
+                    class="fc-slide keen-slider__slide xcl-rounded-2xl"
+                    data-block-index="{{ forloop.index0 }}"
+                    style="border-color: {{ section.settings.card_border_color }}; background: {{ section.settings.card_bg_color }};"
+                  >
+                    {% render 'testimonial-card', testimonial: block.settings %}
                   </div>
                 {% endfor %}
               </div>
 
               {% if section.settings.show_arrows %}
-                <button class="fc-arrow fc-arrow-left
-                xcl-hidden
-                xcl-absolute
-                xcl-top-1/2
-                xcl--translate-y-1/2
-                xcl-z-30
-                xcl-bg-transparent
-                xcl-border-none
-                xcl-cursor-pointer
-                xl:xcl-flex
-                xcl-items-center
-                xcl-justify-center
-                xcl-w-[40px]
-                xcl-h-[40px]
-                xl:xcl-left-[-55px]
-                " data-role="arrow-prev" aria-label="Previous slide">
+                <button
+                  class="
+                    fc-arrow fc-arrow-left
+                    xcl-hidden
+                    xcl-absolute
+                    xcl-top-1/2
+                    xcl--translate-y-1/2
+                    xcl-z-30
+                    xcl-bg-transparent
+                    xcl-border-none
+                    xcl-cursor-pointer
+                    xl:xcl-flex
+                    xcl-items-center
+                    xcl-justify-center
+                    xcl-w-[40px]
+                    xcl-h-[40px]
+                    xl:xcl-left-[-55px]
+                  "
+                  data-role="arrow-prev"
+                  aria-label="Previous slide"
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
                     <path d="M13.6667 20L23.6667 30L26 27.6667L18.3333 20L26 12.3333L23.6667 10L13.6667 20Z" fill="white"/>
                   </svg>
                 </button>
-                <button class="fc-arrow fc-arrow-right
-                xcl-hidden
-                xcl-absolute
-                xcl-top-1/2
-                xcl--translate-y-1/2
-                xcl-z-30
-                xcl-bg-transparent
-                xcl-border-none
-                xcl-cursor-pointer
-                xl:xcl-flex
-                xcl-items-center
-                xcl-justify-center
-                xcl-w-[40px]
-                xcl-h-[40px]
-                xl:xcl-right-[-55px]
-                " data-role="arrow-next" aria-label="Next slide">
+                <button
+                  class="
+                    fc-arrow fc-arrow-right
+                    xcl-hidden
+                    xcl-absolute
+                    xcl-top-1/2
+                    xcl--translate-y-1/2
+                    xcl-z-30
+                    xcl-bg-transparent
+                    xcl-border-none
+                    xcl-cursor-pointer
+                    xl:xcl-flex
+                    xcl-items-center
+                    xcl-justify-center
+                    xcl-w-[40px]
+                    xcl-h-[40px]
+                    xl:xcl-right-[-55px]
+                  "
+                  data-role="arrow-next"
+                  aria-label="Next slide"
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
                     <path d="M26.3333 20L16.3333 30L14 27.6667L21.6667 20L14 12.3333L16.3333 10L26.3333 20Z" fill="white"/>
                   </svg>
@@ -278,17 +288,43 @@ section#{{ section.id }}-featured-testimonials featured-slider{
       "settings": [
         { "type": "image_picker", "id": "avatar", "label": "Avatar image" },
         { "type": "text", "id": "name", "label": "Name", "default": "Rajesh Kumar" },
-        { "type": "text", "id": "subtitle", "label": "Subtitle (role, location)", "default": "Algorithmic Trader, Mumbai" },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle (role, location)",
+          "default": "Algorithmic Trader, Mumbai"
+        },
         { "type": "text", "id": "time_meta", "label": "Time & meta", "default": "5d · 🌐" },
-        { "type": "richtext", "id": "body", "label": "Testimonial text", "default": "<p>Finally found a strategy that works exactly the same in live trading as in backtests. No more repainting nightmares!</p>" },
+        
+        {
+          "type": "select",
+          "id": "display_type",
+          "label": "Display Type",
+          "options": [
+            {
+              "value": "content",
+              "label": "Content"
+            },
+            {
+              "value": "image",
+              "label": "Image"
+            }
+          ],
+          "default": "content"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Testimonial text",
+          "default": "<p>Finally found a strategy that works exactly the same in live trading as in backtests. No more repainting nightmares!</p>"
+        },
+        { "type": "image_picker", "id": "review-image", "label": "Review image" },
         { "type": "text", "id": "reaction_icons", "label": "Reaction icons (emoji)", "default": "👍 ❤️ 👏" },
         { "type": "text", "id": "reaction_count", "label": "Reaction count", "default": "358" },
         { "type": "text", "id": "comments_text", "label": "Comments text", "default": "5 comments" }
-      ]
+      ] 
     }
   ],
-  "presets": [
-    { "name": "featured testimonials" }
-  ]
+  "presets": [{ "name": "featured testimonials" }]
 }
 {% endschema %}
