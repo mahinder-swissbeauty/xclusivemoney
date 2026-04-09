@@ -6,9 +6,9 @@
 {% liquid
   assign path_prefix = path | slice: 0
   if path_prefix == '/'
-    assign file_url_prefix = 'http://127.0.0.1:3000'
+    assign file_url_prefix = 'http://127.0.0.1:3001'
   else
-    assign file_url_prefix = 'http://127.0.0.1:3000/frontend/entrypoints/'
+    assign file_url_prefix = 'http://127.0.0.1:3001/frontend/entrypoints/'
   endif
   assign file_url = path | prepend: file_url_prefix
   assign file_name = path | split: '/' | last
@@ -21,8 +21,8 @@
     assign is_css = true
   endif
 %}
-<script src="http://127.0.0.1:3000/@id/__x00__vite-plugin-shopify:react-refresh" type="module"></script>
-<script src="http://127.0.0.1:3000/@vite/client" type="module"></script>
+<script src="http://127.0.0.1:3001/@id/__x00__vite-plugin-shopify:react-refresh" type="module"></script>
+<script src="http://127.0.0.1:3001/@vite/client" type="module"></script>
 <script id="hot-reload-client" src="https://cdn.jsdelivr.net/npm/@shopify/theme-hot-reload/dist/theme-hot-reload.min.js" type="module"></script>
 {% if is_css == true %}
   <link rel="stylesheet" href="{{ file_url }}" crossorigin="anonymous">
