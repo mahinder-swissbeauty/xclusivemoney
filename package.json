@@ -38,8 +38,9 @@
   },
   "devDependencies": {
     "@shopify/app": "^3.58.2",
-    "@shopify/cli": "^3.64.1",
+    "@shopify/cli": "^3.93.2",
     "@shopify/prettier-plugin-liquid": "^1.4.1",
+    "@shopify/theme": "^3.58.2",
     "@types/prettier": "^2.7.2",
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "@vitejs/plugin-react": "^4.3.1",

@@ -376,7 +376,7 @@
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-PHVVFVLC');</script>
     <!-- End Google Tag Manager -->
-   
+
   </head>
 
   <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}
@@ -520,14 +520,14 @@
         const target = href ? document.querySelector(href) : null;
         if (!target) return;
 
-        //  close menu (same behavior)
+        // close menu (same behavior)
         if (typeof menu !== "undefined" && menu && !menu.classList.contains('xcl-hidden')) {
           menu.classList.add('xcl-hidden');
         }
 
         const headerEl = document.querySelector('#siteHeader');
 
-        //  IMPORTANT FIX:
+        // IMPORTANT FIX:
         // If we are near top (0-15px), header is not "scrolled" yet,
         // but during scroll it becomes "is-scrolled" (shrinks).
         // So we force it BEFORE measuring offset to avoid extra gap.
@@ -545,7 +545,7 @@
           return Math.ceil(cover + 24); // small safe gap
         };
 
-        //  Measure after DOM applies header class (no blink, single scroll)
+        // Measure after DOM applies header class (no blink, single scroll)
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             const offset = getOffset();
@@ -599,7 +599,7 @@
         // Normal load
         document.addEventListener('DOMContentLoaded', resetCheckoutButtons);
 
-        //  When coming back from checkout using browser back (BFCache)
+        // When coming back from checkout using browser back (BFCache)
         window.addEventListener('pageshow', function (e) {
           // e.persisted = page restored from bfcache
           if (e.persisted) resetCheckoutButtons();
@@ -626,21 +626,21 @@
           });
         }
 
-        //  reset immediately on normal load
+        // reset immediately on normal load
         document.addEventListener('DOMContentLoaded', () => resetLoadingState());
 
-        //  when coming back (BFCache restore) - very common on mobile
+        // when coming back (BFCache restore) - very common on mobile
         window.addEventListener('pageshow', () => resetLoadingState());
 
-        //  when tab becomes visible again
+        // when tab becomes visible again
         document.addEventListener('visibilitychange', () => {
           if (document.visibilityState === 'visible') resetLoadingState();
         });
 
-        //  when window regains focus (mobile back)
+        // when window regains focus (mobile back)
         window.addEventListener('focus', () => resetLoadingState());
 
-        //  IMPORTANT: before leaving page, clear loading (prevents cached loading UI)
+        // IMPORTANT: before leaving page, clear loading (prevents cached loading UI)
         window.addEventListener('pagehide', () => resetLoadingState());
       })();
     </script>
